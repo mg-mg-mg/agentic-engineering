@@ -1,5 +1,9 @@
 # One Engineer, an Agent Team: How I Ship a Production Product with AI Agents
 
+![Replay: Issue #499 to production in about two hours, every step by agents except two owner approvals](./agentic-replay.gif)
+
+*Replay from real repository timestamps (KST, 2026-10-07): a browser agent finds a bug, a lead session opens the fix, a separate reviewer approves at fixed SHAs, the owner authorizes merge and deploy. Issue to production deploy: 2 h 01 m.*
+
 **Visual version:** [index.html](./index.html) (rendered page link will be added when published)
 
 *Mingyun Chae, October 2026. Case study of the delivery system behind [TriAstra](https://triastra.ai) and a client engagement in Singapore. Product source code is private; this document describes the process, not the product code.*

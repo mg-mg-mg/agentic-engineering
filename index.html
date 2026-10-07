@@ -63,6 +63,33 @@
   .muted { color:var(--muted); font-size:13px; }
   footer { padding: 40px 0 56px; color:var(--muted); font-size:14px; }
   footer a { color: var(--accent); text-decoration:none; }
+
+  /* replay */
+  .replay { background:#0d1326; color:#e8ecf7; border-radius:16px; padding:22px 22px 18px; position:relative; overflow:hidden; }
+  .replay .hdr { display:flex; justify-content:space-between; align-items:baseline; gap:12px; flex-wrap:wrap; }
+  .replay .hdr b { font-size:15px; }
+  .replay .clock { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size:13px; color:#9fb6ff; }
+  .track { position:relative; margin:26px 6px 8px; height:4px; background:#26304d; border-radius:4px; }
+  .track .fill { position:absolute; left:0; top:0; height:100%; background:linear-gradient(90deg,#4f7bff,#22c39a); border-radius:4px; width:0; }
+  .track .dot { position:absolute; top:-6px; width:16px; height:16px; margin-left:-8px; border-radius:50%; background:#26304d; border:2px solid #3a4670; transition: background .3s, border-color .3s, box-shadow .3s; }
+  .track .dot.on { background:#22c39a; border-color:#22c39a; box-shadow:0 0 0 6px rgba(34,195,154,.18); }
+  .track .token { position:absolute; top:-10px; width:24px; height:24px; margin-left:-12px; border-radius:6px; background:#4f7bff; box-shadow:0 0 18px rgba(79,123,255,.8); left:0; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; color:#fff; }
+  .stages { display:grid; grid-template-columns: repeat(5, 1fr); gap:10px; margin-top:18px; }
+  .stage { background:#141c35; border:1px solid #26304d; border-radius:12px; padding:12px; font-size:12.5px; line-height:1.45; opacity:.35; transform: translateY(6px); transition: opacity .4s, transform .4s, border-color .4s; min-height:150px; }
+  .stage.on { opacity:1; transform:none; border-color:#3d5bd6; }
+  .stage .t { font-family: ui-monospace, Menlo, monospace; color:#9fb6ff; font-size:12px; }
+  .stage .who { display:inline-block; font-size:10.5px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; padding:2px 7px; border-radius:999px; margin:4px 0 6px; }
+  .who.agent { background:#1e2e66; color:#a9bcff; } .who.rev { background:#123d33; color:#7de3c2; } .who.own { background:#4a2a14; color:#ffc59e; }
+  .stage q { display:block; margin-top:6px; color:#c8d0e6; font-style:italic; }
+  .total { margin-top:14px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; font-size:13px; color:#aab4cf; }
+  .total .big { color:#22c39a; font-weight:800; font-size:16px; }
+  .ticker { margin-top:16px; border-top:1px solid #26304d; padding-top:12px; display:flex; gap:12px; align-items:center; }
+  .ticker .count { flex:0 0 auto; font-family: ui-monospace, Menlo, monospace; font-size:13px; color:#22c39a; min-width:150px; }
+  .ticker .feed { flex:1; height:22px; overflow:hidden; position:relative; font-size:13px; color:#c8d0e6; white-space:nowrap; text-overflow:ellipsis; }
+  .ticker .feed span { position:absolute; left:0; right:0; overflow:hidden; text-overflow:ellipsis; transition: transform .35s, opacity .35s; }
+  .catch { margin-top:12px; font-size:13px; color:#aab4cf; }
+  .catch b { color:#ffc59e; }
+  @media (max-width: 860px) { .stages { grid-template-columns: 1fr 1fr; } .stage { min-height:0; } }
   @media (max-width: 860px) {
     header h1 { font-size: 30px; }
     .metrics { grid-template-columns: repeat(2, 1fr); }
@@ -90,6 +117,26 @@
     <div class="metric"><div class="n">702</div><div class="l">PRs merged in one month on a client project, median 1.3 h to merge</div></div>
     <div class="metric"><div class="n">33 → 3</div><div class="l">minutes for the pre-merge E2E gate on that project</div></div>
   </div>
+
+
+  <section>
+    <h2>Replay: one bug, from browser to production in about two hours</h2>
+    <p class="sub">Real timestamps (KST, 2026-10-07) from the repository's Issue and PR history. Agents did every step except the two Owner approvals.</p>
+    <div class="replay" id="replay">
+      <div class="hdr"><b>Issue #499 → PR #501 → production</b><span class="clock" id="rclock">03:10 KST</span></div>
+      <div class="track" id="rtrack"><div class="fill" id="rfill"></div><div class="token" id="rtoken">PR</div></div>
+      <div class="stages" id="rstages">
+        <div class="stage"><div class="t">03:10</div><span class="who agent">browser agent</span><br>Test-mode refund E2E shows a refunded report <b>still generating</b> (~260k LLM tokens per report). Files Issue #499.</div>
+        <div class="stage"><div class="t">03:37</div><span class="who agent">payments lead session</span><br>Opens PR #501 with evidence: new web/Flutter tests <b>fail without the fix</b>, pass with it.</div>
+        <div class="stage"><div class="t">03:58</div><span class="who rev">independent reviewer</span><br>Separate read-only session checks the SQL predicate and the claim guard at fixed SHAs.<q>Verdict: MERGEABLE. No Critical, High, or Medium findings.</q></div>
+        <div class="stage"><div class="t">04:36</div><span class="who own">owner-authorized merge</span><br>Squash merge <span class="t">94fcb8c</span> into main, pinned to the reviewed head.</div>
+        <div class="stage"><div class="t">05:11</div><span class="who own">owner-approved deploy</span><br>Production release <span class="t">79f534c4a</span> ships the fix with two other payment fixes.</div>
+      </div>
+      <div class="total"><span>Issue filed → production deploy</span><span class="big" id="relapsed">0 h 00 m</span></div>
+      <div class="ticker"><span class="count" id="rcount">PRs merged that day (UTC): 0</span><div class="feed" id="rfeed"><span></span></div></div>
+      <div class="catch">Reviews are not rubber stamps: on PR #343 the first independent review returned <b>CHANGES_REQUESTED</b> with four findings; the author fixed them and the delta review returned MERGEABLE.</div>
+    </div>
+  </section>
 
   <section>
     <h2>1. Owner attention is the scarcest resource</h2>
@@ -207,5 +254,40 @@
     Mingyun Chae · <a href="mailto:coalsrbs7@gmail.com">coalsrbs7@gmail.com</a> · <a href="https://github.com/mg-mg-mg">GitHub</a>
   </footer>
 </div>
+
+<script>
+(function(){
+  const titles = ["Stop paid-report generation once the purchase is refunded","Batch dispatcher Issue metadata to keep four worker ticks within API budget","Refill autonomous lanes independently while preserving legacy ownership","Stop Ops pages from polling the backend while idle","Keep four autonomous lanes available while protecting parked claims","Run account deletion purges from the daily retention job","Document the Aside browser-agent bridge contract","Show seven app languages on /download and the marketing footer","Serialize local production releases with cooperating main integration","Diagnose Pages hydration failures with aggregate browser evidence","Fail early on unreviewed release contracts and fix schema allowances","Retry autonomous dispatcher every three minutes","Make verify-static the single enforced gate and report degraded Git hooks","Move purchased-report SQL and transactions out of the HTTP handler","Recover unattended dispatcher child state and tool PATH","Justify the remaining payment error causes; error-cause baseline reaches 0","Require the report withdrawal waiver before web Dodo checkout","Render the web report detail page instead of the list"];
+  const stamps = [190, 217, 238, 276, 311]; // minutes after 00:00 KST
+  const D = 14000, steps = [0.06, 0.24, 0.42, 0.6, 0.78];
+  const track = document.getElementById('rtrack'); if (!track) return;
+  const dots = steps.map(p => { const d = document.createElement('div'); d.className = 'dot'; d.style.left = (p*100/0.78*0.96+2) + '%'; track.appendChild(d); return d; });
+  const stages = [...document.querySelectorAll('#rstages .stage')];
+  const tok = document.getElementById('rtoken'), fill = document.getElementById('rfill');
+  const clock = document.getElementById('rclock'), el = document.getElementById('relapsed');
+  const cnt = document.getElementById('rcount'), feed = document.querySelector('#rfeed span');
+  const fmt = m => String(Math.floor(m/60)).padStart(2,'0') + ':' + String(Math.floor(m%60)).padStart(2,'0');
+  function render(ms){
+    const p = (ms % D) / D;
+    const prog = Math.min(p/0.78, 1);
+    const pos = prog*96+2;
+    tok.style.left = pos + '%'; fill.style.width = pos + '%';
+    let k = -1; steps.forEach((s,i) => { if (p >= s) k = i; });
+    dots.forEach((d,i) => d.classList.toggle('on', i <= k));
+    stages.forEach((st,i) => st.classList.toggle('on', i <= k));
+    // clock interpolation between stamps
+    const segs = steps.length - 1; const sp = prog*segs; const si = Math.min(Math.floor(sp), segs-1);
+    const mins = stamps[si] + (stamps[si+1]-stamps[si]) * Math.min(sp - si, 1);
+    const m = p < steps[0] ? stamps[0] : mins;
+    clock.textContent = fmt(m) + ' KST';
+    const e = m - stamps[0]; el.textContent = Math.floor(e/60) + ' h ' + String(Math.floor(e%60)).padStart(2,'0') + ' m';
+    const n = Math.min(45, Math.floor((ms % D) / D * 60));
+    cnt.textContent = 'PRs merged that day (UTC): ' + n;
+    const ti = Math.floor(ms / 700) % titles.length; if (feed.dataset.i != ti) { feed.dataset.i = ti; feed.textContent = '✓ ' + titles[ti]; }
+  }
+  let paused = false; window.__replaySet = t => { paused = true; render(t); };
+  const t0 = performance.now(); (function loop(now){ if (!paused) render(now - t0); requestAnimationFrame(loop); })(t0);
+})();
+</script>
 </body>
 </html>
