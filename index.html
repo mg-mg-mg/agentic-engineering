@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>One Engineer, an Agent Team | Mingyun Chae</title>
+<meta name="description" content="How I ship a production product as one engineer with an AI agent team: decision rights, parallel lanes, independent review and verification, and quality gates.">
+<style>
+  :root { --ink:#14171f; --muted:#5b6475; --line:#e4e7ee; --bg:#f7f8fb; --card:#fff; --accent:#2f5bea; --accent2:#0f9d76; --warn:#c2410c; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, Arial, sans-serif; color:var(--ink); background:var(--bg); line-height:1.55; }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
+  header { background: linear-gradient(135deg, #10172a 0%, #1d2b5c 100%); color:#fff; padding: 56px 0 44px; }
+  header .eyebrow { font-size: 13px; letter-spacing: .12em; text-transform: uppercase; opacity: .7; }
+  header h1 { font-size: 40px; line-height: 1.15; margin: 10px 0 14px; letter-spacing: -.01em; }
+  header p.lead { font-size: 18px; max-width: 760px; opacity: .9; margin: 0 0 20px; }
+  header .who { font-size: 14px; opacity: .85; }
+  header .who a { color:#9fb6ff; text-decoration:none; }
+  section { padding: 40px 0 8px; }
+  h2 { font-size: 24px; margin: 0 0 6px; letter-spacing: -.01em; }
+  .sub { color: var(--muted); margin: 0 0 20px; }
+  .grid { display:grid; gap:14px; }
+  .metrics { grid-template-columns: repeat(4, 1fr); margin-top: -28px; }
+  .metric { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:18px 18px 16px; box-shadow: 0 6px 20px rgba(16,23,42,.06); }
+  .metric .n { font-size: 30px; font-weight: 750; letter-spacing:-.02em; }
+  .metric .l { font-size: 13px; color: var(--muted); }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:20px; }
+  table { width:100%; border-collapse: collapse; font-size: 14.5px; }
+  th, td { text-align:left; padding: 10px 12px; border-bottom:1px solid var(--line); vertical-align: top; }
+  th { font-size: 12px; text-transform: uppercase; letter-spacing:.06em; color: var(--muted); }
+  .pill { display:inline-block; font-size:12px; font-weight:650; padding:3px 9px; border-radius:999px; white-space:nowrap; }
+  .pill.agent { background:#e8efff; color:var(--accent); }
+  .pill.owner { background:#fff1e8; color:var(--warn); }
+  /* system diagram */
+  .sys { display:grid; grid-template-columns: 1fr; gap: 12px; }
+  .owner-box { text-align:center; background:#10172a; color:#fff; border-radius:12px; padding:14px; font-weight:650; }
+  .owner-box span { display:block; font-weight:400; font-size:13px; opacity:.75; }
+  .lanes { display:grid; grid-template-columns: repeat(3, 1fr); gap:12px; }
+  .lane { background:var(--card); border:1px solid var(--line); border-top: 4px solid var(--accent); border-radius:12px; padding:16px; }
+  .lane.b { border-top-color: var(--accent2); }
+  .lane.c { border-top-color: #8b5cf6; }
+  .lane h3 { margin:0 0 6px; font-size:16px; }
+  .lane ul { margin:0; padding-left:18px; font-size:14px; color:#2b3242; }
+  .hub { text-align:center; background:#eef2ff; border:1px dashed #b7c4f5; border-radius:12px; padding:12px; font-size:14px; }
+  .gatesbar { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; }
+  .gate { background:#e9f8f2; color:#0b6b51; border:1px solid #bfe9d8; border-radius:8px; padding:6px 10px; font-size:13px; font-weight:600; }
+  /* pipeline */
+  .pipe { display:grid; grid-template-columns: repeat(6, 1fr); gap:10px; counter-reset: step; }
+  .step { position:relative; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:14px 12px 12px; font-size:13.5px; }
+  .step:before { counter-increment: step; content: counter(step); position:absolute; top:-11px; left:12px; width:22px; height:22px; border-radius:50%; background:var(--accent); color:#fff; font-size:12px; font-weight:700; display:flex; align-items:center; justify-content:center; }
+  .step b { display:block; font-size:14px; margin-bottom:4px; }
+  .step .perm { display:block; margin-top:8px; font-size:11.5px; color:var(--muted); }
+  .loop { margin-top:10px; font-size:13.5px; color:var(--muted); text-align:center; }
+  .never { margin-top:14px; background:#fff6f0; border:1px solid #f6d5c0; border-radius:12px; padding:12px 14px; font-size:14px; }
+  .two { grid-template-columns: 1fr 1fr; }
+  .lesson { display:flex; gap:12px; }
+  .lesson .k { flex:0 0 30px; height:30px; border-radius:8px; background:#e8efff; color:var(--accent); font-weight:750; display:flex; align-items:center; justify-content:center; }
+  .lesson p { margin:0; font-size:14.5px; }
+  .lesson b { display:block; }
+  .case { display:grid; grid-template-columns: 1.3fr 1fr; gap:18px; align-items:start; }
+  .bar { height:10px; border-radius:6px; background:#e6e9f2; overflow:hidden; margin:6px 0 2px; }
+  .bar i { display:block; height:100%; background:var(--accent2); }
+  .muted { color:var(--muted); font-size:13px; }
+  footer { padding: 40px 0 56px; color:var(--muted); font-size:14px; }
+  footer a { color: var(--accent); text-decoration:none; }
+  @media (max-width: 860px) {
+    header h1 { font-size: 30px; }
+    .metrics { grid-template-columns: repeat(2, 1fr); }
+    .lanes, .two, .case { grid-template-columns: 1fr; }
+    .pipe { grid-template-columns: repeat(2, 1fr); row-gap: 18px; }
+  }
+  @media print { header { padding:28px 0 32px; } .metric, .card, .lane, .step { box-shadow:none; break-inside: avoid; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="eyebrow">Case study · October 2026</div>
+    <h1>One engineer, an agent team.</h1>
+    <p class="lead">How I build and operate a production product alone: AI agents write, review, verify, and merge the code, and I own architecture, acceptance criteria, quality gates, and every irreversible decision.</p>
+    <div class="who">Mingyun Chae · Senior Software Engineer · <a href="mailto:coalsrbs7@gmail.com">coalsrbs7@gmail.com</a> · <a href="https://github.com/mg-mg-mg">github.com/mg-mg-mg</a> · <a href="https://triastra.ai">triastra.ai</a></div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="grid metrics">
+    <div class="metric"><div class="n">10,143</div><div class="l">commits since the first one on 2026-01-05</div></div>
+    <div class="metric"><div class="n">34-45</div><div class="l">independently reviewed PRs merged per day (Oct 3-6)</div></div>
+    <div class="metric"><div class="n">702</div><div class="l">PRs merged in one month on a client project, median 1.3 h to merge</div></div>
+    <div class="metric"><div class="n">33 → 3</div><div class="l">minutes for the pre-merge E2E gate on that project</div></div>
+  </div>
+
+  <section>
+    <h2>1. Owner attention is the scarcest resource</h2>
+    <p class="sub">The repo contract (AGENTS.md, ~63 KB plus nested rules and task skills) makes decision rights explicit. An agent that stops to ask for a decision it could make costs more than a reversible mistake it catches and fixes.</p>
+    <div class="card">
+      <table>
+        <tr><th style="width:62%">Decision</th><th>Who</th></tr>
+        <tr><td>Technical design, root-cause scope, refactoring, slicing, test strategy, task order</td><td><span class="pill agent">Agent decides</span> and reports why</td></tr>
+        <tr><td>Defects found while working, tooling recovery, Issues, branches, worktrees, PRs, docs and rule updates</td><td><span class="pill agent">Agent acts</span> then records</td></tr>
+        <tr><td>Deployment, store submission, payments, production data, external messages, spending, credentials</td><td><span class="pill owner">Owner approves</span> asked once, with a recommendation</td></tr>
+        <tr><td>Product direction, pricing, user-facing policy, final Korean copy</td><td><span class="pill owner">Owner decides</span> agents keep working meanwhile</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>2. The system</h2>
+    <p class="sub">Three kinds of agent lanes feed one GitHub queue, and everything passes the same gates.</p>
+    <div class="sys">
+      <div class="owner-box">Owner<span>product, priorities, irreversible approvals</span></div>
+      <div class="lanes">
+        <div class="lane">
+          <h3>Interactive lead sessions</h3>
+          <ul>
+            <li>One long-lived lead per workstream: deploy, lead, refactor, payments, ops/marketing</li>
+            <li>Lead owns design, integration, final verification</li>
+            <li>Delegates bounded slices to workers in isolated git worktrees, one owner per generated surface</li>
+          </ul>
+        </div>
+        <div class="lane b">
+          <h3>Unattended Issue pool</h3>
+          <ul>
+            <li>4 macOS LaunchAgent workers, 180 s tick</li>
+            <li>Each claims one unowned P1/P2 bug or maintenance Issue</li>
+            <li>Author, reviewer, verifier are separate processes with separate permissions (below)</li>
+          </ul>
+        </div>
+        <div class="lane c">
+          <h3>Browser agent (QA / ops)</h3>
+          <ul>
+            <li>Live E2E: payment checkout, refund, cancel in test mode</li>
+            <li>7-locale i18n/UX audits, dashboard audits</li>
+            <li>Files Issues to coding lanes via a repo mailbox and the harness debug socket</li>
+          </ul>
+        </div>
+      </div>
+      <div class="hub">GitHub Issues · PRs · Project board &nbsp;|&nbsp; 310 Issues in the queue · 225 PRs merged since the review-gated flow began (Sep 2026)</div>
+      <div class="gatesbar">
+        <span class="gate">Cross-language compile/generate-time gate</span>
+        <span class="gate">Contract-first OpenAPI → typed clients</span>
+        <span class="gate">Visual regression</span>
+        <span class="gate">Exact-hash LLM locale review</span>
+        <span class="gate">Root cause + regression ratchet</span>
+        <span class="gate">Fail-closed main lease</span>
+      </div>
+    </div>
+    <p class="muted" style="margin-top:12px">Harness history: TriAstra started on Codex and Claude Code, moved through oh-my-pi, and now runs entirely on jcode. The rules live in the repository, not in a tool, so switching harnesses did not reset the process.</p>
+  </section>
+
+  <section>
+    <h2>3. One unattended Issue, end to end</h2>
+    <p class="sub">The author can write code but cannot reach the network; the only process with credentials is the dispatcher, and only for the write it is about to make.</p>
+    <div class="pipe">
+      <div class="step"><b>Claim</b>Worker picks one unowned P1/P2 Issue from a full Project/PR/dependency snapshot.<span class="perm">excludes payments, holds, owned work</span></div>
+      <div class="step"><b>Author</b>Implements and runs local checks in an offline worktree sandbox.<span class="perm">no network, no secrets, no git push</span></div>
+      <div class="step"><b>Dispatcher</b>Validates Issue state, reviews the diff, publishes the PR, verifies the remote head.<span class="perm">only process with GitHub write</span></div>
+      <div class="step"><b>Reviewer</b>Separate read-only model reviews fixed head/base SHAs against acceptance criteria.<span class="perm">read-only</span></div>
+      <div class="step"><b>Verifier</b>Separate credentialless process reruns the chosen checks; must not change the head.<span class="perm">no credentials</span></div>
+      <div class="step"><b>Guarded merge</b>Intent saved, squash merge pinned to reviewed head, parent/tree verified, evidence posted.<span class="perm">then Issue/Project reconciled</span></div>
+    </div>
+    <div class="loop">Findings or failed checks go back to the same author lane. Every revision needs a new head, a fresh review, and passing verification, until mergeable or a 5-hour budget expires.</div>
+    <div class="never"><b>Never unattended:</b> deployments, app-store submissions, production data writes, payments, credential changes, external messages.</div>
+  </section>
+
+  <section>
+    <h2>4. What I learned</h2>
+    <div class="grid two">
+      <div class="card lesson"><div class="k">1</div><p><b>Throughput is cheap; trust is expensive.</b>The bottleneck moved from writing code to acceptance criteria and gates that make agent output trustworthy without reading every line.</p></div>
+      <div class="card lesson"><div class="k">2</div><p><b>Separate the roles.</b>A model reviewing its own work misses the same things. Separate author, reviewer, and verifier processes catch far more.</p></div>
+      <div class="card lesson"><div class="k">3</div><p><b>Least privilege for agents.</b>Authors need no network and no secrets. Credentials live only where a specific write happens.</p></div>
+      <div class="card lesson"><div class="k">4</div><p><b>Write the rules where agents read them.</b>Decision rights and workflows live in versioned repo docs, so every session starts from the same contract and rules improve through PRs.</p></div>
+      <div class="card lesson"><div class="k">5</div><p><b>Find errors before runtime.</b>Typed contracts and generated clients turn agent mistakes into build failures instead of production incidents.</p></div>
+      <div class="card lesson"><div class="k">6</div><p><b>Spend human attention on the irreversible.</b>I approve deploys, payments, pricing, and policy. Almost everything else is delegated and audited.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>5. Same system, client context</h2>
+    <p class="sub">One-month on-site contract, Singapore startup-accelerator B2B platform, existing Django + React codebase. Run on oh-my-pi after starting on Codex.</p>
+    <div class="case">
+      <div class="card">
+        <ul style="margin:0; padding-left:18px; font-size:14.5px">
+          <li>Spreadsheet-only process → 15-screen prototype → real server and 3 role-based portals in 6 days</li>
+          <li>Meeting engine: availability, booking locks, reschedule state machine, time zones/DST, .ics</li>
+          <li>Locked down 15 unauthenticated APIs, tiered access on 30 write APIs, signed private file links</li>
+          <li>Removed 87+ legacy templates; moved a 1,973-line global script into React</li>
+          <li>Client rating 5.0/5 on every criterion</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="muted">PRs authored vs merged in one month</div>
+        <div class="bar"><i style="width:100%"></i></div><div class="muted">715 authored</div>
+        <div class="bar"><i style="width:98.2%"></i></div><div class="muted">702 merged · median 1.3 h</div>
+        <div class="muted" style="margin-top:12px">Share of repo commits in the period</div>
+        <div class="bar"><i style="width:98.7%"></i></div><div class="muted">98.7%</div>
+        <div class="muted" style="margin-top:12px">Pre-merge E2E gate</div>
+        <div class="bar"><i style="width:100%; background:#c9cfdc"></i></div><div class="muted">before: 33 min</div>
+        <div class="bar"><i style="width:9%"></i></div><div class="muted">after: 2-4 min</div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    Product source code is private; this page describes the process, not the product code. Numbers as of 2026-10-07 from the repository and GitHub.<br>
+    Mingyun Chae · <a href="mailto:coalsrbs7@gmail.com">coalsrbs7@gmail.com</a> · <a href="https://github.com/mg-mg-mg">GitHub</a>
+  </footer>
+</div>
+</body>
+</html>

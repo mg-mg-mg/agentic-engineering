@@ -1,5 +1,7 @@
 # One Engineer, an Agent Team: How I Ship a Production Product with AI Agents
 
+**Visual version:** [index.html](./index.html) (rendered page link will be added when published)
+
 *Mingyun Chae, October 2026. Case study of the delivery system behind [TriAstra](https://triastra.ai) and a client engagement in Singapore. Product source code is private; this document describes the process, not the product code.*
 
 ## TL;DR
@@ -36,22 +38,21 @@ Agents "work the queue": when a task ends they start the next authorized one ins
 
 ## 2. The system
 
-```
-                  Owner (product, priorities, irreversible approvals)
-                                   |
-        +--------------------------+---------------------------+
-        |                          |                           |
- Interactive lead sessions   Unattended Issue pool      Browser agent (QA/ops)
- (one per workstream:        (4 macOS LaunchAgent       live-product E2E, payments
-  deploy, lead, refactor,     workers, 180 s tick)      test mode, i18n/UX audits,
-  payments, ops/marketing)          |                   dashboards -> files Issues
-        |                   author -> reviewer ->              |
-  bounded workers in        verifier -> guarded merge   file mailbox + debug socket
-  isolated git worktrees            |                   to the coding sessions
-        +---------------> GitHub Issues / PRs / Project <------+
-                                   |
-            Gates: compile/generate-time static gate, tests, visual
-            regression, exact-hash locale review, release evidence
+```mermaid
+flowchart TB
+  O["Owner<br/>product, priorities, irreversible approvals"]
+  subgraph L["Agent lanes"]
+    A["Interactive lead sessions<br/>one per workstream<br/>workers in isolated worktrees"]
+    B["Unattended Issue pool<br/>4 LaunchAgent workers, 180 s tick<br/>author → reviewer → verifier → guarded merge"]
+    C["Browser agent<br/>live E2E, payments test mode,<br/>i18n/UX + dashboard audits"]
+  end
+  G[("GitHub Issues / PRs / Project")]
+  Q{{"Gates: compile/generate-time static gate · tests · visual regression · exact-hash locale review · release evidence"}}
+  O --> A & B & C
+  A --> G
+  B --> G
+  C -- files Issues --> G
+  G --> Q
 ```
 
 ### 2.1 Interactive lead sessions
