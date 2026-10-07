@@ -4,7 +4,7 @@
 
 *Replay from real repository timestamps (KST, 2026-10-07): a browser agent finds a bug, a lead session opens the fix, a separate reviewer approves at fixed SHAs, the owner authorizes merge and deploy. Issue to production deploy: 2 h 01 m.*
 
-**Visual version:** [index.html](./index.html) (rendered page link will be added when published)
+**Visual version (one page):** https://mg-mg-mg.github.io/agentic-engineering/
 
 *Mingyun Chae, October 2026. Case study of the delivery system behind [TriAstra](https://triastra.ai) and a client engagement in Singapore. Product source code is private; this document describes the process, not the product code.*
 
@@ -61,7 +61,7 @@ flowchart TB
 
 ### 2.1 Interactive lead sessions
 
-Each workstream has a long-lived lead session in a terminal agent harness. Tooling evolved with the work: TriAstra started on Codex and Claude Code, moved through oh-my-pi (omp), and now runs entirely on jcode; the client engagement used Codex and omp, then consolidated on omp. The rules live in the repository, not in a tool, so switching harnesses did not reset the process. A lead owns design, integration, and final verification, and delegates bounded slices to at most two workers, each in its own git worktree with explicit file ownership, acceptance criteria, and a stop condition. Generated surfaces (OpenAPI clients, SQLx metadata, l10n files, fixtures) get exactly one owner lane per task so agents never fight over the same files.
+Each workstream has a long-lived lead session in a terminal agent harness. Tooling evolved with the work: TriAstra started on Codex and Claude Code, moved through Oh My Pi (omp), and now runs entirely on jcode; the client engagement used Codex and omp, then consolidated on omp. The rules live in the repository, not in a tool, so switching harnesses did not reset the process. A lead owns design, integration, and final verification, and delegates bounded slices to at most two workers, each in its own git worktree with explicit file ownership, acceptance criteria, and a stop condition. Generated surfaces (OpenAPI clients, SQLx metadata, l10n files, fixtures) get exactly one owner lane per task so agents never fight over the same files.
 
 ### 2.2 The unattended Issue pool
 
@@ -78,7 +78,13 @@ Nothing unattended can deploy, submit to app stores, touch production data, move
 
 ### 2.3 A browser agent as a teammate
 
-A browser agent (Aside) handles everything that needs a real logged-in browser: end-to-end payment flows in test mode (checkout, refund, period-end cancel, revoke), live i18n and UX audits across all locales, and read-only audits of ops, analytics, and observability dashboards. It talks to the coding sessions through a file mailbox inside the repository and the harness debug socket, and turns findings into GitHub Issues that the coding lanes pick up. One example: during a payments migration it found that refunded reports kept generating (about 260k LLM input tokens per report). That became an Issue, was fixed by a coding lane, and was deployed the same day.
+A browser agent (Aside) handles everything that needs a real logged-in browser: end-to-end payment flows in test mode (checkout, refund, period-end cancel, revoke), live i18n and UX audits across all locales, and read-only audits of ops, analytics, and observability dashboards. It talks to the coding sessions through a file mailbox inside the repository and a local control channel of the harness, and turns findings into GitHub Issues that the coding lanes pick up. One example: during a payments migration it found that refunded reports kept generating (about 260k LLM input tokens per report). That became an Issue, was fixed by a coding lane, and was deployed the same day.
+
+### 2.4 Context for agents, with measured trust
+
+Agents navigate the codebase through two local code-intelligence tools: **CodeGraph** (symbol, call, import, and route lookup, served to jcode over MCP) and **Understand Anything** (an on-demand visual explanation of one subdirectory). Both are installed from checksum-pinned releases into a user cache, never via upstream installers that rewrite agent configs; telemetry and update checks are off; and a read boundary keeps credentials, key stores, Terraform state, and private data out of the index, with a test that keeps both tools' exclusion lists aligned.
+
+I don't take the tools on faith. An evaluation script scores the index against ground truth built from source (every handler bound in the router, word-bounded usages, curated direct calls) and fails if a metric drops below baseline. It found that route-to-handler recall was **8.5% (31 of 364)** because of an upstream defect with multi-line routes. The repository rule that follows: graph output is a navigation lead, not evidence; every caller, impact set, and route is confirmed in source before editing.
 
 ## 3. The gates that make speed safe
 

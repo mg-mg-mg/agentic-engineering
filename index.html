@@ -179,7 +179,7 @@
           <ul>
             <li>Live E2E: payment checkout, refund, cancel in test mode</li>
             <li>7-locale i18n/UX audits, dashboard audits</li>
-            <li>Files Issues to coding lanes via a repo mailbox and the harness debug socket</li>
+            <li>Files Issues to coding lanes via a repo mailbox and a local control channel of the harness</li>
           </ul>
         </div>
       </div>
@@ -193,7 +193,7 @@
         <span class="gate">Fail-closed main lease</span>
       </div>
     </div>
-    <p class="muted" style="margin-top:12px">Harness history: TriAstra started on Codex and Claude Code, moved through oh-my-pi, and now runs entirely on jcode. The rules live in the repository, not in a tool, so switching harnesses did not reset the process.</p>
+    <p class="muted" style="margin-top:12px">Harness history: TriAstra started on Codex and Claude Code, moved through Oh My Pi, and now runs entirely on jcode. The rules live in the repository, not in a tool, so switching harnesses did not reset the process.</p>
   </section>
 
   <section>
@@ -211,6 +211,16 @@
     <div class="never"><b>Never unattended:</b> deployments, app-store submissions, production data writes, payments, credential changes, external messages.</div>
   </section>
 
+
+  <section>
+    <h2>Context for agents, with measured trust</h2>
+    <p class="sub">Agents navigate the code through two local tools. I measured them instead of trusting them.</p>
+    <div class="grid two">
+      <div class="card"><b>CodeGraph</b> symbol, call, import, and route lookup, served to jcode over MCP.<br><b>Understand Anything</b> on-demand visual explanation of one subdirectory.<p class="muted" style="margin-top:10px">Checksum-pinned releases, no upstream installers, telemetry off, credential read boundary shared by both tools and enforced by a test.</p></div>
+      <div class="card"><div class="muted">Eval against source-derived ground truth</div><div class="metric" style="box-shadow:none;border:none;padding:6px 0 0"><div class="n">8.5%</div><div class="l">route-to-handler recall (31 of 364), traced to an upstream multi-line route defect</div></div><p class="muted" style="margin-top:6px">Rule that follows: graph output is a lead, never evidence. Every caller, impact set, and route is confirmed in source before editing.</p></div>
+    </div>
+  </section>
+
   <section>
     <h2>4. What I learned</h2>
     <div class="grid two">
@@ -225,7 +235,7 @@
 
   <section>
     <h2>5. Same system, client context</h2>
-    <p class="sub">One-month on-site contract, Singapore startup-accelerator B2B platform, existing Django + React codebase. Run on oh-my-pi after starting on Codex.</p>
+    <p class="sub">One-month on-site contract, Singapore startup-accelerator B2B platform, existing Django + React codebase. Run on Oh My Pi after starting on Codex.</p>
     <div class="case">
       <div class="card">
         <ul style="margin:0; padding-left:18px; font-size:14.5px">
