@@ -106,18 +106,18 @@
     <div class="eyebrow">Case study · October 2026</div>
     <h1>One engineer, an agent team.</h1>
     <p class="lead">How I build and operate a production product alone: AI agents write, review, verify, and merge the code, and I own architecture, acceptance criteria, quality gates, and every irreversible decision.</p>
-    <div class="who">Mingyun Chae · Senior Software Engineer · <a href="mailto:coalsrbs7@gmail.com">coalsrbs7@gmail.com</a> · <a href="https://github.com/mg-mg-mg">github.com/mg-mg-mg</a> · <a href="https://triastra.ai">triastra.ai</a> · <a href="https://github.com/mg-mg-mg/agentic-delivery-kit">reference code: agentic-delivery-kit</a></div>
+    <div class="who">Mingyun Chae · Senior Backend &amp; AI Agent Platform Engineer · <a href="mailto:coalsrbs7@gmail.com">coalsrbs7@gmail.com</a> · <a href="https://github.com/mg-mg-mg">github.com/mg-mg-mg</a> · <a href="https://triastra.ai">triastra.ai</a> · <a href="https://github.com/mg-mg-mg/agentic-delivery-kit">reference code: agentic-delivery-kit</a></div>
   </div>
 </header>
 
 <div class="wrap">
   <div class="grid metrics">
-    <div class="metric"><div class="n">1,600+</div><div class="l">users in 70+ countries for a 7-language product built and run by one person</div></div>
+    <div class="metric"><div class="n">1,600+</div><div class="l">registered users of a 7-language product built and run by one person</div></div>
     <div class="metric"><div class="n">1.9 h</div><div class="l">median from bug report to merged fix (24 bugs, Sep-Oct 2026)</div></div>
-    <div class="metric"><div class="n">6 days</div><div class="l">to turn a client's spreadsheet-only process into a server and 3 working portals</div></div>
+    <div class="metric"><div class="n">6 days</div><div class="l">to replace all 15 prototype screens of a client's 3-portal system with real, working ones</div></div>
     <div class="metric"><div class="n">19% · 0</div><div class="l">PRs sent back by independent AI reviewers · merged PRs reverted (of 231)</div></div>
   </div>
-  <p class="muted" style="margin-top:12px">Development runs on two flat-rate AI subscriptions. Throughput as supporting evidence: 10,143 commits since 2026-01-05 · 34-45 independently reviewed PRs merged per day (Oct 3-6) · 702 PRs merged in a month on the client project · pre-merge E2E gate 33 → 2-4 min.</p>
+  <p class="muted" style="margin-top:12px">Development runs on two flat-rate AI subscriptions. Throughput as supporting evidence: 10,143 commits since 2026-01-05 · 34-45 independently reviewed PRs merged per day (Oct 3-6) · 702 PRs merged in 30 days on the client project · 2-4 min pre-merge E2E smoke gate instead of the 33-min full suite.</p>
 
 
   <section>
@@ -184,7 +184,7 @@
           </ul>
         </div>
       </div>
-      <div class="hub">GitHub Issues · PRs · Project board &nbsp;|&nbsp; 310 Issues in the queue · 225 PRs merged since the review-gated flow began (Sep 2026)</div>
+      <div class="hub">GitHub Issues · PRs · Project board &nbsp;|&nbsp; 310 Issues in the queue · 231 PRs merged in the measured window (Sep 2026 to Oct 8)</div>
       <div class="gatesbar">
         <span class="gate">Cross-language compile/generate-time gate</span>
         <span class="gate">Contract-first OpenAPI → typed clients</span>
@@ -240,22 +240,22 @@
     <div class="case">
       <div class="card">
         <ul style="margin:0; padding-left:18px; font-size:14.5px">
-          <li>Spreadsheet-only process → 15-screen prototype → real server and 3 role-based portals in 6 days</li>
+          <li>Spreadsheet-only process → 15-screen prototype → real server and 3 role-based portals; all 15 screens made real in 6 days</li>
           <li>Meeting engine: availability, booking locks, reschedule state machine, time zones/DST, .ics</li>
           <li>Locked down 15 unauthenticated APIs, tiered access on 30 write APIs, signed private file links</li>
-          <li>Removed 87+ legacy templates; moved a 1,973-line global script into React</li>
+          <li>Removed all 156 legacy server-rendered templates (11.5k lines); moved a 1,973-line global script into React</li>
           <li>Client rating 5.0/5 on every criterion</li>
         </ul>
       </div>
       <div class="card">
-        <div class="muted">PRs authored vs merged in one month</div>
+        <div class="muted">PRs authored vs merged in 30 days</div>
         <div class="bar"><i style="width:100%"></i></div><div class="muted">715 authored</div>
         <div class="bar"><i style="width:98.2%"></i></div><div class="muted">702 merged · median 1.3 h</div>
         <div class="muted" style="margin-top:12px">Share of repo commits in the period</div>
         <div class="bar"><i style="width:98.7%"></i></div><div class="muted">98.7%</div>
-        <div class="muted" style="margin-top:12px">Pre-merge E2E gate</div>
-        <div class="bar"><i style="width:100%; background:#c9cfdc"></i></div><div class="muted">before: 33 min</div>
-        <div class="bar"><i style="width:9%"></i></div><div class="muted">after: 2-4 min</div>
+        <div class="muted" style="margin-top:12px">E2E check before every merge</div>
+        <div class="bar"><i style="width:100%; background:#c9cfdc"></i></div><div class="muted">full suite (585 tests): 33 min, too slow to gate</div>
+        <div class="bar"><i style="width:9%"></i></div><div class="muted">smoke gate (78 tests): 2-4 min, runs on every PR</div>
       </div>
     </div>
   </section>

@@ -16,14 +16,14 @@ I run software delivery as a small organization in which AI agents do almost all
 
 | Impact | Evidence |
 | --- | --- |
-| A full product shipped and run by one person | 7 languages on web, iOS, Android and a ChatGPT app; 1,600+ users in 70+ countries; D7 retention ~19-22% |
+| A full product shipped and run by one person | 7 languages on the web and as a ChatGPT app; 1,600+ registered users; ~130 new sign-ups a week |
 | Bugs are fixed in hours, not sprints | Median 1.9 h from bug report to merged fix (24 bugs, Sep 7 - Oct 8, 2026); one billing bug went from browser-agent discovery to production deploy in 2 h 01 m, stopping ~260k wasted LLM tokens per refunded report |
 | Speed without lowering the bar | Independent AI reviewers sent back 19% of PRs (45 of 231) before merge; 0 of 231 merged PRs reverted; median 22 minutes from PR opened to merged; 3,600+ server tests; nothing unattended can deploy, move money, or touch production data |
-| A client got a working product, not a mockup | A Singapore startup-accelerator operator's spreadsheet-only process became a server and 3 role-based portals in 6 days, delivered for the client's pilot; client rating 5.0/5 |
+| A client got a working product, not a mockup | A Singapore startup-accelerator operator's spreadsheet-only process became a working server and 3 role-based portals, with all 15 prototype screens replaced by real ones in 6 days, delivered for the client's pilot; client rating 5.0/5 |
 | Team-level output at subscription cost | The whole development system runs on two flat-rate AI subscriptions (production LLM and cloud costs are separate) |
 | Better tools for other engineers | My accuracy eval found 3 defects in CodeGraph (73k+ stars), all fixed upstream; the harness is open source as agentic-delivery-kit |
 
-Throughput, as supporting evidence only: 10,143 commits since 2026-01-05; 34-45 independently reviewed PRs merged per day (Oct 3-6, 2026); 702 PRs merged in one month on the client project (median 1.3 h); pre-merge E2E gate cut from 33 to 2-4 minutes.
+Throughput, as supporting evidence only: 10,143 commits since 2026-01-05; 34-45 independently reviewed PRs merged per day (Oct 3-6, 2026); 702 PRs merged in 30 days on the client project (median 1.3 h); a 2-4 minute pre-merge E2E smoke gate in place of the 33-minute full suite minutes.
 
 ## 1. The operating principle: owner attention is the scarcest resource
 
@@ -106,7 +106,7 @@ I don't take the tools on faith. An evaluation script scores the index against g
 
 ## 5. Same system, client context
 
-On a one-month on-site contract for a Singapore startup-accelerator B2B platform (existing Django + React codebase), the same approach (run on oh-my-pi after starting on Codex) let me act as the sole full-stack engineer: a spreadsheet-only process became a 15-screen prototype, then a real server and three role-based portals in six days; I built a meeting engine (availability, booking locks, reschedule state machine, time zones and DST, .ics), locked down 15 unauthenticated APIs and tiered 30 write APIs, removed 87+ legacy templates, and cut the pre-merge E2E gate from 33 minutes to 2-4 minutes. 715 PRs authored, 702 merged, client rating 5.0/5.
+On a one-month on-site contract for a Singapore startup-accelerator B2B platform (existing Django + React codebase), the same approach (run on oh-my-pi after starting on Codex) let me act as the sole full-stack engineer: a spreadsheet-only process became a 15-screen prototype, then a real server and three role-based portals, with every prototype screen replaced by a real one in six days; I built a meeting engine (availability, booking locks, reschedule state machine, time zones and DST, .ics), locked down 15 unauthenticated APIs and tiered 30 write APIs, removed all 156 legacy server-rendered templates (11.5k lines), and added a 2-4 minute pre-merge E2E smoke gate in place of the 33-minute full suite. 715 PRs authored, 702 merged, client rating 5.0/5.
 
 ---
 
