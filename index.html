@@ -194,7 +194,7 @@
         <span class="gate">Fail-closed main lease</span>
       </div>
     </div>
-    <p class="muted" style="margin-top:12px">Harness history: TriAstra started on Codex and Claude Code, moved through Oh My Pi, and now runs entirely on jcode. The rules live in the repository, not in a tool, so switching harnesses did not reset the process.</p>
+    <p class="muted" style="margin-top:12px">Harness history: TriAstra started on Codex and Claude Code, moved through Oh My Pi and jcode, and has now consolidated on Oh My Pi (omp). The rules live in the repository, not in a tool, so switching harnesses did not reset the process.</p>
   </section>
 
   <section>
@@ -217,7 +217,7 @@
     <h2>Context for agents, with measured trust</h2>
     <p class="sub">Agents navigate the code through two local tools. I measured them instead of trusting them.</p>
     <div class="grid two">
-      <div class="card"><b>CodeGraph</b> symbol, call, import, and route lookup, served to jcode over MCP.<br><b>Understand Anything</b> on-demand visual explanation of one subdirectory.<p class="muted" style="margin-top:10px">Checksum-pinned releases, no upstream installers, telemetry off, credential read boundary shared by both tools and enforced by a test.</p></div>
+      <div class="card"><b>CodeGraph</b> symbol, call, import, and route lookup, served to the coding harness over MCP.<br><b>Understand Anything</b> on-demand visual explanation of one subdirectory.<p class="muted" style="margin-top:10px">Checksum-pinned releases, no upstream installers, telemetry off, credential read boundary shared by both tools and enforced by a test.</p></div>
       <div class="card"><div class="muted">Eval against source-derived ground truth</div><div class="metric" style="box-shadow:none;border:none;padding:6px 0 0"><div class="n">8.5%</div><div class="l">route-to-handler recall (31 of 364), traced to an upstream multi-line route defect</div></div><p class="muted" style="margin-top:6px">Rule that follows: graph output is a lead, never evidence. Every caller, impact set, and route is confirmed in source before editing.</p></div>
     </div>
   </section>

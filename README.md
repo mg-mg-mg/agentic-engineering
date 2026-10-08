@@ -61,7 +61,7 @@ flowchart TB
 
 ### 2.1 Interactive lead sessions
 
-Each workstream has a long-lived lead session in a terminal agent harness. Tooling evolved with the work: TriAstra started on Codex and Claude Code, moved through Oh My Pi (omp), and now runs entirely on jcode; the client engagement used Codex and omp, then consolidated on omp. The rules live in the repository, not in a tool, so switching harnesses did not reset the process. A lead owns design, integration, and final verification, and delegates bounded slices to at most two workers, each in its own git worktree with explicit file ownership, acceptance criteria, and a stop condition. Generated surfaces (OpenAPI clients, SQLx metadata, l10n files, fixtures) get exactly one owner lane per task so agents never fight over the same files.
+Each workstream has a long-lived lead session in a terminal agent harness. Tooling evolved with the work: TriAstra started on Codex and Claude Code, moved through Oh My Pi (omp) and jcode, and has now consolidated on omp; the client engagement also used Codex and then omp. The rules live in the repository, not in a tool, so switching harnesses did not reset the process. A lead owns design, integration, and final verification, and delegates bounded slices to at most two workers, each in its own git worktree with explicit file ownership, acceptance criteria, and a stop condition. Generated surfaces (OpenAPI clients, SQLx metadata, l10n files, fixtures) get exactly one owner lane per task so agents never fight over the same files.
 
 ### 2.2 The unattended Issue pool
 
@@ -82,7 +82,7 @@ A browser agent (Aside) handles everything that needs a real logged-in browser: 
 
 ### 2.4 Context for agents, with measured trust
 
-Agents navigate the codebase through two local code-intelligence tools: **CodeGraph** (symbol, call, import, and route lookup, served to jcode over MCP) and **Understand Anything** (an on-demand visual explanation of one subdirectory). Both are installed from checksum-pinned releases into a user cache, never via upstream installers that rewrite agent configs; telemetry and update checks are off; and a read boundary keeps credentials, key stores, Terraform state, and private data out of the index, with a test that keeps both tools' exclusion lists aligned.
+Agents navigate the codebase through two local code-intelligence tools: **CodeGraph** (symbol, call, import, and route lookup, served to the coding harness over MCP) and **Understand Anything** (an on-demand visual explanation of one subdirectory). Both are installed from checksum-pinned releases into a user cache, never via upstream installers that rewrite agent configs; telemetry and update checks are off; and a read boundary keeps credentials, key stores, Terraform state, and private data out of the index, with a test that keeps both tools' exclusion lists aligned.
 
 I don't take the tools on faith. An evaluation script scores the index against ground truth built from source (every handler bound in the router, word-bounded usages, curated direct calls) and fails if a metric drops below baseline. It found that route-to-handler recall was **8.5% (31 of 364)** because of an upstream defect with multi-line routes. The repository rule that follows: graph output is a navigation lead, not evidence; every caller, impact set, and route is confirmed in source before editing.
 
