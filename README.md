@@ -4,6 +4,8 @@
 
 *Replay from real repository timestamps (KST, 2026-10-07): a browser agent finds a bug, a lead session opens the fix, a separate reviewer approves at fixed SHAs, the owner authorizes merge and deploy. Issue to production deploy: 2 h 01 m.*
 
+**Code (reference implementation):** https://github.com/mg-mg-mg/agentic-delivery-kit, a public-safe, configurable version of the dispatcher, lease, guards, and navigation eval, with 108 tests.
+
 **Visual version (one page):** https://mg-mg-mg.github.io/agentic-engineering/
 
 *Mingyun Chae, October 2026. Case study of the delivery system behind [TriAstra](https://triastra.ai) and a client engagement in Singapore. Product source code is private; this document describes the process, not the product code.*
