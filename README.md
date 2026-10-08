@@ -12,20 +12,18 @@
 
 ## TL;DR
 
-I run software delivery as a small organization in which AI agents do almost all of the implementation, review, verification, and bookkeeping, and I act as owner, architect, and final authority on irreversible decisions.
+I run software delivery as a small organization in which AI agents do almost all of the implementation, review, verification, and bookkeeping, and I act as owner, architect, and final authority on irreversible decisions. What matters is what it changed:
 
-| Metric | Value |
+| Impact | Evidence |
 | --- | --- |
-| TriAstra commits since first commit (2026-01-05) | 10,143 |
-| PRs merged since moving to a PR-gated, review-required flow (Sep 2026) | 225 |
-| PRs merged per day, Oct 3-6 2026 | 34 / 44 / 44 / 45 |
-| Issues tracked in the delivery queue | 310 |
-| Product surfaces | Web app (live), iOS and Android apps, admin/ops console, ChatGPT app integration (MCP), background workers |
-| Languages shipped | 7 locales; 6 managed through AI review gates |
-| Client engagement (Singapore B2B platform, 1 month) | 715 PRs authored, 702 merged, median time-to-merge 1.3 h, 98.7% of repo commits |
-| Pre-merge E2E gate on that engagement | 33 min down to 2-4 min |
+| A full product shipped and run by one person | 7 languages on web, iOS, Android and a ChatGPT app; 1,600+ users in 70+ countries; D7 retention ~19-22% |
+| Bugs reach production in hours, not sprints | A billing bug found by a browser agent went from issue to production deploy in 2 h 01 m, stopping ~260k wasted LLM tokens per refunded report |
+| Speed without lowering the bar | Every change is reviewed by a different agent at fixed commits and re-verified; reviews do block changes; 3,600+ server tests; nothing unattended can deploy, move money, or touch production data |
+| A client got a working product, not a mockup | A Singapore startup-accelerator operator's spreadsheet-only process became a server and 3 role-based portals in 6 days, delivered for the client's pilot; client rating 5.0/5 |
+| Team-level output at subscription cost | The whole development system runs on two flat-rate AI subscriptions |
+| Better tools for other engineers | My accuracy eval found 3 defects in CodeGraph (73k+ stars), all fixed upstream; the harness is open source as agentic-delivery-kit |
 
-Every merged PR in the gated flow requires review by a *different* agent than the author, against fixed head/base SHAs, plus checks reproduced by a separate verifier. Volume is the output; the gates are the product.
+Throughput, as supporting evidence only: 10,143 commits since 2026-01-05; 34-45 independently reviewed PRs merged per day (Oct 3-6, 2026); 702 PRs merged in one month on the client project (median 1.3 h); pre-merge E2E gate cut from 33 to 2-4 minutes.
 
 ## 1. The operating principle: owner attention is the scarcest resource
 
