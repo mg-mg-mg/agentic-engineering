@@ -119,7 +119,6 @@ Contact: coalsrbs7@gmail.com · GitHub [mg-mg-mg](https://github.com/mg-mg-mg)
 
 Built from the repository's own config, rules and GitHub history. Private repo: wording generalized, no source code.
 
-| | |
-|---|---|
-| ![Operating blueprint](./agent-blueprint.png) | ![Review that bites](./review-catch.png) |
-| **Operating blueprint**: model per role, decision rights, two sessions per change | **Review that bites**: a reviewer agent blocked a privacy leak before merge |
+![Review that bites](./review-catch.png)
+
+**Review that bites**: a reviewer agent blocked a privacy leak before merge.
