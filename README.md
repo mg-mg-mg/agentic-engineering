@@ -1,5 +1,9 @@
 # One Engineer, an Agent Team: How I Ship a Production Product with AI Agents
 
+[![Watch: one real bug, end to end in 30 seconds](./agent-loop-poster.jpg)](https://mg-mg-mg.github.io/agentic-engineering/#watch)
+
+▶ **[Watch the 30-second video](https://mg-mg-mg.github.io/agentic-engineering/#watch)**: a P0 bug, independent reviewer agents that blocked a privacy leak, the fix, merge and production verification. Real timestamps, wording generalized.
+
 ![Replay: Issue #499 to production in about two hours, every step by agents except two owner approvals](./agentic-replay.gif)
 
 *Replay from real repository timestamps (KST, 2026-10-07): a browser agent finds a bug, a lead session opens the fix, a separate reviewer approves at fixed SHAs, the owner authorizes merge and deploy. Issue to production deploy: 2 h 01 m.*
@@ -111,3 +115,16 @@ On a one-month on-site contract for a Singapore startup-accelerator B2B platform
 ---
 
 Contact: coalsrbs7@gmail.com · GitHub [mg-mg-mg](https://github.com/mg-mg-mg)
+
+## Evidence, as images
+
+Built from the repositories' own config, rules and GitHub history. Private repos: titles generalized, no source code. All five in one PDF: [agent-engineering-evidence.pdf](./agent-engineering-evidence.pdf).
+
+| | |
+|---|---|
+| ![Operating blueprint](./agent-blueprint.png) | ![Review that bites](./review-catch.png) |
+| **Operating blueprint**: model per role, decision rights, two sessions per change | **Review that bites**: a reviewer agent blocked a privacy leak before merge |
+| ![One week of agent work](./agent-week.png) | ![Every role, one engineer](./one-engineer-roles.png) |
+| **One week of agent work**: 78 PRs merged, 11 sent back first, 0 reverted | **Every role, one engineer**: what I own and what runs on agents |
+
+![Client project pipeline](./client-pipeline.png)
