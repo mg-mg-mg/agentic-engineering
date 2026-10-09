@@ -24,7 +24,6 @@ I run software delivery as a small organization in which AI agents do almost all
 | Bugs are fixed in hours, not sprints | Median 1.9 h from bug report to merged fix (24 bugs, Sep 7 - Oct 8, 2026); one billing bug went from browser-agent discovery to production deploy in 2 h 01 m, stopping ~260k wasted LLM tokens per refunded report |
 | Speed without lowering the bar | Independent AI reviewers sent back 19% of PRs (45 of 231) before merge; 0 of 231 merged PRs reverted; median 22 minutes from PR opened to merged; 3,600+ server tests; nothing unattended can deploy, move money, or touch production data |
 | A client got a working product, not a mockup | A Singapore startup-accelerator operator's spreadsheet-only process became a working server and 3 role-based portals, with all 15 prototype screens replaced by real ones in 6 days, delivered for the client's pilot; client rating 5.0/5 |
-| Team-level output at subscription cost | The whole development system runs on two flat-rate AI subscriptions (production LLM and cloud costs are separate) |
 | Better tools for other engineers | My accuracy eval found 3 defects in CodeGraph (73k+ stars), all fixed upstream; the harness is open source as agentic-delivery-kit |
 
 Throughput, as supporting evidence only: 10,143 commits since 2026-01-05; 34-45 independently reviewed PRs merged per day (Oct 3-6, 2026); 702 PRs merged in 30 days on the client project (median 1.3 h); a 2-4 minute pre-merge E2E smoke gate in place of the 33-minute full suite minutes.
@@ -118,13 +117,9 @@ Contact: coalsrbs7@gmail.com · GitHub [mg-mg-mg](https://github.com/mg-mg-mg)
 
 ## Evidence, as images
 
-Built from the repositories' own config, rules and GitHub history. Private repos: titles generalized, no source code. All five in one PDF: [agent-engineering-evidence.pdf](./agent-engineering-evidence.pdf).
+Built from the repository's own config, rules and GitHub history. Private repo: wording generalized, no source code.
 
 | | |
 |---|---|
 | ![Operating blueprint](./agent-blueprint.png) | ![Review that bites](./review-catch.png) |
 | **Operating blueprint**: model per role, decision rights, two sessions per change | **Review that bites**: a reviewer agent blocked a privacy leak before merge |
-| ![One week of agent work](./agent-week.png) | ![Every role, one engineer](./one-engineer-roles.png) |
-| **One week of agent work**: 78 PRs merged, 11 sent back first, 0 reverted | **Every role, one engineer**: what I own and what runs on agents |
-
-![Client project pipeline](./client-pipeline.png)

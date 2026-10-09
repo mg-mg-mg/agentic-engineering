@@ -124,7 +124,7 @@
     <div class="metric"><div class="n">6 days</div><div class="l">to replace all 15 prototype screens of a client's 3-portal system with real, working ones</div></div>
     <div class="metric"><div class="n">19% · 0</div><div class="l">PRs sent back by independent AI reviewers · merged PRs reverted (of 231)</div></div>
   </div>
-  <p class="muted" style="margin-top:12px">Development runs on two flat-rate AI subscriptions. Throughput as supporting evidence: 10,143 commits since 2026-01-05 · 34-45 independently reviewed PRs merged per day (Oct 3-6) · 702 PRs merged in 30 days on the client project · 2-4 min pre-merge E2E smoke gate instead of the 33-min full suite.</p>
+  <p class="muted" style="margin-top:12px">Throughput as supporting evidence: 10,143 commits since 2026-01-05 · 34-45 independently reviewed PRs merged per day (Oct 3-6) · 702 PRs merged in 30 days on the client project · 2-4 min pre-merge E2E smoke gate instead of the 33-min full suite.</p>
 
 
   <section class="watch" id="watch">
@@ -277,13 +277,10 @@
 
   <section id="evidence">
     <h2>The evidence, as images</h2>
-    <p class="sub">Built from the repositories' own config, rules and GitHub history. Private repos: titles generalized, no source code. <a href="agent-engineering-evidence.pdf">All five as one PDF</a>.</p>
+    <p class="sub">Built from the repository's own config, rules and GitHub history. Private repo: wording generalized, no source code.</p>
     <div class="gal">
       <figure><a href="agent-blueprint.png"><img src="agent-blueprint.png" alt="Operating blueprint: model per role, decision rights, two sessions per change" loading="lazy"></a><figcaption><b>Operating blueprint.</b> Model routing from config, decision rights from the repo contract, and why no agent grades its own work.</figcaption></figure>
       <figure><a href="review-catch.png"><img src="review-catch.png" alt="Reviewer agent blocked a privacy leak before merge" loading="lazy"></a><figcaption><b>Review that bites.</b> A reviewer agent blocked a fix that would have sent users' birth details to the error tracker; fixed with a regression test in 1 h 16 m.</figcaption></figure>
-      <figure><a href="agent-week.png"><img src="agent-week.png" alt="Calendar of 78 merged PRs in one week" loading="lazy"></a><figcaption><b>One week of agent work.</b> 78 PRs merged (Sep 28 to Oct 4), 11 sent back by review first, 0 reverted, 17 min median open to merge.</figcaption></figure>
-      <figure><a href="one-engineer-roles.png"><img src="one-engineer-roles.png" alt="Every role of a product team covered by me and my agents" loading="lazy"></a><figcaption><b>Every role, one engineer.</b> Which roles I own and which run on author, reviewer, verifier and browser agents.</figcaption></figure>
-      <figure style="grid-column:1 / -1"><a href="client-pipeline.png"><img src="client-pipeline.png" alt="Client project: issue pipeline and results" loading="lazy"></a><figcaption><b>Client project.</b> The issue pipeline I set up on a client's Django + React codebase: dispatcher, worker and separate reviewer agents, merge train, and a single human decision queue.</figcaption></figure>
     </div>
   </section>
 
