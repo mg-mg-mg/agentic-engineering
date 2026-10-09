@@ -124,7 +124,7 @@
     <div class="metric"><div class="n">6 days</div><div class="l">to replace all 15 prototype screens of a client's 3-portal system with real, working ones</div></div>
     <div class="metric"><div class="n">19% · 0</div><div class="l">PRs sent back by independent AI reviewers · merged PRs reverted (of 231)</div></div>
   </div>
-  <p class="muted" style="margin-top:12px">Throughput as supporting evidence: 10,143 commits since 2026-01-05 · 34-45 independently reviewed PRs merged per day (Oct 3-6) · 702 PRs merged in 30 days on the client project · 2-4 min pre-merge E2E smoke gate instead of the 33-min full suite.</p>
+  <p class="muted" style="margin-top:12px">Throughput as supporting evidence: 10,143 commits since 2026-01-05 · 34-45 independently reviewed PRs merged per day (Oct 3-6) · 668 PRs merged in September on the client project · 2-4 min pre-merge E2E smoke gate on every PR.</p>
 
 
   <section class="watch" id="watch">
@@ -251,26 +251,22 @@
 
   <section>
     <h2>5. Same system, client context</h2>
-    <p class="sub">One-month on-site contract, Singapore startup-accelerator B2B platform, existing Django + React codebase. Run on Oh My Pi after starting on Codex.</p>
+    <p class="sub">One-month on-site contract for a Singapore B2B startup, existing Django + React codebase. Run on Oh My Pi after starting on Codex.</p>
     <div class="case">
       <div class="card">
         <ul style="margin:0; padding-left:18px; font-size:14.5px">
-          <li>Spreadsheet-only process → 15-screen prototype → real server and 3 role-based portals; all 15 screens made real in 6 days</li>
+          <li>Manual workflow → 15-screen prototype → real server and 3 role-based portals; all 15 screens made real in 6 days</li>
           <li>Meeting engine: availability, booking locks, reschedule state machine, time zones/DST, .ics</li>
-          <li>Locked down 15 unauthenticated APIs, tiered access on 30 write APIs, signed private file links</li>
-          <li>Removed all 156 legacy server-rendered templates (11.5k lines); moved a 1,973-line global script into React</li>
+          <li>Hardened API authentication and role-based access; private files behind signed links</li>
+          <li>Retired the legacy server-rendered UI and moved its scripts into React</li>
           <li>Client rating 5.0/5 on every criterion</li>
         </ul>
       </div>
       <div class="card">
-        <div class="muted">PRs authored vs merged in 30 days</div>
-        <div class="bar"><i style="width:100%"></i></div><div class="muted">715 authored</div>
-        <div class="bar"><i style="width:98.2%"></i></div><div class="muted">702 merged · median 1.3 h</div>
-        <div class="muted" style="margin-top:12px">Share of repo commits in the period</div>
-        <div class="bar"><i style="width:98.7%"></i></div><div class="muted">98.7%</div>
+        <div class="muted">PRs merged in September</div>
+        <div class="bar"><i style="width:100%"></i></div><div class="muted">668</div>
         <div class="muted" style="margin-top:12px">E2E check before every merge</div>
-        <div class="bar"><i style="width:100%; background:#c9cfdc"></i></div><div class="muted">full suite (585 tests): 33 min, too slow to gate</div>
-        <div class="bar"><i style="width:9%"></i></div><div class="muted">smoke gate (78 tests): 2-4 min, runs on every PR</div>
+        <div class="bar"><i style="width:9%"></i></div><div class="muted">smoke gate: 2-4 min, runs on every PR</div>
       </div>
     </div>
   </section>
