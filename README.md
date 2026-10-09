@@ -1,8 +1,8 @@
 # One Engineer, an Agent Team: How I Ship a Production Product with AI Agents
 
-[![Watch: one real bug, end to end in 30 seconds](./agent-loop-poster.jpg)](https://mg-mg-mg.github.io/agentic-engineering/#watch)
+[![Watch: one real bug, end to end in 39 seconds](./agent-loop-poster.jpg)](https://mg-mg-mg.github.io/agentic-engineering/#watch)
 
-▶ **[Watch the 30-second video](https://mg-mg-mg.github.io/agentic-engineering/#watch)**: a P0 bug, independent reviewer agents that blocked a privacy leak, the fix, merge and production verification. Real timestamps, wording generalized.
+▶ **[Watch the 39-second video](https://mg-mg-mg.github.io/agentic-engineering/#watch)**: a release-blocking bug, a separate reviewer agent that kept personal data out of error reports, the fix, merge and production verification. Real timestamps, wording generalized.
 
 ![Replay: Issue #499 to production in about two hours, every step by agents except two owner approvals](./agentic-replay.gif)
 
@@ -119,6 +119,6 @@ Contact: coalsrbs7@gmail.com · GitHub [mg-mg-mg](https://github.com/mg-mg-mg)
 
 Built from the repository's own config, rules and GitHub history. Private repo: wording generalized, no source code.
 
-![Review that bites](./review-catch.png)
+![Independent review, before merge](./review-catch.png)
 
-**Review that bites**: a reviewer agent blocked a privacy leak before merge.
+**Independent review, before merge**: a separate reviewer agent kept personal data out of error reports.
