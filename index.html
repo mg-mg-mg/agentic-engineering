@@ -5,11 +5,33 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>One Engineer, an Agent Team | Mingyun Chae</title>
 <meta name="description" content="How I ship a production product as one engineer with an AI agent team: decision rights, parallel lanes, independent review and verification, and quality gates.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="One Engineer, an Agent Team | Mingyun Chae">
+<meta property="og:description" content="How I ship with AI agents: explicit ownership, independent review and owner approvals.">
+<meta property="og:url" content="https://mg-mg-mg.github.io/agentic-engineering/">
+<meta property="og:image" content="https://mg-mg-mg.github.io/agentic-engineering/agent-loop-poster.jpg">
+<meta property="og:image:alt" content="One real bug, end to end: independent review before merge">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="One Engineer, an Agent Team | Mingyun Chae">
+<meta name="twitter:description" content="How I ship with AI agents: explicit ownership, independent review and owner approvals.">
+<meta name="twitter:image" content="https://mg-mg-mg.github.io/agentic-engineering/agent-loop-poster.jpg">
+<meta name="twitter:image:alt" content="One real bug, end to end: independent review before merge">
 <style>
   :root { --ink:#14171f; --muted:#5b6475; --line:#e4e7ee; --bg:#f7f8fb; --card:#fff; --accent:#2f5bea; --accent2:#0f9d76; --warn:#c2410c; }
   * { box-sizing: border-box; }
   body { margin:0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, Arial, sans-serif; color:var(--ink); background:var(--bg); line-height:1.55; }
   .wrap { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
+  .skip { position:absolute; left:24px; top:-80px; padding:10px 16px; background:#fff; color:var(--ink); z-index:1; }
+  .skip:focus { top:12px; }
+  button { font:inherit; cursor:pointer; }
+  .replay button { background:#e8efff; color:#14171f; border:2px solid #9fb6ff; border-radius:6px; padding:6px 12px; }
+  :focus-visible { outline:3px solid #2f5bea; outline-offset:4px; }
+  caption { text-align:left; font-weight:600; padding-bottom:10px; }
+  .mt6 { margin-top:6px; } .mt10 { margin-top:10px; } .mt12 { margin-top:12px; } .mt16 { margin-top:16px; }
+  .decision { width:62%; }
+  .metric.flat { box-shadow:none; border:none; padding:6px 0 0; }
+  .case ul { margin:0; padding-left:18px; font-size:14.5px; }
+  .bar .full { width:100%; } .bar .smoke { width:9%; }
   header { background: linear-gradient(135deg, #10172a 0%, #1d2b5c 100%); color:#fff; padding: 56px 0 44px; }
   header .eyebrow { font-size: 13px; letter-spacing: .12em; text-transform: uppercase; opacity: .7; }
   header h1 { font-size: 40px; line-height: 1.15; margin: 10px 0 14px; letter-spacing: -.01em; }
@@ -64,7 +86,7 @@
   .watch video { width:100%; border-radius:16px; display:block; background:#0c1226; box-shadow:0 10px 30px rgba(16,23,42,.18); }
   .gal { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
   .gal figure { margin:0; background:var(--card); border:1px solid var(--line); border-radius:14px; overflow:hidden; }
-  .gal img { width:100%; display:block; }
+  .gal img { width:100%; height:auto; display:block; }
   .gal figcaption { padding:10px 14px 12px; font-size:13.5px; color:var(--muted); }
   .gal figcaption b { color:var(--ink); }
   @media (max-width: 860px) { .gal { grid-template-columns:1fr; } }
@@ -77,13 +99,13 @@
   .replay .hdr b { font-size:15px; }
   .replay .clock { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size:13px; color:#9fb6ff; }
   .track { position:relative; margin:26px 6px 8px; height:4px; background:#26304d; border-radius:4px; }
-  .track .fill { position:absolute; left:0; top:0; height:100%; background:linear-gradient(90deg,#4f7bff,#22c39a); border-radius:4px; width:0; }
+  .track .fill { position:absolute; left:0; top:0; height:100%; background:linear-gradient(90deg,#4f7bff,#22c39a); border-radius:4px; width:98%; }
   .track .dot { position:absolute; top:-6px; width:16px; height:16px; margin-left:-8px; border-radius:50%; background:#26304d; border:2px solid #3a4670; transition: background .3s, border-color .3s, box-shadow .3s; }
   .track .dot.on { background:#22c39a; border-color:#22c39a; box-shadow:0 0 0 6px rgba(34,195,154,.18); }
-  .track .token { position:absolute; top:-10px; width:24px; height:24px; margin-left:-12px; border-radius:6px; background:#4f7bff; box-shadow:0 0 18px rgba(79,123,255,.8); left:0; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; color:#fff; }
+  .track .token { position:absolute; top:-10px; width:24px; height:24px; margin-left:-12px; border-radius:6px; background:#4f7bff; box-shadow:0 0 18px rgba(79,123,255,.8); left:98%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; color:#fff; }
   .stages { display:grid; grid-template-columns: repeat(5, 1fr); gap:10px; margin-top:18px; }
-  .stage { background:#141c35; border:1px solid #26304d; border-radius:12px; padding:12px; font-size:12.5px; line-height:1.45; opacity:.35; transform: translateY(6px); transition: opacity .4s, transform .4s, border-color .4s; min-height:150px; }
-  .stage.on { opacity:1; transform:none; border-color:#3d5bd6; }
+  .stage { background:#141c35; border:1px solid #26304d; border-radius:12px; padding:12px; font-size:12.5px; line-height:1.45; transition:border-color .4s, background .4s; min-height:150px; }
+  .stage.on { background:#1e2e50; border-color:#9fb6ff; }
   .stage .t { font-family: ui-monospace, Menlo, monospace; color:#9fb6ff; font-size:12px; }
   .stage .who { display:inline-block; font-size:10.5px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; padding:2px 7px; border-radius:999px; margin:4px 0 6px; }
   .who.agent { background:#1e2e66; color:#a9bcff; } .who.rev { background:#123d33; color:#7de3c2; } .who.own { background:#4a2a14; color:#ffc59e; }
@@ -104,9 +126,11 @@
     .pipe { grid-template-columns: repeat(2, 1fr); row-gap: 18px; }
   }
   @media print { header { padding:28px 0 32px; } .metric, .card, .lane, .step { box-shadow:none; break-inside: avoid; } }
+  @media (prefers-reduced-motion: reduce) { .stage, .track .dot, .ticker .feed span { transition:none; } }
 </style>
 </head>
 <body>
+<a class="skip" href="#main">Skip to main content</a>
 
 <header>
   <div class="wrap">
@@ -117,30 +141,48 @@
   </div>
 </header>
 
-<div class="wrap">
+<main class="wrap" id="main">
   <div class="grid metrics">
     <div class="metric"><div class="n">1,600+</div><div class="l">registered users of a 7-language product built and run by one person</div></div>
-    <div class="metric"><div class="n">1.9 h</div><div class="l">median from bug report to merged fix (24 bugs, Sep-Oct 2026)</div></div>
+    <div class="metric"><div class="n">1.9 h</div><div class="l">median from bug report to merged fix (24 bugs, Sep 7–Oct 8, 2026)</div></div>
     <div class="metric"><div class="n">6 days</div><div class="l">to replace all 15 prototype screens of a client's 3-portal system with real, working ones</div></div>
-    <div class="metric"><div class="n">19% · 0</div><div class="l">PRs sent back by independent AI reviewers · merged PRs reverted (of 231)</div></div>
+    <div class="metric"><div class="n">19% · 0</div><div class="l">PRs sent back by independent AI reviewers · merged PRs reverted (of 231, Sep 11–Oct 8)</div></div>
   </div>
-  <p class="muted" style="margin-top:12px">Throughput as supporting evidence: 10,143 commits since 2026-01-05 · 34-45 independently reviewed PRs merged per day (Oct 3-6) · 668 PRs merged in September on the client project · 2-4 min pre-merge E2E smoke gate on every PR.</p>
+  <p class="muted mt12">Throughput as supporting evidence: 10,143 commits since 2026-01-05 · 34-45 independently reviewed PRs merged per day (Oct 3-6) · 668 PRs merged in September on the client project · 2-4 min pre-merge E2E smoke gate on every PR.</p>
 
 
   <section class="watch" id="watch">
     <h2>Watch: one real bug, end to end (39 s)</h2>
     <p class="sub">A release-blocking production bug, an author agent, a read-only reviewer agent in a separate session that kept personal data out of error reports, the fix, merge, and next-day production verification. Real timestamps, wording generalized.</p>
-    <video controls muted playsinline loop autoplay preload="metadata" poster="agent-loop-poster.jpg">
+    <video controls muted playsinline preload="none" poster="agent-loop-poster.jpg" aria-label="39-second review-catch video">
       <source src="agent-loop.mp4" type="video/mp4">
+      <a href="agent-loop.mp4">Download the silent video</a>.
     </video>
+    <p><a href="#review-transcript">Text equivalent of the video and evidence card</a></p>
+    <details id="review-transcript" class="card">
+      <summary>Transcript: independent review, before merge</summary>
+      <p>The silent video follows a release-blocking chart bug, not the refund replay below. Real PR, wording generalized; times in KST.</p>
+      <p>Title card: “One real bug, end to end. Report to verified fix, with an independent AI reviewer in the loop.”</p>
+      <ol>
+        <li><b>Sep 13, 21:21 — Owner reports:</b> valid chart requests fail for later dates; users get no chart.</li>
+        <li><b>23:40 — Author opens a PR:</b> extend the calculation range and improve error reporting. Elapsed: 2 h 19 m.</li>
+        <li><b>Sep 14, 00:15 — Read-only reviewers, code and architecture:</b> request changes in a separate session. New error reports would include users' personal details; keep them out of the external tracker. Elapsed: 2 h 54 m.</li>
+        <li><b>01:31 — Author pushes the fix:</b> remove personal details from error reports and add a regression test proving none reach the tracker. Elapsed: 4 h 10 m.</li>
+        <li><b>02:06 — Approval and merge:</b> reviewers rerun tests and lint on the exact merge result. Report to merge: 4 h 45 m.</li>
+        <li><b>Sep 15, 01:57 — Production verification:</b> the deployed build contains the fix; both error groups went quiet. Verified the next day.</li>
+      </ol>
+      <p>The evidence card shows sent-back-to-fixed: <b>1 h 16 m</b>; fix-to-approval: <b>35 m</b>; report-to-merge: <b>4 h 45 m</b>. Its lesson: an urgent fix still needs a separate session with a different job to ask what the error reports contain; writing and reviewing never happen in the same session.</p>
+      <p>Closing headline: “Since Sep 2026, every PR goes through that loop.” The video closes with the Sep 11–Oct 8, 2026 snapshot: <b>231 PRs merged, ~19% sent back first, 0 merged PRs reverted</b>, and <b>1.9 h</b> median bug-report-to-resolved time (24 bugs); <b>1,600+ registered users in 7 languages</b>. The counters animate through smaller intermediate values. The evidence card repeats ~19% and 0/231.</p>
+      <p>Closing message: agents write and review; I set priorities and approve every deploy. Mingyun Chae, Senior Backend &amp; AI Agent Platform Engineer; GitHub and this case study linked above; open to the UAE, Poland and remote.</p>
+    </details>
   </section>
 
   <section>
     <h2>Replay: one bug, from browser to production in about two hours</h2>
-    <p class="sub">Real timestamps (KST, 2026-10-07) from the repository's Issue and PR history. Agents did every step except the two Owner approvals.</p>
+    <p class="sub">A different example: the refund bug. Real timestamps (KST, 2026-10-07) from the repository's Issue and PR history; Issue to deploy: 2 h 01 m. Agents did every step except the two Owner approvals.</p>
     <div class="replay" id="replay">
-      <div class="hdr"><b>Issue #499 → PR #501 → production</b><span class="clock" id="rclock">03:10 KST</span></div>
-      <div class="track" id="rtrack"><div class="fill" id="rfill"></div><div class="token" id="rtoken">PR</div></div>
+      <div class="hdr"><b>Issue #499 → PR #501 → production</b><span class="clock" id="rclock">05:11 KST</span><button type="button" id="replay-toggle" aria-controls="replay" hidden>Pause replay</button></div>
+      <div class="track" id="rtrack" aria-hidden="true"><div class="fill" id="rfill"></div><div class="token" id="rtoken">PR</div></div>
       <div class="stages" id="rstages">
         <div class="stage"><div class="t">03:10</div><span class="who agent">browser agent</span><br>Test-mode refund E2E shows a refunded report <b>still generating</b> (~260k LLM tokens per report). Files Issue #499.</div>
         <div class="stage"><div class="t">03:37</div><span class="who agent">payments lead session</span><br>Opens PR #501 with evidence: new web/Flutter tests <b>fail without the fix</b>, pass with it.</div>
@@ -148,8 +190,8 @@
         <div class="stage"><div class="t">04:36</div><span class="who own">owner-authorized merge</span><br>Squash merge <span class="t">94fcb8c</span> into main, pinned to the reviewed head.</div>
         <div class="stage"><div class="t">05:11</div><span class="who own">owner-approved deploy</span><br>Production release <span class="t">79f534c4a</span> ships the fix with two other payment fixes.</div>
       </div>
-      <div class="total"><span>Issue filed → production deploy</span><span class="big" id="relapsed">0 h 00 m</span></div>
-      <div class="ticker"><span class="count" id="rcount">PRs merged that day (UTC): 0</span><div class="feed" id="rfeed"><span></span></div></div>
+      <div class="total"><span>Issue filed → production deploy</span><span class="big" id="relapsed">2 h 01 m</span></div>
+      <div class="ticker"><span class="count" id="rcount">PRs merged that day (UTC): 45</span><div class="feed" id="rfeed"><span>Replay complete: refund fix deployed</span></div></div>
       <div class="catch">Reviews are not rubber stamps: on PR #343 the first independent review returned <b>CHANGES_REQUESTED</b> with four findings; the author fixed them and the delta review returned MERGEABLE.</div>
     </div>
   </section>
@@ -159,35 +201,38 @@
     <p class="sub">The repo contract (AGENTS.md, ~63 KB plus nested rules and task skills) makes decision rights explicit. An agent that stops to ask for a decision it could make costs more than a reversible mistake it catches and fixes.</p>
     <div class="card">
       <table>
-        <tr><th style="width:62%">Decision</th><th>Who</th></tr>
+        <caption>Decision rights: agents act; the Owner approves irreversible effects</caption>
+        <thead><tr><th scope="col" class="decision">Decision</th><th scope="col">Who</th></tr></thead>
+        <tbody>
         <tr><td>Technical design, root-cause scope, refactoring, slicing, test strategy, task order</td><td><span class="pill agent">Agent decides</span> and reports why</td></tr>
         <tr><td>Defects found while working, tooling recovery, Issues, branches, worktrees, PRs, docs and rule updates</td><td><span class="pill agent">Agent acts</span> then records</td></tr>
         <tr><td>Deployment, store submission, payments, production data, external messages, spending, credentials</td><td><span class="pill owner">Owner approves</span> asked once, with a recommendation</td></tr>
         <tr><td>Product direction, pricing, user-facing policy, final Korean copy</td><td><span class="pill owner">Owner decides</span> agents keep working meanwhile</td></tr>
+        </tbody>
       </table>
     </div>
   </section>
 
   <section>
-    <h2>2. The system</h2>
-    <p class="sub">Three kinds of agent lanes feed one GitHub queue, and everything passes the same gates.</p>
+    <h2>2. Current system: native OMP</h2>
+    <p class="sub">One authorized LEADER owns delivery. Root roles define ownership, not a claim that every role is running.</p>
     <div class="sys">
       <div class="owner-box">Owner<span>product, priorities, irreversible approvals</span></div>
       <div class="lanes">
         <div class="lane">
-          <h3>Interactive lead sessions</h3>
+          <h3>Root roles</h3>
           <ul>
-            <li>One long-lived lead per workstream: deploy, lead, refactor, payments, ops/marketing</li>
-            <li>Lead owns design, integration, final verification</li>
-            <li>Delegates bounded slices to workers in isolated git worktrees, one owner per generated surface</li>
+            <li>LEADER &amp; DELIVERY: queue admission, integration, merge and cleanup</li>
+            <li>RELEASE, DISCOVERY, OPS &amp; GROWTH, BILLING MIGRATION: specialist ownership and handoffs to LEADER</li>
+            <li>Capacity follows host authorization and measured memory headroom, not a fixed worker count</li>
           </ul>
         </div>
         <div class="lane b">
-          <h3>Unattended Issue pool</h3>
+          <h3>Author → independent review</h3>
           <ul>
-            <li>4 macOS LaunchAgent workers, 180 s tick</li>
-            <li>Each claims one unowned P1/P2 bug or maintenance Issue</li>
-            <li>Author, reviewer, verifier are separate processes with separate permissions (below)</li>
+            <li>One sole branch author, one task worktree; generated surfaces have one owner lane</li>
+            <li>Distinct read-only reviewer at fixed head/base SHAs; highest matching risk tier sets effort</li>
+            <li>Delta re-review returns to the original reviewer while available</li>
           </ul>
         </div>
         <div class="lane c">
@@ -206,24 +251,32 @@
         <span class="gate">Visual regression</span>
         <span class="gate">Exact-hash LLM locale review</span>
         <span class="gate">Root cause + regression ratchet</span>
-        <span class="gate">Fail-closed main lease</span>
+        <span class="gate">Integration main lease · separate release lock</span>
       </div>
     </div>
-    <p class="muted" style="margin-top:12px">Harness history: TriAstra started on Codex and Claude Code, moved through Oh My Pi and jcode, and has now consolidated on Oh My Pi (omp). The rules live in the repository, not in a tool, so switching harnesses did not reset the process.</p>
+    <p class="muted mt12">Harness history: TriAstra started on Codex and Claude Code, moved through Oh My Pi and jcode, and has now consolidated on Oh My Pi (omp). The rules live in the repository, not in a tool, so switching harnesses did not reset the process.</p>
+    <p class="muted">Worktree contract: inspect existing lanes, claims and prerequisites; fetch through the existing guard; create or reuse one task-specific lane from the integration head and record its starting SHA. Verify checkout identity, clean status and the authorized environment link. No duplicate lanes or stacked task branches; dependencies wait for main.</p>
+    <p class="muted">Trusted OMP configuration is not an enforced sandbox. Actual host permissions, authorization, single-writer ownership, owner approvals and independent review are the boundaries.</p>
   </section>
 
   <section>
-    <h2>3. One unattended Issue, end to end</h2>
-    <p class="sub">The author can write code but cannot reach the network; the only process with credentials is the dispatcher, and only for the write it is about to make.</p>
+    <h2>3. One Issue, end to end today</h2>
+    <p class="sub">Proportionate changed-path proof, not blanket repetition. Native Cargo/Flutter tool locks and measured memory headroom govern heavy concurrency; there are no repository Cargo slots.</p>
     <div class="pipe">
-      <div class="step"><b>Claim</b>Worker picks one unowned P1/P2 Issue from a full Project/PR/dependency snapshot.<span class="perm">excludes payments, holds, owned work</span></div>
-      <div class="step"><b>Author</b>Implements and runs local checks in an offline worktree sandbox.<span class="perm">no network, no secrets, no git push</span></div>
-      <div class="step"><b>Dispatcher</b>Validates Issue state, reviews the diff, publishes the PR, verifies the remote head.<span class="perm">only process with GitHub write</span></div>
-      <div class="step"><b>Reviewer</b>Separate read-only model reviews fixed head/base SHAs against acceptance criteria.<span class="perm">read-only</span></div>
-      <div class="step"><b>Verifier</b>Separate credentialless process reruns the chosen checks; must not change the head.<span class="perm">no credentials</span></div>
-      <div class="step"><b>Guarded merge</b>Intent saved, squash merge pinned to reviewed head, parent/tree verified, evidence posted.<span class="perm">then Issue/Project reconciled</span></div>
+      <div class="step"><b>Admit</b>LEADER checks the canonical queue, prerequisites, holds and existing ownership.<span class="perm">one authorized coordinator</span></div>
+      <div class="step"><b>Author</b>Sole branch writer implements, checks and publishes from the task lane.<span class="perm">explicit file ownership</span></div>
+      <div class="step"><b>Review</b>Distinct read-only reviewer assesses fixed head/base SHAs.<span class="perm">high: sensitive contracts, security, payments, delivery/governance; medium: other code/scripts; low: only if all paths qualify</span></div>
+      <div class="step"><b>Prove</b>Necessary independently observed changed-path checks; docs-only reference/policy checks, not product builds.<span class="perm">separate verifier only where required</span></div>
+      <div class="step"><b>Integrate</b>LEADER pins the reviewed head under the main lease, verifies head/base and resulting parent/tree.<span class="perm">release uses a separate lock</span></div>
+      <div class="step"><b>Reconcile + clean</b>LEADER updates Issue/Project and cleans the merged lane in the same pass after preservation checks.<span class="perm">sweeps clean older merged lanes; failed checks preserve the lane with a recorded reason</span></div>
     </div>
-    <div class="loop">Findings or failed checks go back to the same author lane. Every revision needs a new head, a fresh review, and passing verification, until mergeable or a 5-hour budget expires.</div>
+    <div class="loop">Findings return to the author; changed head/base gets delta re-review by the original reviewer while available. Reuse proof only after inspecting logs and proving relevant inputs equivalent; retain original tested SHAs and disclose gaps. Never repeat whole suites just to relabel evidence.</div>
+    <details class="card mt16">
+      <summary>Sep 27 – Oct 8, 2026: unattended Issue pool (historical; final configuration from Oct 7)</summary>
+      <p>In its final configuration from Oct 7, the retired dispatcher ran four macOS LaunchAgent workers on a 180-second tick, each claiming one unowned P1/P2 bug or maintenance Issue. Payments, Owner holds, unresolved dependencies and owned work were excluded.</p>
+      <p>An offline, minimal-read author sandbox had no secrets, credentials, network, commit or push access. A trusted dispatcher validated state, reviewed the diff, disabled candidate hooks, published the PR and verified its head. Separate read-only review at fixed SHAs and credentialless verification returned findings to the author for a new head, fresh review and checks, within a five-hour budget.</p>
+      <p>Guarded merge saved intent, pinned the squash merge, checked parent/tree and reconciled Issue/Project with evidence. The offline isolation taught least-privilege lessons; it is not today's trusted OMP permission model. <a href="https://github.com/mg-mg-mg/agentic-delivery-kit">Historical reference code</a>.</p>
+    </details>
     <div class="never"><b>Never unattended:</b> deployments, app-store submissions, production data writes, payments, credential changes, external messages.</div>
   </section>
 
@@ -232,8 +285,8 @@
     <h2>Context for agents, with measured trust</h2>
     <p class="sub">Agents navigate the code through two local tools. I measured them instead of trusting them.</p>
     <div class="grid two">
-      <div class="card"><b>CodeGraph</b> symbol, call, import, and route lookup, served to the coding harness over MCP.<br><b>Understand Anything</b> on-demand visual explanation of one subdirectory.<p class="muted" style="margin-top:10px">Checksum-pinned releases, no upstream installers, telemetry off, credential read boundary shared by both tools and enforced by a test.</p></div>
-      <div class="card"><div class="muted">Eval against source-derived ground truth</div><div class="metric" style="box-shadow:none;border:none;padding:6px 0 0"><div class="n">8.5%</div><div class="l">route-to-handler recall (31 of 364), traced to an upstream multi-line route defect</div></div><p class="muted" style="margin-top:6px">Rule that follows: graph output is a lead, never evidence. Every caller, impact set, and route is confirmed in source before editing.</p></div>
+      <div class="card"><b>CodeGraph</b> symbol, call, import, and route lookup, served to the coding harness over MCP.<br><b>Understand Anything</b> on-demand visual explanation of one subdirectory.<p class="muted mt10">Checksum-pinned releases, no upstream installers, telemetry off, credential read boundary shared by both tools and enforced by a test.</p></div>
+      <div class="card"><div class="muted">Eval against source-derived ground truth</div><div class="metric flat"><div class="n">8.5%</div><div class="l">route-to-handler recall (31 of 364), traced to an upstream multi-line route defect</div></div><p class="muted mt6">Rule that follows: graph output is a lead, never evidence. Every caller, impact set, and route is confirmed in source before editing.</p></div>
     </div>
   </section>
 
@@ -241,8 +294,8 @@
     <h2>4. What I learned</h2>
     <div class="grid two">
       <div class="card lesson"><div class="k">1</div><p><b>Throughput is cheap; trust is expensive.</b>The bottleneck moved from writing code to acceptance criteria and gates that make agent output trustworthy without reading every line.</p></div>
-      <div class="card lesson"><div class="k">2</div><p><b>Separate the roles.</b>A model reviewing its own work misses the same things. Separate author, reviewer, and verifier processes catch far more.</p></div>
-      <div class="card lesson"><div class="k">3</div><p><b>Least privilege for agents.</b>Authors need no network and no secrets. Credentials live only where a specific write happens.</p></div>
+      <div class="card lesson"><div class="k">2</div><p><b>Separate the roles.</b>A model reviewing its own work misses the same things. A distinct read-only reviewer and proportionate independent proof matter more than repeating every check.</p></div>
+      <div class="card lesson"><div class="k">3</div><p><b>Least privilege for agents.</b>The historical dispatcher isolated offline authors from credentials. Today's trusted OMP relies on host authorization, single-writer ownership and owner approvals, not a claimed sandbox.</p></div>
       <div class="card lesson"><div class="k">4</div><p><b>Write the rules where agents read them.</b>Decision rights and workflows live in versioned repo docs, so every session starts from the same contract and rules improve through PRs.</p></div>
       <div class="card lesson"><div class="k">5</div><p><b>Find errors before runtime.</b>Typed contracts and generated clients turn agent mistakes into build failures instead of production incidents.</p></div>
       <div class="card lesson"><div class="k">6</div><p><b>Spend human attention on the irreversible.</b>I approve deploys, payments, pricing, and policy. Almost everything else is delegated and audited.</p></div>
@@ -254,7 +307,7 @@
     <p class="sub">One-month on-site contract for a Singapore B2B startup, existing Django + React codebase. Run on Oh My Pi after starting on Codex.</p>
     <div class="case">
       <div class="card">
-        <ul style="margin:0; padding-left:18px; font-size:14.5px">
+        <ul>
           <li>Manual workflow → 15-screen prototype → real server and 3 role-based portals; all 15 screens made real in 6 days</li>
           <li>Meeting engine: availability, booking locks, reschedule state machine, time zones/DST, .ics</li>
           <li>Hardened API authentication and role-based access; private files behind signed links</li>
@@ -264,9 +317,9 @@
       </div>
       <div class="card">
         <div class="muted">PRs merged in September</div>
-        <div class="bar"><i style="width:100%"></i></div><div class="muted">668</div>
-        <div class="muted" style="margin-top:12px">E2E check before every merge</div>
-        <div class="bar"><i style="width:9%"></i></div><div class="muted">smoke gate: 2-4 min, runs on every PR</div>
+        <div class="bar"><i class="full"></i></div><div class="muted">668</div>
+        <div class="muted mt12">E2E check before every merge</div>
+        <div class="bar"><i class="smoke"></i></div><div class="muted">smoke gate: 2-4 min, runs on every PR</div>
       </div>
     </div>
   </section>
@@ -275,12 +328,14 @@
     <h2>The evidence, as images</h2>
     <p class="sub">Built from the repository's own config, rules and GitHub history. Private repo: wording generalized, no source code.</p>
     <div class="gal">
-      <figure><a href="review-catch.png"><img src="review-catch.png" alt="A separate reviewer agent kept personal data out of error reports before merge" loading="lazy"></a><figcaption><b>Independent review, before merge.</b> A separate reviewer agent kept personal data out of error reports; fixed with a regression test in 1 h 16 m.</figcaption></figure>
+      <figure><a href="review-catch.png"><img src="review-catch.png" alt="A separate reviewer agent kept personal data out of error reports before merge" loading="lazy" width="1920" height="1080"></a><figcaption><b>Independent review, before merge.</b> A separate reviewer agent kept personal data out of error reports; fixed with a regression test in 1 h 16 m. <a href="#review-transcript">Read the text equivalent</a>.</figcaption></figure>
     </div>
   </section>
+</main>
+<div class="wrap">
 
   <footer>
-    Product source code is private; this page describes the process, not the product code. Numbers as of 2026-10-07 from the repository and GitHub.<br>
+    Product source code is private; this page describes the process, not the product code. Current workflow as of October 10, 2026; outcome snapshots through October 8 from the repository and GitHub. Review window: Sep 11–Oct 8; bug timing: Sep 7–Oct 8; other windows stated beside each figure.<br>
     Mingyun Chae · <a href="mailto:coalsrbs7@gmail.com">coalsrbs7@gmail.com</a> · <a href="https://github.com/mg-mg-mg">GitHub</a>
   </footer>
 </div>
@@ -315,8 +370,34 @@
     cnt.textContent = 'PRs merged that day (UTC): ' + n;
     const ti = Math.floor(ms / 700) % titles.length; if (feed.dataset.i != ti) { feed.dataset.i = ti; feed.textContent = '✓ ' + titles[ti]; }
   }
-  let paused = false; window.__replaySet = t => { paused = true; render(t); };
-  const t0 = performance.now(); (function loop(now){ if (!paused) render(now - t0); requestAnimationFrame(loop); })(t0);
+  const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const toggle = document.getElementById('replay-toggle');
+  let paused = motion.matches, elapsed = 0, last = null, frame = null;
+  function completed(){
+    render(D * 0.99);
+    clock.textContent = '05:11 KST'; el.textContent = '2 h 01 m';
+    feed.textContent = 'Replay complete: refund fix deployed';
+  }
+  function loop(now){
+    if (paused) return;
+    if (last !== null) elapsed += now - last;
+    last = now; render(elapsed); frame = requestAnimationFrame(loop);
+  }
+  function pause(){
+    paused = true; cancelAnimationFrame(frame); last = null;
+    toggle.textContent = 'Resume replay';
+  }
+  toggle.hidden = false;
+  toggle.addEventListener('click', () => {
+    if (!paused) { pause(); return; }
+    paused = false; last = null; toggle.textContent = 'Pause replay';
+    frame = requestAnimationFrame(loop);
+  });
+  motion.addEventListener('change', event => {
+    if (event.matches) { pause(); completed(); }
+  });
+  if (paused) { completed(); toggle.textContent = 'Play replay'; }
+  else frame = requestAnimationFrame(loop);
 })();
 </script>
 </body>
