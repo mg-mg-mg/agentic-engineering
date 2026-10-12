@@ -20,7 +20,7 @@ I run software delivery as a small organization in which AI agents do almost all
 
 | Impact | Evidence |
 | --- | --- |
-| A full product shipped and run by one person | 7 languages on the web and as a ChatGPT app; 1,600+ registered users; ~130 new sign-ups a week |
+| A full product shipped and run by one person | 7 languages on the web and as a ChatGPT app; 1,700+ registered users; ~200 new sign-ups a week |
 | Bugs are fixed in hours, not sprints | Median 1.9 h from bug report to resolved fix (24 bugs, Sep 7 - Oct 8, 2026); one billing bug went from browser-agent discovery to production deploy in 2 h 01 m, stopping ~260k wasted LLM tokens per refunded report |
 | Speed without lowering the bar | Independent AI reviewers sent back ~19% of PRs before merge; 0 of 231 merged PRs reverted; median 22 minutes from PR opened to merged; 3,600+ server tests; nothing unattended can deploy, move money, or touch production data |
 | A client got a working product, not a mockup | A Singapore client's manual workflow became a working server and 3 role-based portals, with all 15 prototype screens replaced by real ones in 6 days, delivered for the client's pilot; client rating 5.0/5 |
