@@ -4,8 +4,6 @@
 
 ▶ **[Watch the 39-second video](https://mg-mg-mg.github.io/agentic-engineering/#watch)**: a release-blocking bug, a separate reviewer agent that kept personal data out of error reports, the fix, merge and production verification. Real timestamps, wording generalized.
 
-![Replay: Issue #499 to production deploy in 2 h 01 m, every step by agents except two owner approvals](./agentic-replay.gif)
-
 *Replay from real repository timestamps (KST, 2026-10-07): a browser agent finds a bug, a lead session opens the fix, a separate reviewer approves at fixed SHAs, the owner authorizes merge and deploy. Issue to production deploy: 2 h 01 m.*
 
 **Code (reference implementation):** https://github.com/mg-mg-mg/agentic-delivery-kit, a public-safe, configurable version of the dispatcher, lease, guards, and navigation eval, with 108 tests.
@@ -109,7 +107,7 @@ I don't take the tools on faith. An evaluation script scores the index against g
 
 ## 5. Same system, client context
 
-On a one-month on-site contract for a Singapore B2B startup (existing Django + React codebase), the same approach (run on oh-my-pi after starting on Codex) let me act as the sole full-stack engineer: a manual workflow became a 15-screen prototype, then a real server and three role-based portals, with every prototype screen replaced by a real one in six days; I built a meeting engine (availability, booking locks, reschedule state machine, time zones and DST, .ics), hardened API authentication and role-based access, retired the legacy server-rendered UI, and added a 2-4 minute pre-merge E2E smoke gate on every PR. 668 PRs merged in September, client rating 5.0/5.
+On a one-month on-site contract for a Singapore B2B startup (existing Django + React codebase), the same approach (run on Oh My Pi (omp) after starting on Codex) let me act as the sole developer (I deployed to the dev server; the client's in-house developer released to the test and production servers): a manual workflow became a 15-screen prototype, then a real server and three role-based portals, with every prototype screen replaced by a real one in six days; I built a meeting engine (availability, booking locks, reschedule state machine, time zones and DST, .ics), hardened API authentication and role-based access, retired the legacy server-rendered UI, and added a 2-4 minute pre-merge E2E smoke gate on every PR. 668 PRs merged in September, client rating 5.0/5.
 
 ---
 
