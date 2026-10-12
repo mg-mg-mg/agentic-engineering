@@ -1,126 +1,104 @@
 # One Engineer, an Agent Team: How I Ship a Production Product with AI Agents
 
-[![Watch: one real bug, end to end in 39 seconds](./agent-loop-poster.jpg)](https://mg-mg-mg.github.io/agentic-engineering/#watch)
+Independent review caught a privacy problem in a chart-calculation-range fix before merge. In a separate October 2026 billing case, a browser agent found that refunded reports continued generating; an author fixed it, a separate reviewer checked it, and the fix reached production. These are distinct examples of the process, not interchangeable evidence.
 
-▶ **[Watch the 39-second video](https://mg-mg-mg.github.io/agentic-engineering/#watch)**: a release-blocking bug, a separate reviewer agent that kept personal data out of error reports, the fix, merge and production verification. Real timestamps, wording generalized.
+**Reference code:** [agentic-delivery-kit](https://github.com/mg-mg-mg/agentic-delivery-kit) contains a historical/synthetic dispatcher reference and reusable lease, guards and navigation evaluation mechanisms. It is not the current native OMP workflow or a demonstrated OMP adapter; synthetic tests do not establish live sandbox containment.
 
-*Replay from real repository timestamps (KST, 2026-10-07): a browser agent finds a bug, a lead session opens the fix, a separate reviewer approves at fixed SHAs, the owner authorizes merge and deploy. Issue to production deploy: 2 h 01 m.*
+**Visual version:** https://mg-mg-mg.github.io/agentic-engineering/
 
-**Code (reference implementation):** https://github.com/mg-mg-mg/agentic-delivery-kit, a public-safe, configurable version of the dispatcher, lease, guards, and navigation eval, with 108 tests.
-
-**Visual version (one page):** https://mg-mg-mg.github.io/agentic-engineering/
-
-*Mingyun Chae, October 2026. Case study of the delivery system behind [TriAstra](https://triastra.ai) and a client engagement in Singapore. Product source code is private; this document describes the process, not the product code.*
+*Mingyun Chae · October 2026. Case study of the delivery process behind [TriAstra](https://triastra.ai) and a client engagement. Product source code is private. Current-practice description checked against maintained main-branch rules on 2026-10-13; measurements below are older snapshots, not current rates.*
 
 ## TL;DR
 
-I run software delivery as a small organization in which AI agents do almost all of the implementation, review, verification, and bookkeeping, and I act as owner, architect, and final authority on irreversible decisions. What matters is what it changed:
+AI agents carry implementation, independent review, risk-selected verification and bookkeeping. I own product direction, priorities and the boundaries of standing authority, rather than every engineering decision.
 
-| Impact | Evidence |
+| Impact | Historical evidence |
 | --- | --- |
-| A full product shipped and run by one person | 7 languages on the web and as a ChatGPT app; 1,700+ registered users; ~200 new sign-ups a week |
-| Bugs are fixed in hours, not sprints | Median 1.9 h from bug report to resolved fix (24 bugs, Sep 7 - Oct 8, 2026); one billing bug went from browser-agent discovery to production deploy in 2 h 01 m, stopping ~260k wasted LLM tokens per refunded report |
-| Speed without lowering the bar | Independent AI reviewers sent back ~19% of PRs before merge; 0 of 231 merged PRs reverted; median 22 minutes from PR opened to merged; 3,600+ server tests; nothing unattended can deploy, move money, or touch production data |
-| A client got a working product, not a mockup | A Singapore client's manual workflow became a working server and 3 role-based portals, with all 15 prototype screens replaced by real ones in 6 days, delivered for the client's pilot; client rating 5.0/5 |
-| Better tools for other engineers | My accuracy eval found 3 defects in CodeGraph (73k+ stars), all fixed upstream; the harness is open source as agentic-delivery-kit |
+| A product built and run by one person | Seven languages on the web and as a ChatGPT app; 1,700+ registered users as of 2026-10-07 (not an active-user or paying-user count) |
+| Bugs resolved in hours | Median 1.9 h from bug report to resolved fix across 24 bugs, 2026-09-07 through 2026-10-08 |
+| Independent review changes outcomes | About 19% of reviewed PRs sent back before merge; 0 of 231 merged PRs reverted during 2026-09-11 through 2026-10-08. No reversions does not mean no regressions |
+| A client received working software | A manual workflow became a working server and role-based interfaces, with scheduling, access controls and a pre-merge E2E smoke gate |
 
-Throughput, as supporting evidence only: 10,143 commits since 2026-01-05; 34-45 independently reviewed PRs merged per day (Oct 3-6, 2026); 668 PRs merged in September on the client project; a 2-4 minute pre-merge E2E smoke gate on every PR.
+Supporting throughput: 34–45 independently reviewed PRs merged per day during 2026-10-03 through 2026-10-06. These historical observations do not measure the effect of the newer workflow.
 
-## 1. The operating principle: owner attention is the scarcest resource
+## 1. Owner attention is the scarcest resource
 
-The repository's root contract (`AGENTS.md`, about 63 KB plus nested files and task skills) starts from one rule: an agent that stops to ask for a decision it could make itself costs more than a reversible mistake that it catches and fixes.
+The repository contract makes decision rights explicit: an agent should decide ordinary engineering questions, act, and report its reasons. Architecture-level choices are delegated; my involvement is discretionary, not a mandatory gate.
 
-Decision rights are explicit:
-
-| Decision | Who decides |
+| Decision | Authority |
 | --- | --- |
-| Technical design, root-cause scope, refactoring, slicing, test strategy, task order | Agent decides, acts, reports the reason |
-| Defects found while working, tooling recovery, Issues, labels, branches, worktrees, PRs, docs and rule updates | Agent acts, then records |
-| Deployment, store submission, payments, production data writes, external messages, spending, credentials | Owner, asked once with a recommendation |
-| Product direction, pricing, user-facing policy, final Korean copy | Owner, asked once; agent keeps working on everything else |
+| Technical design, root-cause scope, refactoring, slicing, test strategy and task order | Agent decides and reports why |
+| Tooling recovery, Issues, branches, worktrees, PRs, documentation and rule updates | Agent acts within scope, then records |
+| Reviewed, verified code merge and criteria-based Issue/Project reconciliation | Standing authority within the original task scope; local-only, PR-only or review-only limits remain binding |
+| Ordinary production release of an exact reviewed main-branch commit | RELEASE decides necessity under bounded standing approval, with readiness, full-gate evidence and post-release readback; no per-commit Owner prompt |
+| Money, live payment operations, stores, external sends, production data/Ops actions, accounts, credentials and boundary-crossing releases | Explicit applicable Owner approval; code merge does not grant it |
+| Product direction, pricing, legal or user-facing policy facts, scope expansion | Owner decides once; agents continue independent authorized work |
+| Wording in all seven locales, including Korean | AI-managed, independent exact-text-hash review; not an Owner copy-review gate |
 
-Agents "work the queue": when a task ends they start the next authorized one instead of asking "what next?". Reports have three parts: done (with evidence), started next, needs an owner decision.
-
-## 2. The system
+## 2. The current native system
 
 ```mermaid
 flowchart TB
-  O["Owner<br/>product, priorities, irreversible approvals"]
-  subgraph L["Agent lanes"]
-    A["Interactive lead sessions<br/>one per workstream<br/>workers in isolated worktrees"]
-    B["Unattended Issue pool<br/>4 LaunchAgent workers, 180 s tick<br/>author → reviewer → verifier → guarded merge"]
-    C["Browser agent<br/>live E2E, payments test mode,<br/>i18n/UX + dashboard audits"]
-  end
-  G[("GitHub Issues / PRs / Project")]
-  Q{{"Gates: compile/generate-time static gate · tests · visual regression · exact-hash locale review · release evidence"}}
-  O --> A & B & C
-  A --> G
-  B --> G
-  C -- files Issues --> G
-  G --> Q
+  O["Owner: product, priorities, bounded authority"]
+  R["Five long-lived OMP root roles"]
+  G[("Canonical GitHub Issues / PRs / Project")]
+  A["Sole author: isolated worktree, checks, commit, push, PR"]
+  V["Independent read-only review: fixed head/base and predicted merge tree"]
+  Q["Required full gate once, last; qualified evidence reuse"]
+  M["Authorized integration: pinned head, parent/tree readback"]
+  O --> R --> G --> A --> V --> Q --> M
 ```
 
-### 2.1 Interactive lead sessions
+### Five distinct root roles
 
-Each workstream has a long-lived lead session in a terminal agent harness. Tooling evolved with the work: TriAstra started on Codex and Claude Code, moved through Oh My Pi (omp) and jcode, and has now consolidated on omp; the client engagement also used Codex and then omp. The rules live in the repository, not in a tool, so switching harnesses did not reset the process. A lead owns design, integration, and final verification, and delegates bounded slices to at most two workers, each in its own git worktree with explicit file ownership, acceptance criteria, and a stop condition. Generated surfaces (OpenAPI clients, SQLx metadata, l10n files, fixtures) get exactly one owner lane per task so agents never fight over the same files.
+- **LEADER & DELIVERY:** canonical queue admission, coordination, cross-root integration conflicts and cleanup; may integrate any authorized PR.
+- **RELEASE:** exact-commit readiness, ordinary releases within standing approval, and release/store evidence within applicable authority.
+- **DISCOVERY:** audits, evidence-backed Issues and specifically authorized direct fixes with independent exact-diff review.
+- **OPS & GROWTH:** analytics, support preparation, content and campaign work; only exact approved external effects.
+- **BILLING MIGRATION:** the migration scope, handing support and release work to their owning roots.
 
-### 2.2 The unattended Issue pool
+These are long-lived ownership roles, not evidence that all sessions are currently running. Roots delegate bounded slices within live host limits and measured heavy-work headroom, not a permanent worker-count rule. One writer owns each branch and generated surface. Authors own checks, commits, push and PR preparation. Authoring roots may integrate their own independently reviewed PRs; LEADER may integrate any authorized PR and resolves cross-root conflicts.
 
-Four macOS LaunchAgent workers wake every 180 seconds and each claims at most one unowned P1/P2 bug or maintenance Issue from a complete Project/PR/dependency snapshot. Payment work, Owner holds, unresolved dependencies, and anything already owned by a branch or PR are excluded. For each claim:
+### Actual progress, not another scheduler
 
-1. **Author**: a coding model runs in an offline, minimal-read worktree sandbox with no GitHub or provider credentials and no access to secrets. It can implement and run local checks, but cannot commit, push, or reach the network.
-2. **Trusted dispatcher**: validates Issue and Project state, stages and reviews the diff with the trusted review script, disables candidate git hooks, publishes the PR, and verifies the exact remote head.
-3. **Independent reviewer**: a separate read-only model process reviews the fixed head/base SHAs against the current Issue acceptance criteria and chooses which checks are needed.
-4. **Verifier**: a separate credentialless process runs those checks and must leave the reviewed head and worktree unchanged.
-5. Findings or failures go back to the same author lane. Every revision needs a new head, a fresh review, and passing verification. The loop runs until mergeable or a five-hour budget expires.
-6. **Guarded merge**: the dispatcher saves a merge intent, squash-merges pinned to the reviewed head, then verifies parent, tree, and Issue state, and posts the risk verdict, exact commands, exit codes, and remaining criteria to the PR.
+The native LEADER finishes actionable existing PR work before ordinary new implementation, then admits eligible independent Issues from the canonical queue. Admission follows actual assigned-task progress, dependencies, writer custody and effective host capacity. Working, waiting, idle and unknown are different states; silence does not terminate a writer or transfer a branch. A blocked item gets a concrete resumption condition while other authorized work continues. There is no extra dispatcher, queue ledger or timer scheduler.
 
-Nothing unattended can deploy, submit to app stores, touch production data, move money, change credentials, or send external messages.
+An **observation-only hold** means implementation has landed but an outcome still needs measurement. Keep the Issue open, record the observation window and due check, and admit that check rather than redispatching implementation. Landed code, released code and an observed outcome are distinct states.
 
-### 2.3 A browser agent as a teammate
+### Browser work and messages
 
-A browser agent (Aside) handles everything that needs a real logged-in browser: end-to-end payment flows in test mode (checkout, refund, period-end cancel, revoke), live i18n and UX audits across all locales, and read-only audits of ops, analytics, and observability dashboards. It talks to the coding sessions through a file mailbox inside the repository and a local control channel of the harness, and turns findings into GitHub Issues that the coding lanes pick up. One example: during a payments migration it found that refunded reports kept generating (about 260k LLM input tokens per report). That became an Issue, was fixed by a coding lane, and was deployed the same day.
+A browser teammate handles authorized test-mode E2E flows, locale/UX audits and read-only operational dashboards. Browser communication uses a file mailbox and notification relay. Coding sessions use direct addressed delivery between sessions, with recipient liveness checks and no browser relay. Messages use short Request / Result / Next / Needs reply sections and carry no authority; durable decisions and evidence belong on the owning Issue or PR. The two transports are different mechanisms, not evidence of an identical end-to-end benchmark.
 
-### 2.4 Context for agents, with measured trust
+### How it evolved — October 2026
 
-Agents navigate the codebase through two local code-intelligence tools: **CodeGraph** (symbol, call, import, and route lookup, served to the coding harness over MCP) and **Understand Anything** (an on-demand visual explanation of one subdirectory). Both are installed from checksum-pinned releases into a user cache, never via upstream installers that rewrite agent configs; telemetry and update checks are off; and a read boundary keeps credentials, key stores, Terraform state, and private data out of the index, with a test that keeps both tools' exclusion lists aligned.
+Earlier work used Codex and Claude Code, then OMP and jcode; the current coding host is OMP. A timer-driven unattended pool with a privileged dispatcher was retired in favor of native queue ownership. Its separate verifier replay and per-deploy approval model are historical, not today's blueprint.
 
-I don't take the tools on faith. An evaluation script scores the index against ground truth built from source (every handler bound in the router, word-bounded usages, curated direct calls) and fails if a metric drops below baseline. It found that route-to-handler recall was **8.5% (31 of 364)** because of an upstream defect with multi-line routes. The repository rule that follows: graph output is a navigation lead, not evidence; every caller, impact set, and route is confirmed in source before editing.
+## 3. Gates that make speed safe
 
-## 3. The gates that make speed safe
+1. **Plan minimum proof by changed risk and consumers.** Run targeted regressions and actual changed-path smoke, then adversarial self-review and any needed rebase.
+2. **Review a fixed pair independently.** A distinct read-only session reviews exact head/base commits and the predicted merge tree, including integration interactions and newly tracked files. The author alone changes the branch. Changed pairs require fresh independent review or qualified delta review.
+3. **Run the required full gate once, last.** Resolve findings before the broad gate on the final reviewed head. Do not add a verifier merely to repeat the author's or reviewer's suite. Required independently observed changed-path proof still matters.
+4. **Reuse evidence only with proof.** Inspect complete original logs and prove relevant source, dependencies, toolchain, flags, fixtures and operational inputs equivalent. Keep the original tested commit visible; disclose warm-binary reuse. Changed inputs, new interactions or uncertainty require affected checks to run again. Failed, missing or interrupted evidence blocks admission.
+5. **Integrate and release separately.** Complete admission before a fail-closed main lease; pin the reviewed head and read back the merge parent and predicted tree. Production releases use a separate lock and a pinned checkout with their own exact-commit gate evidence and postcheck. Native tool locks and measured headroom replace retired Cargo-slot caps.
+6. **Catch errors before runtime.** Typed contracts, generated-client freshness, owning tests and actual-surface visual proof cover the relevant risks. Test inventory must name which gate executes each test and any explicit exclusions; a test count alone proves little.
+7. **AI-managed locale quality, including Korean.** Start from locale-neutral meaning, author each locale independently, and require an independent exact-text-hash `PASS + LLM_CRITIQUED` verdict. Sensitive copy also needs domain review; pricing, legal and policy facts retain their decision owners.
 
-- **Find errors at compile, analyze, or generation time, not at runtime.** A single cross-language static gate covers Rust, generated API clients, Flutter, TypeScript, Python, Shell, and Terraform. Contract-first REST APIs generate typed clients so API drift fails the build.
-- **Author-reported green checks never count.** Review and verification must be reproduced by a different process at fixed SHAs, even for a docs-only PR.
-- **Root cause plus a ratchet.** A fix is done only when the root cause is named and a regression test, ratchet, or gate stops it from returning.
-- **Visual regression** with deterministic Flutter goldens and Chromium screenshots of app, widget, and public pages.
-- **Locale quality gate:** for AI-managed locales, a string ships only after seven independent locale passes over the exact text hash; the owner natively reviews Korean.
-- **Concurrency guards:** Cargo build slots shared across worktrees, a fail-closed lease on `main` for release and integration, `--force-with-lease` with an observed SHA for any history rewrite, serialized merges.
-- **Evidence over claims:** every report states the commands run, observed results, and checks that could not run. Unverified claims are labeled as such.
+Every handoff distinguishes checks actually run, qualified reused evidence and remaining gaps. No unmeasured speedup is implied by avoiding duplicate work.
 
-## 4. What I learned
+## 4. Context tools are leads, not evidence
 
-1. **Throughput is cheap; trust is expensive.** The bottleneck moved from writing code to defining acceptance criteria and building gates that make agent output trustworthy without me reading every line.
-2. **Separate the roles.** The same model reviewing its own work misses the same things. Separate author, reviewer, and verifier processes with different permissions catch far more.
-3. **Least privilege for agents.** The author needs no network and no secrets. Credentials live only in the trusted dispatcher, and only for the specific write it is about to make.
-4. **Write the rules where agents read them.** Decision rights, workflows, and domain facts live in versioned repo docs, so every new session starts with the same contract and rules improve through PRs.
-5. **Spend human attention on the irreversible.** I approve deployments, payments, pricing, and user-facing policy. Almost everything else is delegated and audited.
+Local code-intelligence tools help find symbols, calls, imports and routes. Source-derived evaluation matters more than trusting an index: the historical navigation evaluation reported route-to-handler recall of **8.5% (31 of 364), as of 2026-10-07**, traced to a multi-line-route defect. Confirm callers and impact in source. Pin tools, keep secrets and private data outside their read boundary, and do not confuse harness configuration with an OS sandbox.
 
-## 5. Same system, client context
+## 5. Same principles, client context
 
-On a one-month on-site contract for a Singapore B2B startup (existing Django + React codebase), the same approach (run on Oh My Pi (omp) after starting on Codex) let me act as the sole developer (I deployed to the dev server; the client's in-house developer released to the test and production servers): a manual workflow became a 15-screen prototype, then a real server and three role-based portals, with every prototype screen replaced by a real one in six days; I built a meeting engine (availability, booking locks, reschedule state machine, time zones and DST, .ics), hardened API authentication and role-based access, retired the legacy server-rendered UI, and added a 2-4 minute pre-merge E2E smoke gate on every PR. 668 PRs merged in September, client rating 5.0/5.
+On an existing client codebase, bounded authoring and independent review turned a manual workflow into working server-backed, role-based interfaces. Work included scheduling and booking locks, rescheduling, time-zone handling, authentication and access controls, and retiring a legacy UI. A client-specific pre-merge E2E smoke gate checked the working path; it is not the product's broader cross-language static gate. Deployment responsibility stayed split between my development environment and the client's release owner. Location, engagement duration, exact interface/PR counts and ratings are intentionally omitted.
+
+## Historical visual evidence
+
+![Historical operating blueprint](./agent-blueprint.png)
+
+**Historical blueprint:** role routing and separate author/reviewer sessions remain useful ideas. The image's mandatory Owner architecture/Korean review and deployment approvals are obsolete; different-model routing is not a substitute for independent fixed-pair review.
 
 ---
 
-Contact: coalsrbs7@gmail.com · GitHub [mg-mg-mg](https://github.com/mg-mg-mg)
-
-## Evidence, as images
-
-Built from the repository's own config, rules and GitHub history. Private repo: wording generalized, no source code.
-
-![Operating blueprint](./agent-blueprint.png)
-
-**Operating blueprint**: role-based model routing, decision rights, and two sessions per change.
-
-![Independent review, before merge](./review-catch.png)
-
-**Independent review, before merge**: a separate reviewer agent kept personal data out of error reports.
+Contact: [GitHub profile — mg-mg-mg](https://github.com/mg-mg-mg)
