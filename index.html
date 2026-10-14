@@ -183,6 +183,16 @@
     </div>
   </section>
 
+  <section id="upstream">
+    <h2>6. Upstream fixes found by dogfooding</h2>
+    <p class="sub">Running many concurrent agent sessions on one machine stresses the harness itself. Harness defects get the same treatment as product defects: reproduce, isolate, fix with a regression, send upstream.</p>
+    <div class="grid two">
+      <div class="card"><b>Shell built-ins blocking their own input producer</b> (<a href="https://github.com/can1357/oh-my-pi/issues/15501">oh-my-pi #15501</a>). <code>read line &lt; &lt;(cmd)</code> could hang because the read blocked the runtime worker before the producer ran; the same hang stalled a live agent shell command on 2026-10-14. Fixes: <a href="https://github.com/can1357/oh-my-pi/pull/15504">#15504</a> (<code>read</code>) and <a href="https://github.com/can1357/oh-my-pi/pull/15647">#15647</a> (<code>mapfile</code>/<code>readarray</code>), each with a single-worker regression that timed out before the fix and passes after it.</div>
+      <div class="card"><b>Configuration and worktrees.</b> A config save now reports the persisted value it replaces (<a href="https://github.com/can1357/oh-my-pi/pull/15478">#15478</a>). Reported: clone-first worktrees copying gitignored secrets such as <code>.env</code> (<a href="https://github.com/can1357/oh-my-pi/issues/15476">#15476</a>) and per-worktree build-cache clones exhausting disk (<a href="https://github.com/can1357/oh-my-pi/issues/15475">#15475</a>). In jcode, contiguous TUI typing became one undo step (<a href="https://github.com/1jehuang/jcode/pull/1714">#1714</a>) and CI formatting was restored (<a href="https://github.com/1jehuang/jcode/pull/1739">#1739</a>).</div>
+    </div>
+    <p class="sub">Status as of 2026-10-14: the oh-my-pi pull requests are open and in maintainer review; the jcode pull requests are merged.</p>
+  </section>
+
   <section id="evidence">
     <h2>Historical visual evidence</h2>
     <p class="sub">This historical blueprint contains obsolete approval rules. The current text, not the image, describes today's operating contract.</p>

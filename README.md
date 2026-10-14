@@ -93,6 +93,17 @@ Local code-intelligence tools help find symbols, calls, imports and routes. Sour
 
 On an existing client codebase, bounded authoring and independent review turned a manual workflow into working server-backed, role-based interfaces. Work included scheduling and booking locks, rescheduling, time-zone handling, authentication and access controls, and retiring a legacy UI. A client-specific pre-merge E2E smoke gate checked the working path; it is not the product's broader cross-language static gate. Deployment responsibility stayed split between my development environment and the client's release owner. Location, engagement duration, exact interface/PR counts and ratings are intentionally omitted.
 
+## 6. Upstream fixes found by dogfooding
+
+Running many concurrent agent sessions on one machine stresses the harness itself, so harness defects get the same treatment as product defects: reproduce, isolate, fix with a regression, and send upstream.
+
+- **Shell built-ins blocking their own input producer** ([oh-my-pi #15501](https://github.com/can1357/oh-my-pi/issues/15501)). `read` and `mapfile` could block the runtime worker before a process-substitution producer ran, so `read line < <(cmd)` hung. The same hang stalled a live agent shell command on 2026-10-14. Fixes: [#15504](https://github.com/can1357/oh-my-pi/pull/15504) (`read`) and [#15647](https://github.com/can1357/oh-my-pi/pull/15647) (`mapfile`/`readarray`), each with a single-worker regression that timed out before the fix and passes after it.
+- **Configuration save reporting the wrong previous value** ([#15478](https://github.com/can1357/oh-my-pi/pull/15478)). A save now reports the persisted value it replaces, not the session override.
+- **Reported design issues:** clone-first worktrees copying gitignored secrets such as `.env` into every new worktree ([#15476](https://github.com/can1357/oh-my-pi/issues/15476)), and per-worktree build-cache clones exhausting disk under multi-agent use ([#15475](https://github.com/can1357/oh-my-pi/issues/15475)).
+- **jcode:** contiguous TUI typing grouped into one undo step ([#1714](https://github.com/1jehuang/jcode/pull/1714)) and restored CI formatting ([#1739](https://github.com/1jehuang/jcode/pull/1739)), both merged.
+
+Status as of 2026-10-14: the oh-my-pi pull requests are open and in maintainer review; the jcode pull requests are merged. Each pull request records the reproduction, the scenario exercised and the checks run.
+
 ## Historical visual evidence
 
 ![Historical operating blueprint](./agent-blueprint.png)
