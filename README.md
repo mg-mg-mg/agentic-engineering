@@ -15,11 +15,11 @@ AI agents carry implementation, independent review, risk-selected verification a
 | Impact | Historical evidence |
 | --- | --- |
 | A product built and run by one person | Seven languages on the web and as a ChatGPT app; roughly 1,700 registered users reported as of 2026-10-07 (not active or paying users) |
-| Bugs resolved in hours | Roughly two hours from report to fix in a historical sample of a few dozen bugs, 2026-09-07 through 2026-10-08 |
+| Bugs resolved in hours | Reported median of roughly two hours from report to fix across 24 bugs, 2026-09-07 through 2026-10-08 |
 | Independent review changes outcomes | Roughly one in five reviewed PRs reportedly sent back before merge as of 2026-10-08; no merged PR titled "Revert" among 249 PRs merged during 2026-09-11 through 2026-10-08 (UTC dates) |
 | A client received working software | A manual workflow became a working server and role-based interfaces, with scheduling, access controls and a pre-merge E2E smoke gate |
 
-**Measurement limits:** User, bug-time and review-return figures are approximate historical reports from private operations, not publicly verifiable measurements. Their original counting rules are unavailable; the bug-time endpoints and review-return inclusion rules are not established, so these are not precise benchmarks. The reproducible GitHub count includes all authors and dependency bots: search the product repository with `is:pr is:merged merged:2026-09-11..2026-10-08` via `gh api search/issues` and read `total_count` (249); adding `in:title Revert` returns 0. Dates are inclusive UTC calendar days. This title search does not prove that no changes were reverted or that no regressions occurred.
+**Measurement limits:** User, bug-time and review-return figures are approximate historical reports from private operations, not publicly verifiable measurements. Their original counting rules are unavailable; the bug-time endpoints and review-return inclusion rules are not established, so these are not precise benchmarks. The count from the private product repository's GitHub search includes all authors and dependency bots: with repository access, search with `is:pr is:merged merged:2026-09-11..2026-10-08` via `gh api search/issues` and read `total_count` (249); adding `in:title Revert` returns 0. Only someone with repository access can rerun this count. Dates are inclusive UTC calendar days. This title search does not prove that no changes were reverted or that no regressions occurred.
 
 Supporting activity context, not a success measure: 34–45 PRs merged per day during 2026-10-03 through 2026-10-06 (UTC days; the same all-author GitHub merged-date definition). These historical observations do not measure the effect of the newer workflow.
 
@@ -106,7 +106,7 @@ Running many concurrent agent sessions on one machine stresses the harness itsel
 - **Reported design issues:** clone-first worktrees copying gitignored secrets such as `.env` into every new worktree ([#15476](https://github.com/can1357/oh-my-pi/issues/15476)), and per-worktree build-cache clones exhausting disk under multi-agent use ([#15475](https://github.com/can1357/oh-my-pi/issues/15475)).
 - **jcode:** contiguous TUI typing grouped into one undo step ([#1714](https://github.com/1jehuang/jcode/pull/1714)) and restored CI formatting ([#1739](https://github.com/1jehuang/jcode/pull/1739)), both merged.
 
-Status as of 2026-10-15: oh-my-pi #15504 and #15509 merged and #15501 closed; #15647 and #15478 open in maintainer review; jcode #1714 and #1739 merged. Each pull request records the reproduction, the scenario exercised and the checks run.
+Status as of 2026-10-15: oh-my-pi #15504 and #15509 merged and #15501 closed; #15647 open in maintainer review; #15478 open with no maintainer review yet; jcode #1714 and #1739 merged. Each pull request records the reproduction, the scenario exercised and the checks run.
 
 ## Historical visual evidence
 

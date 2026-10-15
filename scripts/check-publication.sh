@@ -14,7 +14,11 @@ def git(*args):
 
 base = sys.argv[1]
 git("rev-parse", "--verify", base + "^{commit}")
-subprocess.run(["git", "merge-base", "--is-ancestor", base, "HEAD"], check=True)
+ancestry = subprocess.run(["git", "merge-base", "--is-ancestor", base, "HEAD"])
+if ancestry.returncode == 1:
+    sys.exit("Publication check: base is not an ancestor of HEAD; update the branch against the current base and rerun")
+if ancestry.returncode != 0:
+    sys.exit("Publication check: could not establish base ancestry; refusing publication")
 email = re.compile(rb"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}")
 noreply = re.compile(rb"(?:[0-9]+\+)?[A-Za-z0-9-]+@users\.noreply\.github\.com")
 credentials = re.compile(
