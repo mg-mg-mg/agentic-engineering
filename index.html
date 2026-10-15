@@ -4,7 +4,19 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>One Engineer, an Agent Team | Mingyun Chae</title>
-<meta name="description" content="How I ship a production product as one engineer with an AI agent team: decision rights, parallel lanes, independent review and verification, and quality gates.">
+<meta name="description" content="How I ship a production product as one engineer with an AI agent team: decision rights, independent fixed-pair review, risk-scoped verification and quality gates.">
+<link rel="canonical" href="https://mg-mg-mg.github.io/agentic-engineering/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="One Engineer, an Agent Team | Mingyun Chae">
+<meta property="og:description" content="Decision rights, independent fixed-pair review, risk-scoped verification and quality gates in a production agent workflow.">
+<meta property="og:url" content="https://mg-mg-mg.github.io/agentic-engineering/">
+<meta property="og:image" content="https://mg-mg-mg.github.io/agentic-engineering/agent-blueprint.png">
+<meta property="og:image:alt" content="Historical blueprint; its approval rules and metric denominator are superseded by the case study text.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="One Engineer, an Agent Team | Mingyun Chae">
+<meta name="twitter:description" content="Decision rights, independent fixed-pair review, risk-scoped verification and quality gates in a production agent workflow.">
+<meta name="twitter:image" content="https://mg-mg-mg.github.io/agentic-engineering/agent-blueprint.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%232f5bea'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-size='38' fill='white'%3EA%3C/text%3E%3C/svg%3E">
 <style>
   :root { --ink:#14171f; --muted:#5b6475; --line:#e4e7ee; --bg:#f7f8fb; --card:#fff; --accent:#2f5bea; --accent2:#0f9d76; --warn:#c2410c; }
   * { box-sizing: border-box; }
@@ -48,7 +60,7 @@
   .loop { margin-top:10px; font-size:13.5px; color:var(--muted); text-align:center; }
   .two { grid-template-columns: 1fr 1fr; }
   .muted { color:var(--muted); font-size:13px; }
-  .gal { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .gal { display:grid; grid-template-columns:1fr; gap:16px; }
   .gal figure { margin:0; background:var(--card); border:1px solid var(--line); border-radius:14px; overflow:hidden; }
   .gal img { width:100%; display:block; }
   .gal figcaption { padding:10px 14px 12px; font-size:13.5px; color:var(--muted); }
@@ -70,25 +82,27 @@
 
 <header>
   <div class="wrap">
-    <div class="eyebrow">Case study · Practice checked 2026-10-13</div>
+    <div class="eyebrow">Case study · Practice checked 2026-10-15</div>
     <h1>One engineer, an agent team.</h1>
     <p class="lead">AI agents carry implementation, independent review, risk-selected verification and bookkeeping. I own product direction, priorities and bounded authority—not every engineering decision.</p>
     <div class="who">Mingyun Chae · Senior Backend &amp; AI Agent Platform Engineer · <a href="https://github.com/mg-mg-mg">GitHub profile</a> · <a href="https://triastra.ai">TriAstra</a> · <a href="https://github.com/mg-mg-mg/agentic-delivery-kit">historical/synthetic reference code</a></div>
   </div>
 </header>
 
-<div class="wrap">
+<main class="wrap">
   <div class="grid metrics">
-    <div class="metric"><div class="n">1,700+</div><div class="l">registered users as of 2026-10-07; not active or paying users</div></div>
-    <div class="metric"><div class="n">1.9 h</div><div class="l">median bug-report-to-fix time across 24 bugs, 2026-09-07 through 2026-10-08</div></div>
+    <div class="metric"><div class="n">~1,700</div><div class="l">registered users reported as of 2026-10-07; not active or paying users</div></div>
+    <div class="metric"><div class="n">~2 h</div><div class="l">report-to-fix time in a historical sample of a few dozen bugs, 2026-09-07 through 2026-10-08</div></div>
     <div class="metric"><div class="n">7 locales</div><div class="l">web and ChatGPT app in the 2026-10-07 product snapshot</div></div>
-    <div class="metric"><div class="n">~19% · 0/231</div><div class="l">reviewed PRs sent back · merged PRs reverted, 2026-09-11 through 2026-10-08</div></div>
+    <div class="metric"><div class="n">~1 in 5</div><div class="l">reviewed PRs reportedly sent back before merge as of 2026-10-08</div></div>
   </div>
-  <p class="muted" style="margin-top:12px">Historical observations, not current rates: 34–45 independently reviewed PRs merged per day during 2026-10-03 through 2026-10-06. No reversions does not mean no regressions. These measurements do not establish the effect of the newer workflow.</p>
+  <p class="muted" style="margin-top:12px"><b>Measurement limits.</b> User, bug-time and review-return figures are approximate historical reports from private operations, not publicly verifiable measurements. Their original counting rules are unavailable; the bug-time endpoints and review-return inclusion rules are not established, so these are not precise benchmarks.</p>
+  <p class="muted">No merged PR titled "Revert" among <b>249 PRs</b> merged during 2026-09-11 through 2026-10-08 (UTC dates). The reproducible GitHub count includes all authors and dependency bots: search the product repository with <code>is:pr is:merged merged:2026-09-11..2026-10-08</code> via <code>gh api search/issues</code> and read <code>total_count</code> (249); adding <code>in:title Revert</code> returns 0. Dates are inclusive UTC calendar days. This title search does not prove that no changes were reverted or that no regressions occurred.</p>
+  <p class="muted">Supporting activity context, not a success measure: 34–45 PRs merged per day during 2026-10-03 through 2026-10-06 (UTC days; the same all-author GitHub merged-date definition). These historical observations do not measure the effect of the newer workflow.</p>
 
   <section>
     <h2>Independent review changes outcomes</h2>
-    <p class="sub">In one historical case, a separate reviewer caught a privacy problem in a chart-calculation-range fix before merge. In a distinct October 2026 billing case, test-mode refund E2E showed that refunded reports continued generating; an author added regression coverage and fixed the behavior, a separate reviewer checked it, and the fix reached production.</p>
+    <p class="sub">Independent review caught a privacy problem in a chart-calculation-range fix before merge. In a separate October 2026 billing case, a browser agent's test-mode refund E2E showed that refunded reports continued generating; an author added regression coverage and fixed the behavior, a separate reviewer checked it, and the fix reached production. These are distinct examples of the process, not interchangeable evidence.</p>
     <p>The billing case predates standing release authority. Its original Owner approvals are history, not today's deployment rule. Requested changes, author repairs and independent delta review—not rubber-stamp approvals—are part of the delivery loop.</p>
   </section>
 
@@ -101,7 +115,7 @@
         <tr><td>Technical design, root-cause scope, refactoring, slicing, test strategy and task order</td><td>Agent decides and reports why</td></tr>
         <tr><td>Tooling recovery, Issues, branches, worktrees, PRs, docs and rule updates</td><td>Agent acts within scope, then records</td></tr>
         <tr><td>Independently reviewed, verified code merge and criteria-based reconciliation</td><td>Standing task authority; original local-only, PR-only or review-only limits remain binding</td></tr>
-        <tr><td>Ordinary exact-main-commit production release</td><td>RELEASE decides under bounded standing approval, with readiness, full-gate evidence and postcheck; no per-commit prompt</td></tr>
+        <tr><td>Ordinary exact-main-commit production release</td><td>RELEASE releases only on defined release triggers, never per merge, under bounded standing approval, with readiness, full-gate evidence and postcheck; no per-commit prompt</td></tr>
         <tr><td>Money, live payments, stores, external sends, production data/Ops actions, accounts, credentials and boundary-crossing releases</td><td>Explicit applicable Owner approval; code merge does not grant it</td></tr>
         <tr><td>Product direction, pricing, legal/policy facts and scope expansion</td><td>Owner decides once; independent authorized work continues</td></tr>
         <tr><td>Wording in all seven locales, including Korean</td><td>AI-managed independent exact-text-hash review; not an Owner copy-review gate</td></tr>
@@ -118,7 +132,7 @@
         <div class="lane">
           <h3>Delivery and release</h3>
           <ul>
-            <li><b>LEADER &amp; DELIVERY:</b> admission, coordination, cross-root integration conflicts and cleanup; may integrate any authorized PR</li>
+            <li><b>LEADER &amp; DELIVERY:</b> admission, coordination and cross-root integration conflicts; may integrate any authorized PR. Retires merged worktrees only after the lane's current writer performs owner-checked incremental cleanup and merged-PR identity and clean-state checks pass, never by age</li>
             <li><b>RELEASE:</b> exact-commit readiness, ordinary releases within standing approval, and approved release/store evidence</li>
           </ul>
         </div>
@@ -126,27 +140,28 @@
           <h3>Discovery and operations</h3>
           <ul>
             <li><b>DISCOVERY:</b> audits, evidence-backed Issues and authorized direct fixes with independent exact-diff review</li>
-            <li><b>OPS &amp; GROWTH:</b> analytics, support preparation and content/campaign work; only exact approved external effects</li>
+            <li><b>OPS &amp; GROWTH:</b> analytics, support preparation, content and campaign work, plus cross-root workflow and operations improvement (ops tooling and workflow/testing docs through independently reviewed PRs). LEADER keeps queue and procedure rule decisions; changes to a root's scripts need that root owner's review; only exact approved external effects</li>
           </ul>
         </div>
         <div class="lane c">
           <h3>Migration and bounded slices</h3>
           <ul>
             <li><b>BILLING MIGRATION:</b> migration scope, handing support and release to their owning roots</li>
-            <li>Bounded subagents, live host limits and measured heavy-work headroom—not a permanent worker-count rule</li>
+            <li>Bounded subagents, live host limits and measured memory/disk headroom, read fresh before each heavy start and sized per workload class, not a fixed global cap or worker count</li>
             <li>One writer per branch and generated surface; authors own checks, commits, push and PRs</li>
           </ul>
         </div>
       </div>
       <div class="hub">Canonical GitHub Issues · PRs · Project · no extra dispatcher, queue ledger or timer scheduler</div>
     </div>
-    <p>Authoring roots may integrate their own independently reviewed PRs; LEADER may integrate any authorized PR and resolves cross-root conflicts.</p>
+    <p>Authoring roots may integrate their own independently reviewed PRs; LEADER may integrate any authorized PR and resolves cross-root conflicts. RELEASE may also integrate release-path PRs from any author and notifies LEADER.</p>
+    <p>Before sorting or admission, each candidate gets a compact evidence-backed product judgment in its existing Issue or PR: user harm and trust, core user value, the current journey bottleneck, affected scope with observed versus inferred evidence, and end-to-end completion cost and recurring value. The goal is observed useful user outcomes and recurring operational value, not PR or worker counts; a PR's age or sunk effort is not value.</p>
     <div class="grid two">
-      <div class="card"><b>Admission follows actual progress.</b> Finish actionable existing PRs before ordinary new implementation, then admit eligible independent Issues. Distinguish working, waiting, idle and unknown. Silence does not terminate a writer or transfer custody. Record a blocked item's resumption condition and continue other authorized work.</div>
+      <div class="card"><b>Admission follows actual progress.</b> Finish actionable existing PRs before ordinary new implementation, then admit eligible independent Issues. Admission follows actual assigned-task progress, dependencies, writer custody and effective host capacity. Distinguish working, waiting, idle and unknown. Silence does not terminate a writer or transfer custody. Record a blocked item's resumption condition and continue other authorized work.</div>
       <div class="card"><b>Observation-only holds.</b> Landed code, released code and observed outcomes are distinct states. Keep an observation-only Issue open with its window and due check; admit the check, not another implementation attempt.</div>
     </div>
-    <p><b>Browser and peer messages.</b> A browser teammate handles authorized test-mode E2E flows, locale/UX audits and read-only dashboards. Browser communication uses a file mailbox and notification relay. Coding sessions use direct addressed delivery between sessions, with recipient liveness checks and no browser relay. Messages use Request / Result / Next / Needs reply sections and carry no authority; durable decisions and evidence belong on the owning Issue or PR. The two transports are different mechanisms, not evidence of an identical end-to-end benchmark.</p>
-    <p class="muted"><b>How it evolved — October 2026.</b> Earlier work used Codex and Claude Code, then OMP and jcode; the current coding host is OMP. The timer-driven pool and privileged dispatcher were retired. Separate verifier replay and per-deploy approval are historical. The public kit is a historical/synthetic reference with reusable lease, guards and navigation evaluation mechanisms—not the current workflow or a demonstrated OMP adapter. Synthetic tests do not establish live sandbox containment.</p>
+    <p><b>Browser and peer messages.</b> A browser teammate handles authorized test-mode E2E flows, locale/UX audits and read-only dashboards. Browser communication uses a file mailbox and notification relay. Coding sessions use direct addressed delivery between sessions, with recipient liveness checks and no browser relay. Messages use Request / Result / Next / Action required sections and carry no authority; pure FYI belongs on the owning Issue or PR, not in the mailbox. Durable decisions and evidence belong there too. The two transports are different mechanisms, not evidence of an identical end-to-end benchmark.</p>
+    <p class="muted"><b>How it evolved — October 2026.</b> Earlier work ran in the Codex CLI and Claude Code, then OMP and jcode; today OMP is the only coding host, routing OpenAI and Anthropic models by role. The timer-driven pool and privileged dispatcher were retired. Separate verifier replay and per-deploy approval are historical. The public kit is a historical/synthetic reference with reusable lease, guards, governance checks and navigation evaluation mechanisms—not the current workflow or a demonstrated OMP adapter. Synthetic tests do not establish live sandbox containment.</p>
   </section>
 
   <section>
@@ -156,11 +171,11 @@
       <div class="step"><b>Independent fixed-pair review</b>A distinct read-only session reviews exact head/base commits and the predicted merge tree, including newly tracked files and integration interactions.</div>
       <div class="step"><b>Full gate once, last</b>Resolve findings first. Run the required broad gate on the final reviewed head; no extra verifier merely to repeat another lane's suite.</div>
       <div class="step"><b>Qualified evidence reuse</b>Inspect original logs and prove relevant inputs equivalent. Retain the original tested commit and disclose warm-binary reuse. Changed inputs or uncertainty require affected checks again.</div>
-      <div class="step"><b>Pinned integration</b>Complete admission before a fail-closed main lease; pin the reviewed head and read back the merge parent and predicted tree. Releases use a separate lock and pinned checkout.</div>
+      <div class="step"><b>Pinned integration</b>Outside the lock, freeze the reviewed head, admitted base, predicted merge tree and any extension certificate in a plan; reject duplicate database-migration versions across the reviewed head and live main. Inside a short fail-closed main lease, execute one head-pinned squash. Count a merge only when its single parent equals the admitted base, its tree equals the prediction and the branch ref reads back as the squash commit. Ambiguous attempts retain the lock for reconciliation, not retries. Releases use a separate lock and pinned checkout with their own exact-commit gate evidence and postcheck. Native tool locks and per-workload headroom replace retired Cargo-slot caps.</div>
     </div>
-    <div class="loop">A changed head/base needs independent fresh or qualified delta review. Required independently observed changed-path proof still matters. Missing, failed or interrupted evidence blocks admission. Record executed checks, reused evidence and remaining gaps separately; no unmeasured speedup is implied.</div>
+    <div class="loop">A changed head needs fresh independent review. A changed base keeps the verdict only when the reviewer's transitive invalidation set is untouched, there are no conflicts, and relevant inputs remain equivalent; record the exact live-base/tree certificate. Otherwise the base move needs independent delta review. P1/P2 findings need a plausible reachable consumer or caller path; a reviewer-proven false PASS against a gate's promised contract blocks merge even if today's inputs do not trigger it. Required independently observed changed-path proof still matters. Missing, failed or interrupted evidence blocks admission. Record executed checks, reused evidence and remaining gaps separately; no unmeasured speedup is implied.</div>
     <div class="grid two">
-      <div class="card"><b>Before runtime.</b> Typed contracts, generated-client freshness, owning tests and actual-surface visual proof cover relevant risks. Inventory which gate executes each test and its explicit exclusions. Native tool locks and measured headroom replace retired Cargo-slot caps.</div>
+      <div class="card"><b>Before runtime.</b> Typed contracts, generated-client freshness, owning tests and actual-surface visual proof cover relevant risks. Inventory which gate executes each test and its explicit exclusions.</div>
       <div class="card"><b>AI-managed locale quality.</b> All seven locales, including Korean, start from locale-neutral meaning and require independent exact-text-hash <code>PASS + LLM_CRITIQUED</code>. Sensitive copy also needs domain review; pricing, legal and policy facts retain their owners.</div>
     </div>
   </section>
@@ -170,7 +185,7 @@
     <p class="sub">Confirm callers and impact in source, rather than trusting an index.</p>
     <div class="grid two">
       <div class="card">Local code-intelligence tools help find symbols, calls, imports and routes. Pin tools and keep secrets and private data outside their read boundary. Harness configuration is not an OS sandbox.</div>
-      <div class="card"><div class="metric" style="box-shadow:none;border:none;padding:6px 0 0"><div class="n">8.5%</div><div class="l">historical route-to-handler recall (31 of 364), as of 2026-10-07, traced to a multi-line-route defect</div></div></div>
+      <div class="card"><div class="metric" style="box-shadow:none;border:none;padding:6px 0 0"><div class="n">8.5%</div><div class="l">route-to-handler recall (31 of 364), measured on 2026-10-03 against a pinned third-party code-graph tool on the private product repo, traced to an upstream multi-line-route defect. The kit's synthetic evaluator demonstrates the method; it does not reproduce this number.</div></div></div>
     </div>
   </section>
 
@@ -187,24 +202,29 @@
     <h2>6. Upstream fixes found by dogfooding</h2>
     <p class="sub">Running many concurrent agent sessions on one machine stresses the harness itself. Harness defects get the same treatment as product defects: reproduce, isolate, fix with a regression, send upstream.</p>
     <div class="grid two">
-      <div class="card"><b>Shell built-ins blocking their own input producer</b> (<a href="https://github.com/can1357/oh-my-pi/issues/15501">oh-my-pi #15501</a>). <code>read line &lt; &lt;(cmd)</code> could hang because the read blocked the runtime worker before the producer ran; the same hang stalled a live agent shell command on 2026-10-14. Fixes: <a href="https://github.com/can1357/oh-my-pi/pull/15504">#15504</a> (<code>read</code>) and <a href="https://github.com/can1357/oh-my-pi/pull/15647">#15647</a> (<code>mapfile</code>/<code>readarray</code>), each with a single-worker regression that timed out before the fix and passes after it.</div>
-      <div class="card"><b>Configuration and worktrees.</b> A config save now reports the persisted value it replaces (<a href="https://github.com/can1357/oh-my-pi/pull/15478">#15478</a>). Reported: clone-first worktrees copying gitignored secrets such as <code>.env</code> (<a href="https://github.com/can1357/oh-my-pi/issues/15476">#15476</a>) and per-worktree build-cache clones exhausting disk (<a href="https://github.com/can1357/oh-my-pi/issues/15475">#15475</a>). In jcode, contiguous TUI typing became one undo step (<a href="https://github.com/1jehuang/jcode/pull/1714">#1714</a>) and CI formatting was restored (<a href="https://github.com/1jehuang/jcode/pull/1739">#1739</a>).</div>
+      <div class="card"><b>Shell built-ins blocking their own input producer</b> (<a href="https://github.com/can1357/oh-my-pi/issues/15501">oh-my-pi #15501</a>). <code>read line &lt; &lt;(cmd)</code> could hang because the read blocked the runtime worker before the producer ran; the same hang stalled a live agent shell command on 2026-10-14. The maintainer's <a href="https://github.com/can1357/oh-my-pi/pull/15509">#15509</a> landed the <code>read</code> deadlock fix and its single-worker regression, graciously crediting my original patch. My <a href="https://github.com/can1357/oh-my-pi/pull/15504">#15504</a> was narrowed in review to a regular-file fast path and merged. The <code>mapfile</code>/<code>readarray</code> fix <a href="https://github.com/can1357/oh-my-pi/pull/15647">#15647</a> remains open, with a single-worker regression that timed out before the fix and passes after it.</div>
+      <div class="card"><b>Configuration and worktrees.</b> A proposed config-save fix reports the persisted value it replaces (<a href="https://github.com/can1357/oh-my-pi/pull/15478">#15478</a>, open), not the session override. Reported: clone-first worktrees copying gitignored secrets such as <code>.env</code> (<a href="https://github.com/can1357/oh-my-pi/issues/15476">#15476</a>) and per-worktree build-cache clones exhausting disk (<a href="https://github.com/can1357/oh-my-pi/issues/15475">#15475</a>). In jcode, contiguous TUI typing became one undo step (<a href="https://github.com/1jehuang/jcode/pull/1714">#1714</a>) and CI formatting was restored (<a href="https://github.com/1jehuang/jcode/pull/1739">#1739</a>).</div>
     </div>
-    <p class="sub">Status as of 2026-10-14: the oh-my-pi pull requests are open and in maintainer review; the jcode pull requests are merged.</p>
+    <p class="sub">Status as of 2026-10-15: oh-my-pi #15504 and #15509 merged and #15501 closed; #15647 and #15478 open in maintainer review; jcode #1714 and #1739 merged. Each pull request records the reproduction, the scenario exercised and the checks run.</p>
   </section>
 
   <section id="evidence">
     <h2>Historical visual evidence</h2>
     <p class="sub">This historical blueprint contains obsolete approval rules. The current text, not the image, describes today's operating contract.</p>
     <div class="gal">
-      <figure><a href="agent-blueprint.png"><img src="agent-blueprint.png" alt="Historical blueprint with separate author and reviewer sessions and obsolete approval rules" loading="lazy"></a><figcaption><b>Historical blueprint.</b> Mandatory Owner architecture/Korean review and deployment approvals are obsolete. Different-model routing does not substitute for independent fixed-pair review.</figcaption></figure>
+      <figure><a href="agent-blueprint.png"><img src="agent-blueprint.png" alt="Historical operating blueprint: OpenAI implementation, Anthropic review and small-model lookups in isolated worktrees; Owner architecture and irreversible-action approvals; separate author and read-only reviewer, pinned integration, merge is not deploy; old claims of about 19% sent back and 0/231 reverted, labeled all PRs merged Sep 11 to Oct 8, 2026; a reviewer caught personal details in error reports and the author added a regression in 1 h 16 m" loading="lazy" width="1920" height="1080" style="height:auto"></a><figcaption><b>Historical blueprint, not current metric evidence.</b> Role routing and separate author/reviewer sessions remain useful ideas. Mandatory Owner architecture/Korean review and deployment approvals are obsolete. Different-model routing does not substitute for independent fixed-pair review. Its "All PRs" / 231 denominator is unreproduced and inaccurate: the defined UTC count above is 249, with no merged PR titled "Revert". The embedded image text needs regeneration from an editable source, not pixel editing.</figcaption></figure>
     </div>
   </section>
 
+  <section>
+    <h2>Publication hygiene</h2>
+    <p>Before publishing, stage the intended files and run <code>bash scripts/check-publication.sh origin/main</code> (Git and Python 3 only). The pinned pull-request workflow checks staged text, incoming commit trees and messages, and requires GitHub noreply author and committer identities. It rejects non-noreply email addresses and common credential patterns in text. This limited guard does not inspect binary media, detect every secret or remove existing history; public text and images still require human review. Existing history is intentionally unchanged.</p>
+  </section>
+
   <footer>
-    Product source code is private; this page describes the process, not the code. Practice checked 2026-10-13; measurements carry their historical dates, not a claim of current rates.<br>
-    Mingyun Chae · <a href="https://github.com/mg-mg-mg">GitHub profile</a> · <a href="README.md">Text case study</a>
+    Product source code is private; this page describes the process, not the code. Practice checked 2026-10-15; measurements carry their historical dates, not a claim of current rates.<br>
+    Mingyun Chae · <a href="https://github.com/mg-mg-mg">GitHub profile</a> · <a href="https://github.com/mg-mg-mg/agentic-engineering#readme">Text case study</a>
   </footer>
-</div>
+</main>
 </body>
 </html>
