@@ -6,7 +6,7 @@ Independent review caught a privacy problem in a chart-calculation-range fix bef
 
 **Visual version:** https://mg-mg-mg.github.io/agentic-engineering/
 
-*Mingyun Chae · October 2026. Case study of the delivery process behind [TriAstra](https://triastra.ai) and a client engagement. Product source code is private. Current-practice description checked against maintained main-branch rules on 2026-10-15; measurements below are older snapshots, not current rates.*
+*Mingyun Chae · October 2026. Case study of the delivery process behind [TriAstra](https://triastra.ai) and a client engagement. Product source code is private. Role and reliability update: 2026-10-18; the broader process description was checked against maintained main-branch rules on 2026-10-15. Measurements carry their own dates, not a claim of current rates.*
 
 ## TL;DR
 
@@ -42,7 +42,7 @@ The repository contract makes decision rights explicit: an agent should decide o
 ```mermaid
 flowchart TB
   O["Owner: product, priorities, bounded authority"]
-  R["Five long-lived OMP root roles"]
+  R["About ten long-lived OMP coding roles"]
   G[("Canonical GitHub Issues / PRs / Project")]
   A["Sole author: isolated worktree, checks, commit, push, PR"]
   V["Independent read-only review: fixed head/base and predicted merge tree"]
@@ -51,13 +51,9 @@ flowchart TB
   O --> R --> G --> A --> V --> Q --> M
 ```
 
-### Five distinct root roles
+### About ten long-lived coding roles
 
-- **LEADER & DELIVERY:** canonical queue admission, coordination and cross-root integration conflicts; may integrate any authorized PR. Retires merged worktrees only after the lane's current writer performs owner-checked incremental cleanup and merged-PR identity and clean-state checks pass, never by age.
-- **RELEASE:** exact-commit readiness, ordinary releases within standing approval, and release/store evidence within applicable authority.
-- **DISCOVERY:** audits, evidence-backed Issues and specifically authorized direct fixes with independent exact-diff review.
-- **OPS & GROWTH:** analytics, support preparation, content and campaign work, plus cross-root workflow and operations improvement (ops tooling and workflow/testing docs through independently reviewed PRs). LEADER keeps queue and procedure rule decisions; changes to a root's scripts need that root owner's review; only exact approved external effects.
-- **BILLING MIGRATION:** the migration scope, handing support and release work to their owning roots.
+The current arrangement has approximately ten long-lived role sessions: **LEADER, RELEASE, DISCOVERY, PLATFORM, BILLING, REFACTOR, BUG-FIX, FEATURE, GROWTH and OPENSOURCE**. These divide coordination, release readiness, discovery, platform and billing ownership, maintenance, product delivery, growth and upstream work. They are ownership boundaries, not ten mandatory stages or a fixed concurrency target. LEADER coordinates queue and integration conflicts; RELEASE owns exact-commit readiness and releases within applicable authority. External effects still require their applicable approval.
 
 These are long-lived ownership roles, not evidence that all sessions are currently running. Roots delegate bounded slices within live host limits and measured memory/disk headroom, read fresh before each heavy start and sized per workload class, not a fixed global cap or worker count. One writer owns each branch and generated surface. Authors own checks, commits, push and PR preparation. Authoring roots may integrate their own independently reviewed PRs; LEADER may integrate any authorized PR and resolves cross-root conflicts. RELEASE may also integrate release-path PRs from any author and notifies LEADER.
 
@@ -88,6 +84,23 @@ Earlier work ran in the Codex CLI and Claude Code, then OMP and jcode; today OMP
 7. **AI-managed locale quality, including Korean.** Start from locale-neutral meaning, author each locale independently, and require an independent exact-text-hash `PASS + LLM_CRITIQUED` verdict. Sensitive copy also needs domain review; pricing, legal and policy facts retain their decision owners.
 
 Every handoff distinguishes checks actually run, qualified reused evidence and remaining gaps. No unmeasured speedup is implied by avoiding duplicate work.
+### What broke at ~100 concurrent agents, and what we automated
+
+**Scale context, not a throughput benchmark:** approximately **1,450 OMP coding-agent sessions** and **3,430 sub-agent runs** since 2026-09-23; sampled peak **116 concurrent OMP coding agents** on 2026-10-15 and a seven-day average of approximately **54**, reported in the 2026-10-18 snapshot. These are **OMP coding-agent sessions only** and exclude the Aside browser agent, whose data is unavailable. Local-log estimates use five-minute samples of first-event-to-last-write intervals: overlapping intervals do not establish active execution, CPU saturation or useful output. The original seven-day averaging endpoints are not established. This update uses the supplied approximate log summary, not a fresh raw-log recount.
+
+These failures were found during operation at that scale; concurrency is context, not proof that it caused every incident:
+
+| What broke or needed proof | What changed |
+| --- | --- |
+| A release-path change merged without required admission evidence | Recorded the missing evidence honestly, without backdating, then completed it afterwards. The merge tool now refuses release-critical PRs lacking a consistent admission line. Classification combines an explicit list with the release entrypoints' transitive callee closure, rather than relying on filenames alone. |
+| Independent review reproduced races where cleanup could delete a replaced file | Fixed before merge: atomic quarantine rename followed by identity/content verification, rather than assuming that an earlier path check still identified the same file. |
+| A release build needed a defensible memory budget | Budgeted 32 GB; one production build measured a sampled peak of 14.7 GB RSS with zero swap. Sampling can miss short peaks; this is one workload observation, not a whole-system maximum or a guarantee for future builds. |
+| A Git hook's inherited `GIT_*` environment made a test fixture flip `core.bare` in my own system | Fixed environment isolation locally and proposed the same bug-class fix upstream in [Flutter #194429](https://github.com/flutter/flutter/pull/194429), open as of 2026-10-18. Local remediation is not evidence of upstream acceptance. |
+
+**Evidence limits:** These are private-operation accounts supplied for this case study, not independently rerunnable public incident records. No private PRs, internal identifiers or infrastructure layout are published. A preventive guardrail or pre-merge reproduction is not a measured reduction in incident rate.
+
+**Dated activity, not an outcome metric:** counted 2026-10-18 using the private repository's GitHub search, all authors including bots: **782** merged PRs for `is:pr is:merged merged:2026-10-11..2026-10-18`; **1,051** for the last 30 inclusive UTC calendar days, `merged:2026-09-19..2026-10-18`; **1,054** for the profile's existing `merged:>=2026-09-15` definition. October 18 is a partial day. Each query includes the private repository qualifier, omitted here; `gh api search/issues` returned `incomplete_results: false`. Only repository members can reproduce these totals; they include bots and do not measure individual productivity or delivery quality.
+
 
 ## 4. Context tools are leads, not evidence
 
@@ -106,7 +119,7 @@ Running many concurrent agent sessions on one machine stresses the harness itsel
 - **Reported design issues:** clone-first worktrees copying gitignored secrets such as `.env` into every new worktree ([#15476](https://github.com/can1357/oh-my-pi/issues/15476)), and per-worktree build-cache clones exhausting disk under multi-agent use ([#15475](https://github.com/can1357/oh-my-pi/issues/15475)).
 - **jcode:** contiguous TUI typing grouped into one undo step ([#1714](https://github.com/1jehuang/jcode/pull/1714)) and restored CI formatting ([#1739](https://github.com/1jehuang/jcode/pull/1739)), both merged.
 
-Status as of 2026-10-15: oh-my-pi #15504 and #15509 merged and #15501 closed; #15647 open in maintainer review; #15478 open with no maintainer review yet; jcode #1714 and #1739 merged. Each pull request records the reproduction, the scenario exercised and the checks run.
+Counted 2026-10-18: **7 merged, 5 open and 3 closed without merge** among my PRs across oh-my-pi, jcode, Flutter, OpenTelemetry Rust and ts-rs. Query: `author:mg-mg-mg is:pr is:public -user:mg-mg-mg -org:TriAstra-ai`, filtered to those five repositories. The seven merges are five in oh-my-pi and two in jcode; my oh-my-pi #15647 and #15478, [Flutter #194429](https://github.com/flutter/flutter/pull/194429), [OpenTelemetry Rust #3791](https://github.com/open-telemetry/opentelemetry-rust/pull/3791) and [ts-rs #501](https://github.com/Aleph-Alpha/ts-rs/pull/501) remain open. The maintainer's #15509 is not counted as my merged PR. [Contribution index](https://github.com/mg-mg-mg/mg-mg-mg/blob/main/CONTRIBUTIONS.md).
 
 ## Historical visual evidence
 

@@ -79,7 +79,7 @@
 
 <header>
   <div class="wrap">
-    <div class="eyebrow">Case study · Practice checked 2026-10-15</div>
+    <div class="eyebrow">Case study · Roles and reliability updated 2026-10-18</div>
     <h1>One engineer, an agent team.</h1>
     <p class="lead">AI agents carry implementation, independent review, risk-selected verification and bookkeeping. I own product direction, priorities and bounded authority—not every engineering decision.</p>
     <div class="who">Mingyun Chae · Senior Backend &amp; AI Agent Platform Engineer · <a href="https://github.com/mg-mg-mg">GitHub profile</a> · <a href="https://triastra.ai">TriAstra</a> · <a href="https://github.com/mg-mg-mg/agentic-delivery-kit">historical/synthetic reference code</a></div>
@@ -122,28 +122,29 @@
 
   <section>
     <h2>2. The current native system</h2>
-    <p class="sub">Five long-lived OMP root roles work one canonical GitHub queue. Role ownership is not proof that all sessions are currently running.</p>
+    <p class="sub">Approximately ten long-lived OMP coding-role sessions work one canonical GitHub queue. Ownership is not proof that all sessions are currently running, and the role count is not a concurrency target.</p>
     <div class="sys">
       <div class="owner-box">Owner<span>product, priorities, bounded authority</span></div>
       <div class="lanes">
         <div class="lane">
           <h3>Delivery and release</h3>
           <ul>
-            <li><b>LEADER &amp; DELIVERY:</b> admission, coordination and cross-root integration conflicts; may integrate any authorized PR. Retires merged worktrees only after the lane's current writer performs owner-checked incremental cleanup and merged-PR identity and clean-state checks pass, never by age</li>
+            <li><b>LEADER:</b> queue admission, coordination and cross-root integration conflicts</li>
             <li><b>RELEASE:</b> exact-commit readiness, ordinary releases within standing approval, and approved release/store evidence</li>
           </ul>
         </div>
         <div class="lane b">
           <h3>Discovery and operations</h3>
           <ul>
-            <li><b>DISCOVERY:</b> audits, evidence-backed Issues and authorized direct fixes with independent exact-diff review</li>
-            <li><b>OPS &amp; GROWTH:</b> analytics, support preparation, content and campaign work, plus cross-root workflow and operations improvement (ops tooling and workflow/testing docs through independently reviewed PRs). LEADER keeps queue and procedure rule decisions; changes to a root's scripts need that root owner's review; only exact approved external effects</li>
+            <li><b>DISCOVERY:</b> audits and evidence-backed Issues</li>
+            <li><b>PLATFORM, BILLING:</b> platform and billing ownership</li>
+            <li><b>GROWTH, OPENSOURCE:</b> growth and upstream work; external effects retain their applicable approval</li>
           </ul>
         </div>
         <div class="lane c">
-          <h3>Migration and bounded slices</h3>
+          <h3>Maintenance and delivery</h3>
           <ul>
-            <li><b>BILLING MIGRATION:</b> migration scope, handing support and release to their owning roots</li>
+            <li><b>REFACTOR, BUG-FIX, FEATURE:</b> maintenance and product delivery</li>
             <li>Bounded subagents, live host limits and measured memory/disk headroom, read fresh before each heavy start and sized per workload class, not a fixed global cap or worker count</li>
             <li>One writer per branch and generated surface; authors own checks, commits, push and PRs</li>
           </ul>
@@ -159,6 +160,20 @@
     </div>
     <p><b>Browser and peer messages.</b> A browser teammate handles authorized test-mode E2E flows, locale/UX audits and read-only dashboards. Browser communication uses a file mailbox and notification relay. Coding sessions use direct addressed delivery between sessions, with recipient liveness checks and no browser relay. Messages use Request / Result / Next / Action required sections and carry no authority; pure FYI belongs on the owning Issue or PR, not in the mailbox. Durable decisions and evidence belong there too. The two transports are different mechanisms, not evidence of an identical end-to-end benchmark.</p>
     <p class="muted"><b>How it evolved — October 2026.</b> Earlier work ran in the Codex CLI and Claude Code, then OMP and jcode; today OMP is the only coding host, routing OpenAI and Anthropic models by role. The timer-driven pool and privileged dispatcher were retired. Separate verifier replay and per-deploy approval are historical. The public kit is a historical/synthetic reference with reusable lease, guards, governance checks and navigation evaluation mechanisms—not the current workflow or a demonstrated OMP adapter. Synthetic tests do not establish live sandbox containment.</p>
+  </section>
+
+  <section id="reliability">
+    <h2>What broke at ~100 concurrent agents, and what we automated</h2>
+    <p class="sub">Scale is context, not proof of causation or useful output. Approximately 1,450 OMP coding-agent sessions and 3,430 sub-agent runs since 2026-09-23; sampled peak 116 concurrent OMP coding agents on 2026-10-15; seven-day average approximately 54, reported in the 2026-10-18 snapshot.</p>
+    <p><b>OMP coding-agent sessions only:</b> excludes the Aside browser agent, whose data is unavailable. These supplied local-log estimates use five-minute samples of first-event-to-last-write intervals, not active-execution measurements. The original seven-day averaging endpoints are not established; this update did not recount raw logs.</p>
+    <div class="grid two">
+      <div class="card"><b>Missing release admission evidence → fail-closed integration.</b> A release-path change merged without required evidence. The gap was recorded without backdating and evidence completed afterwards. The merge tool now refuses release-critical PRs lacking a consistent admission line; classification combines an explicit list with the release entrypoints' transitive callee closure.</div>
+      <div class="card"><b>Cleanup race → quarantine and verify.</b> An independent reviewer reproduced races where cleanup could delete a replaced file. Fixed before merge with atomic quarantine rename and identity/content verification, rather than trusting an earlier path check.</div>
+      <div class="card"><b>Build sizing → measured headroom.</b> Budgeted 32 GB; one production build measured a sampled peak of 14.7 GB RSS with zero swap. Sampling can miss short peaks. This is one workload observation, not a whole-system maximum or a future capacity guarantee.</div>
+      <div class="card"><b>Git hook environment leak → isolation.</b> Inherited <code>GIT_*</code> variables made a test fixture flip <code>core.bare</code> in my own system. Fixed isolation locally; proposed the same bug-class fix in <a href="https://github.com/flutter/flutter/pull/194429">Flutter #194429</a>, open as of 2026-10-18. Local remediation does not imply upstream acceptance.</div>
+    </div>
+    <p class="sub">Private-operation accounts, not independently rerunnable public incident records. No private PRs, internal identifiers or infrastructure layout are published. Preventive guardrails and pre-merge reproductions are not measured reductions in incident rate.</p>
+    <p><b>Dated activity, not an outcome metric:</b> counted 2026-10-18: 782 repository-wide merges during October 11–18; 1,051 in the last 30 inclusive UTC calendar days (September 19–October 18); 1,054 since September 15. All authors, including bots; October 18 is a partial day. GitHub queries: <code>is:pr is:merged merged:2026-10-11..2026-10-18</code>, <code>merged:2026-09-19..2026-10-18</code>, and <code>merged:&gt;=2026-09-15</code>, each scoped to the private repository. <code>gh api search/issues</code> returned <code>incomplete_results: false</code>. Only repository members can reproduce these totals; counts do not measure individual productivity or delivery quality.</p>
   </section>
 
   <section>
@@ -202,7 +217,7 @@
       <div class="card"><b>Shell built-ins blocking their own input producer</b> (<a href="https://github.com/can1357/oh-my-pi/issues/15501">oh-my-pi #15501</a>). <code>read line &lt; &lt;(cmd)</code> could hang because the read blocked the runtime worker before the producer ran; the same hang stalled a live agent shell command on 2026-10-14. The maintainer's <a href="https://github.com/can1357/oh-my-pi/pull/15509">#15509</a> landed the <code>read</code> deadlock fix and its single-worker regression, graciously crediting my original patch. My <a href="https://github.com/can1357/oh-my-pi/pull/15504">#15504</a> was narrowed in review to a regular-file fast path and merged. The <code>mapfile</code>/<code>readarray</code> fix <a href="https://github.com/can1357/oh-my-pi/pull/15647">#15647</a> remains open, with a single-worker regression that timed out before the fix and passes after it.</div>
       <div class="card"><b>Configuration and worktrees.</b> A proposed config-save fix reports the persisted value it replaces (<a href="https://github.com/can1357/oh-my-pi/pull/15478">#15478</a>, open), not the session override. Reported: clone-first worktrees copying gitignored secrets such as <code>.env</code> (<a href="https://github.com/can1357/oh-my-pi/issues/15476">#15476</a>) and per-worktree build-cache clones exhausting disk (<a href="https://github.com/can1357/oh-my-pi/issues/15475">#15475</a>). In jcode, contiguous TUI typing became one undo step (<a href="https://github.com/1jehuang/jcode/pull/1714">#1714</a>) and CI formatting was restored (<a href="https://github.com/1jehuang/jcode/pull/1739">#1739</a>).</div>
     </div>
-    <p class="sub">Status as of 2026-10-15: oh-my-pi #15504 and #15509 merged and #15501 closed; #15647 open in maintainer review; #15478 open with no maintainer review yet; jcode #1714 and #1739 merged. Each pull request records the reproduction, the scenario exercised and the checks run.</p>
+    <p class="sub">Counted 2026-10-18: 7 merged (five oh-my-pi, two jcode), 5 open and 3 closed without merge among my PRs across oh-my-pi, jcode, Flutter, OpenTelemetry Rust and ts-rs. Query: <code>author:mg-mg-mg is:pr is:public -user:mg-mg-mg -org:TriAstra-ai</code>, filtered to those five repositories. Open: oh-my-pi #15647 and #15478, <a href="https://github.com/flutter/flutter/pull/194429">Flutter #194429</a>, <a href="https://github.com/open-telemetry/opentelemetry-rust/pull/3791">OpenTelemetry Rust #3791</a> and <a href="https://github.com/Aleph-Alpha/ts-rs/pull/501">ts-rs #501</a>. The maintainer's #15509 is not counted as my merged PR. <a href="https://github.com/mg-mg-mg/mg-mg-mg/blob/main/CONTRIBUTIONS.md">Contribution index</a>.</p>
   </section>
 
   <section id="evidence">
@@ -219,7 +234,7 @@
   </section>
 
   <footer>
-    Product source code is private; this page describes the process, not the code. Practice checked 2026-10-15; measurements carry their historical dates, not a claim of current rates.<br>
+    Product source code is private; this page describes the process, not the code. Roles and reliability updated 2026-10-18; broader practice checked 2026-10-15. Measurements carry their own dates, not a claim of current rates.<br>
     Mingyun Chae · <a href="https://github.com/mg-mg-mg">GitHub profile</a> · <a href="https://github.com/mg-mg-mg/agentic-engineering#readme">Text case study</a>
   </footer>
 </main>
