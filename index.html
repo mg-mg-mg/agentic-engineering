@@ -122,7 +122,7 @@
 
   <section>
     <h2>2. The current native system</h2>
-    <p class="sub">Approximately ten long-lived OMP coding-role sessions work one canonical GitHub queue. Ownership is not proof that all sessions are currently running, and the role count is not a concurrency target.</p>
+    <p class="sub">Approximately ten long-lived OMP role sessions work one canonical GitHub queue. Ownership is not proof that all sessions are currently running, and the role count is not a concurrency target.</p>
     <div class="sys">
       <div class="owner-box">Owner<span>product, priorities, bounded authority</span></div>
       <div class="lanes">
@@ -164,13 +164,12 @@
 
   <section id="reliability">
     <h2>What broke at ~100 concurrent agents, and what we automated</h2>
-    <p class="sub">Scale is context, not proof of causation or useful output. Approximately 1,450 OMP coding-agent sessions and 3,430 sub-agent runs since 2026-09-23; sampled peak 116 concurrent OMP coding agents on 2026-10-15; seven-day average approximately 54, reported in the 2026-10-18 snapshot.</p>
-    <p><b>OMP coding-agent sessions only:</b> excludes the Aside browser agent, whose data is unavailable. These supplied local-log estimates use five-minute samples of first-event-to-last-write intervals, not active-execution measurements. The original seven-day averaging endpoints are not established; this update did not recount raw logs.</p>
+    <p class="sub">From my local OMP session logs, five-minute samples of first-event-to-last-write intervals give approximately 1,450 OMP coding-agent sessions and 3,430 sub-agent runs since 2026-09-23, a peak of ~116 concurrent OMP coding agents (October 14, 22:29 UTC) and a seven-day average of ~54 in the 2026-10-18 snapshot. These figures cover <b>OMP coding-agent sessions only</b>, excluding the Aside browser agent. Overlapping intervals do not establish active execution.</p>
     <div class="grid two">
       <div class="card"><b>Missing release admission evidence → fail-closed integration.</b> A release-path change merged without required evidence. The gap was recorded without backdating and evidence completed afterwards. The merge tool now refuses release-critical PRs lacking a consistent admission line; classification combines an explicit list with the release entrypoints' transitive callee closure.</div>
       <div class="card"><b>Cleanup race → quarantine and verify.</b> An independent reviewer reproduced races where cleanup could delete a replaced file. Fixed before merge with atomic quarantine rename and identity/content verification, rather than trusting an earlier path check.</div>
       <div class="card"><b>Build sizing → measured headroom.</b> Budgeted 32 GB; one production build measured a sampled peak of 14.7 GB RSS with zero swap. Sampling can miss short peaks. This is one workload observation, not a whole-system maximum or a future capacity guarantee.</div>
-      <div class="card"><b>Git hook environment leak → isolation.</b> Inherited <code>GIT_*</code> variables made a test fixture flip <code>core.bare</code> in my own system. Fixed isolation locally; proposed the same bug-class fix in <a href="https://github.com/flutter/flutter/pull/194429">Flutter #194429</a>, open as of 2026-10-18. Local remediation does not imply upstream acceptance.</div>
+      <div class="card"><b>Git hook environment leak → isolation.</b> A test fixture most likely inherited a Git hook's <code>GIT_*</code> environment and flipped <code>core.bare</code> in the shared repository. Fixed with isolated Git environments; the same bug class is proposed upstream in <a href="https://github.com/flutter/flutter/pull/194429">Flutter #194429</a>, open as of 2026-10-18.</div>
     </div>
     <p class="sub">Private-operation accounts, not independently rerunnable public incident records. No private PRs, internal identifiers or infrastructure layout are published. Preventive guardrails and pre-merge reproductions are not measured reductions in incident rate.</p>
     <p><b>Dated activity, not an outcome metric:</b> counted 2026-10-18: 782 repository-wide merges during October 11–18; 1,051 in the last 30 inclusive UTC calendar days (September 19–October 18); 1,054 since September 15. All authors, including bots; October 18 is a partial day. GitHub queries: <code>is:pr is:merged merged:2026-10-11..2026-10-18</code>, <code>merged:2026-09-19..2026-10-18</code>, and <code>merged:&gt;=2026-09-15</code>, each scoped to the private repository. <code>gh api search/issues</code> returned <code>incomplete_results: false</code>. Only repository members can reproduce these totals; counts do not measure individual productivity or delivery quality.</p>
