@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 960 600" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="incident-loop-title incident-loop-desc" id="loop-root">
+<title id="incident-loop-title">Incidents become automated guardrails</title>
+<desc id="incident-loop-desc">Loop: operate many agents on one repository; detect problems through review, E2E and gates; record them honestly without backdating; fix the root cause with a regression test; automate a guardrail so the tool refuses next time; send harness bugs upstream as PRs; then keep operating. Evidence and new checks are written into a shared record of repository rules and gates, which the gates read during detection.</desc>
+<defs>
+      <style>#loop-root { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; color: #2d3142; }
+      #loop-root .diagram-container { width: 100%; overflow-x: auto; }
+      @media print {
+#loop-root .diagram-container { overflow-x: visible; }
+}</style><pattern id="loop-dots" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="0.9" fill="#2d3142" fill-opacity="0.10"/></pattern><marker id="loop-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker><marker id="loop-arrow-start" markerWidth="8" markerHeight="6" refX="1" refY="3" orient="auto"><polygon points="8 0, 0 3, 8 6" fill="#4f5d75"/></marker><marker id="loop-arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#bf4520"/></marker></defs>
+<rect width="100%" height="100%" fill="#f5f5f5"/><rect width="100%" height="100%" fill="url(#loop-dots)" opacity="0.55"/>
+<path d="M 568.2,87.1 A 330,196 0 0 1 719.4,141.1" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#loop-arrow)"/>
+<path d="M 793.8,215.4 A 330,196 0 0 1 793.8,336.6" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#loop-arrow)"/>
+<path d="M 719.4,410.9 A 330,196 0 0 1 568.2,464.9" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#loop-arrow)"/>
+<path d="M 391.8,464.9 A 330,196 0 0 1 240.6,410.9" fill="none" stroke="#bf4520" stroke-width="1.4" marker-end="url(#loop-arrow-accent)"/>
+<path d="M 166.2,336.6 A 330,196 0 0 1 166.2,215.4" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#loop-arrow)"/>
+<path d="M 240.6,141.1 A 330,196 0 0 1 391.8,87.1" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#loop-arrow)"/>
+<path d="M 686.0,346.6 L 580.0,310.3" fill="none" stroke="#4f5d75" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#loop-arrow)"/>
+<rect x="606.6" y="322" width="52.8" height="12" rx="2" fill="#f5f5f5"/>
+<text x="633" y="331" fill="#4f5d75" font-size="8" font-weight="400" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle" letter-spacing="0.12em">EVIDENCE</text>
+<path d="M 274.0,346.6 L 380.0,310.3" fill="none" stroke="#4f5d75" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#loop-arrow)"/>
+<rect x="297.8" y="322" width="58.4" height="12" rx="2" fill="#f5f5f5"/>
+<text x="327" y="331" fill="#4f5d75" font-size="8" font-weight="400" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle" letter-spacing="0.12em">NEW CHECK</text>
+<path d="M 580.0,241.7 L 686.0,205.4" fill="none" stroke="#4f5d75" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#loop-arrow)"/>
+<rect x="603.8" y="218" width="58.4" height="12" rx="2" fill="#f5f5f5"/>
+<text x="633" y="227" fill="#4f5d75" font-size="8" font-weight="400" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle" letter-spacing="0.12em">GATES RUN</text>
+<rect x="400" y="52" width="160" height="56" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="480.0" y="78.0" fill="#2d3142" font-size="12" font-weight="600" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" text-anchor="middle">Operate</text>
+<text x="480.0" y="92.0" fill="#4f5d75" font-size="9" font-weight="400" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">many agents, one repo</text>
+<rect x="686" y="150" width="160" height="56" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="766.0" y="176.0" fill="#2d3142" font-size="12" font-weight="600" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" text-anchor="middle">Detect</text>
+<text x="766.0" y="190.0" fill="#4f5d75" font-size="9" font-weight="400" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">review · E2E · gates</text>
+<rect x="686" y="346" width="160" height="56" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="766.0" y="372.0" fill="#2d3142" font-size="12" font-weight="600" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" text-anchor="middle">Record honestly</text>
+<text x="766.0" y="386.0" fill="#4f5d75" font-size="9" font-weight="400" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">no backdating</text>
+<rect x="400" y="444" width="160" height="56" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="480.0" y="470.0" fill="#2d3142" font-size="12" font-weight="600" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" text-anchor="middle">Fix the root cause</text>
+<text x="480.0" y="484.0" fill="#4f5d75" font-size="9" font-weight="400" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">with a regression test</text>
+<rect x="114" y="346" width="160" height="56" rx="6" fill="#bf4520" stroke="#bf4520" stroke-width="1" fill-opacity="0.08"/>
+<text x="194.0" y="372.0" fill="#2d3142" font-size="12" font-weight="600" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" text-anchor="middle">Automate a guardrail</text>
+<text x="194.0" y="386.0" fill="#4f5d75" font-size="9" font-weight="400" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">the tool refuses next time</text>
+<rect x="114" y="150" width="160" height="56" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="194.0" y="176.0" fill="#2d3142" font-size="12" font-weight="600" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" text-anchor="middle">Send upstream</text>
+<text x="194.0" y="190.0" fill="#4f5d75" font-size="9" font-weight="400" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">harness bugs become PRs</text>
+<rect x="380" y="240" width="200" height="72" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="480.0" y="268.0" fill="#2d3142" font-size="12" font-weight="600" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" text-anchor="middle">Rules and gates</text>
+<text x="480.0" y="282.0" fill="#4f5d75" font-size="9" font-weight="400" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">shared repository record</text>
+<text x="480.0" y="294.0" fill="#4f5d75" font-size="9" font-weight="400" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">every fix leaves a check</text>
+<line x1="40" y1="540" x2="920" y2="540" stroke="#2d3142" stroke-width="0.8" stroke-opacity="0.12"/>
+<text x="40" y="556" fill="#4f5d75" font-size="8" font-weight="500" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="start" letter-spacing="0.18em">LEGEND</text>
+<rect x="40" y="572" width="14" height="10" rx="2" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="60" y="580.5" fill="#4f5d75" font-size="10" font-weight="400" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" text-anchor="start">Station</text>
+<rect x="127.19999999999999" y="572" width="14" height="10" rx="2" fill="#bf4520" stroke="#bf4520" stroke-width="1" fill-opacity="0.08"/>
+<text x="147.2" y="580.5" fill="#4f5d75" font-size="10" font-weight="400" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" text-anchor="start">Where an incident becomes a guardrail</text>
+<path d="M 382.4,577 H 410.4" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#loop-arrow)"/>
+<text x="418.4" y="580.5" fill="#4f5d75" font-size="10" font-weight="400" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" text-anchor="start">Next step</text>
+<path d="M 496.79999999999995,577 H 524.8" fill="none" stroke="#4f5d75" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#loop-arrow)"/>
+<text x="532.8" y="580.5" fill="#4f5d75" font-size="10" font-weight="400" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" text-anchor="start">Reads or writes the shared record</text>
+</svg>

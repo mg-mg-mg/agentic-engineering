@@ -37,17 +37,6 @@
   table { width:100%; border-collapse: collapse; font-size: 14.5px; }
   th, td { text-align:left; padding: 10px 12px; border-bottom:1px solid var(--line); vertical-align: top; }
   th { font-size: 12px; text-transform: uppercase; letter-spacing:.06em; color: var(--muted); }
-  /* system diagram */
-  .sys { display:grid; grid-template-columns: 1fr; gap: 12px; }
-  .owner-box { text-align:center; background:#10172a; color:#fff; border-radius:12px; padding:14px; font-weight:650; }
-  .owner-box span { display:block; font-weight:400; font-size:13px; opacity:.75; }
-  .lanes { display:grid; grid-template-columns: repeat(3, 1fr); gap:12px; }
-  .lane { background:var(--card); border:1px solid var(--line); border-top: 4px solid var(--accent); border-radius:12px; padding:16px; }
-  .lane.b { border-top-color: var(--accent2); }
-  .lane.c { border-top-color: #8b5cf6; }
-  .lane h3 { margin:0 0 6px; font-size:16px; }
-  .lane ul { margin:0; padding-left:18px; font-size:14px; color:#2b3242; }
-  .hub { text-align:center; background:#eef2ff; border:1px dashed #b7c4f5; border-radius:12px; padding:12px; font-size:14px; }
   /* pipeline */
   .pipe { display:grid; grid-template-columns: repeat(5, 1fr); gap:10px; counter-reset: step; }
   .step { position:relative; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:14px 12px 12px; font-size:13.5px; }
@@ -57,29 +46,25 @@
   .loop { margin-top:10px; font-size:13.5px; color:var(--muted); text-align:center; }
   .two { grid-template-columns: 1fr 1fr; }
   .muted { color:var(--muted); font-size:13px; }
-  .gal { display:grid; grid-template-columns:1fr; gap:16px; }
-  .gal figure { margin:0; background:var(--card); border:1px solid var(--line); border-radius:14px; overflow:hidden; }
-  .gal img { width:100%; display:block; }
-  .gal figcaption { padding:10px 14px 12px; font-size:13.5px; color:var(--muted); }
-  .gal figcaption b { color:var(--ink); }
-  @media (max-width: 860px) { .gal { grid-template-columns:1fr; } }
+  .dia { margin: 18px 0 8px; }
+  .dia img { width:100%; height:auto; display:block; border:1px solid var(--line); border-radius:14px; background:#f5f5f5; }
   footer { padding: 40px 0 56px; color:var(--muted); font-size:14px; }
   footer a { color: var(--accent); text-decoration:none; }
 
   @media (max-width: 860px) {
     header h1 { font-size: 30px; }
     .metrics { grid-template-columns: repeat(2, 1fr); }
-    .lanes, .two { grid-template-columns: 1fr; }
+    .two { grid-template-columns: 1fr; }
     .pipe { grid-template-columns: repeat(2, 1fr); row-gap: 18px; }
   }
-  @media print { header { padding:28px 0 32px; } .metric, .card, .lane, .step { box-shadow:none; break-inside: avoid; } }
+  @media print { header { padding:28px 0 32px; } .metric, .card, .step, .dia { box-shadow:none; break-inside: avoid; } }
 </style>
 </head>
 <body>
 
 <header>
   <div class="wrap">
-    <div class="eyebrow">Case study · Roles and reliability updated 2026-10-18</div>
+    <div class="eyebrow">Case study · Process and diagrams checked 2026-10-21</div>
     <h1>One engineer, an agent team.</h1>
     <p class="lead">AI agents carry implementation, independent review, risk-selected verification and bookkeeping. I own product direction, priorities and bounded authority—not every engineering decision.</p>
     <div class="who">Mingyun Chae · Senior Backend &amp; AI Agent Platform Engineer · <a href="https://github.com/mg-mg-mg">GitHub profile</a> · <a href="https://triastra.ai">TriAstra</a> · <a href="https://github.com/mg-mg-mg/agentic-delivery-kit">historical/synthetic reference code</a></div>
@@ -118,41 +103,15 @@
         <tr><td>Wording in all seven locales, including Korean</td><td>AI-managed independent exact-text-hash review; not an Owner copy-review gate</td></tr>
       </table>
     </div>
+    <figure class="dia"><img src="assets/diagrams/decision-rights.svg" width="960" height="600" loading="lazy" alt="Who decides what, by reversibility and external effect: agents decide reversible internal work and report why; code merge and production release run under standing authority after independent review and on release triggers; the Owner decides product direction and pricing once and approves credentials, external sends, payments, stores and production data."></figure>
   </section>
 
   <section>
     <h2>2. The current native system</h2>
-    <p class="sub">Approximately ten long-lived OMP role sessions work one canonical GitHub queue. Ownership is not proof that all sessions are currently running, and the role count is not a concurrency target.</p>
-    <div class="sys">
-      <div class="owner-box">Owner<span>product, priorities, bounded authority</span></div>
-      <div class="lanes">
-        <div class="lane">
-          <h3>Delivery and release</h3>
-          <ul>
-            <li><b>LEADER:</b> queue admission, coordination and cross-root integration conflicts</li>
-            <li><b>RELEASE:</b> exact-commit readiness, ordinary releases within standing approval, and approved release/store evidence</li>
-          </ul>
-        </div>
-        <div class="lane b">
-          <h3>Discovery and operations</h3>
-          <ul>
-            <li><b>DISCOVERY:</b> audits and evidence-backed Issues</li>
-            <li><b>PLATFORM, BILLING:</b> platform and billing ownership</li>
-            <li><b>GROWTH, OPENSOURCE:</b> growth and upstream work; external effects retain their applicable approval</li>
-          </ul>
-        </div>
-        <div class="lane c">
-          <h3>Maintenance and delivery</h3>
-          <ul>
-            <li><b>REFACTOR, BUG-FIX, FEATURE:</b> maintenance and product delivery</li>
-            <li>Bounded subagents, live host limits and measured memory/disk headroom, read fresh before each heavy start and sized per workload class, not a fixed global cap or worker count</li>
-            <li>One writer per branch and generated surface; authors own checks, commits, push and PRs</li>
-          </ul>
-        </div>
-      </div>
-      <div class="hub">Canonical GitHub Issues · PRs · Project · no extra dispatcher, queue ledger or timer scheduler</div>
-    </div>
-    <p>Authoring roots may integrate their own independently reviewed PRs; LEADER may integrate any authorized PR and resolves cross-root conflicts. RELEASE may also integrate release-path PRs from any author and notifies LEADER.</p>
+    <p class="sub">Eleven long-lived OMP role sessions work one canonical GitHub queue. Ownership is not proof that all sessions are currently running, and the role count is not a concurrency target.</p>
+    <figure class="dia"><img src="assets/diagrams/role-sessions.svg" width="960" height="528" loading="lazy" alt="Eleven long-lived role sessions under the Owner, in four groups: coordinate (LEADER, REVIEW), build (FEATURE, BUG-FIX, REFACTOR), platform and ship (PLATFORM, RELEASE) and specialists (BILLING, GROWTH, DISCOVERY, OPENSOURCE). Money, stores, production data, external messages and credentials still need the Owner."></figure>
+    <figure class="dia"><img src="assets/diagrams/change-lifecycle.svg" width="960" height="568" loading="lazy" alt="How one change reaches production: LEADER admits an Issue; one author root builds and proves it in an isolated worktree and opens a PR; a separate read-only reviewer gives one verdict per head; changes or a queue refusal mean a new head and a new review; the merge queue runs admission on the PR combined with current main and makes a head-pinned squash merge; RELEASE ships an exact main SHA only on a release trigger."></figure>
+    <p>Roots delegate bounded slices within live host limits and measured memory/disk headroom, read fresh before each heavy start and sized per workload class, not a fixed global cap or worker count. One writer owns each branch and generated surface. Authors own checks, commits, push and PRs, then enqueue their independently reviewed PRs; one merge queue, run by PLATFORM, performs every merge to main. LEADER keeps priority and resolves cross-root conflicts. Canonical GitHub Issues, PRs and Project state are the only queue: no extra dispatcher, queue ledger or timer scheduler.</p>
     <p>Before sorting or admission, each candidate gets a compact evidence-backed product judgment in its existing Issue or PR: user harm and trust, core user value, the current journey bottleneck, affected scope with observed versus inferred evidence, and end-to-end completion cost and recurring value. The goal is observed useful user outcomes and recurring operational value, not PR or worker counts; a PR's age or sunk effort is not value.</p>
     <div class="grid two">
       <div class="card"><b>Admission follows actual progress.</b> Finish actionable existing PRs before ordinary new implementation, then admit eligible independent Issues. Admission follows actual assigned-task progress, dependencies, writer custody and effective host capacity. Distinguish working, waiting, idle and unknown. Silence does not terminate a writer or transfer custody. Record a blocked item's resumption condition and continue other authorized work.</div>
@@ -165,6 +124,7 @@
   <section id="reliability">
     <h2>What broke at ~100 concurrent agents, and what we automated</h2>
     <p class="sub">From my local OMP session logs, five-minute samples of first-event-to-last-write intervals give approximately 1,450 OMP coding-agent sessions and 3,430 sub-agent runs since 2026-09-23, a peak of ~116 concurrent OMP coding agents (October 14, 22:29 UTC) and a seven-day average of ~54 in the 2026-10-18 snapshot. These figures cover <b>OMP coding-agent sessions only</b>, excluding the Aside browser agent. Overlapping intervals do not establish active execution.</p>
+    <figure class="dia"><img src="assets/diagrams/incident-loop.svg" width="960" height="600" loading="lazy" alt="Incidents become automated guardrails: operate many agents on one repository; detect problems through review, E2E and gates; record them honestly without backdating; fix the root cause with a regression test; automate a guardrail so the tool refuses next time; send harness bugs upstream; evidence and new checks accumulate in the shared repository rules and gates."></figure>
     <div class="grid two">
       <div class="card"><b>Missing release admission evidence → fail-closed integration.</b> A release-path change merged without required evidence. The gap was recorded without backdating and evidence completed afterwards. The merge tool now refuses release-critical PRs lacking a consistent admission line; classification combines an explicit list with the release entrypoints' transitive callee closure.</div>
       <div class="card"><b>Cleanup race → quarantine and verify.</b> An independent reviewer reproduced races where cleanup could delete a replaced file. Fixed before merge with atomic quarantine rename and identity/content verification, rather than trusting an earlier path check.</div>
@@ -179,12 +139,12 @@
     <h2>3. Gates that make speed safe</h2>
     <div class="pipe">
       <div class="step"><b>Targeted proof</b>Select regressions and actual changed-path smoke by risk and affected consumers; self-review and rebase as needed.</div>
-      <div class="step"><b>Independent fixed-pair review</b>A distinct read-only session reviews exact head/base commits and the predicted merge tree, including newly tracked files and integration interactions.</div>
-      <div class="step"><b>Full gate once, last</b>Resolve findings first. Run the required broad gate on the final reviewed head; no extra verifier merely to repeat another lane's suite.</div>
+      <div class="step"><b>Review each head once</b>A distinct read-only session reviews the exact head and records one <code>decision: MERGEABLE</code> verdict or findings. A changed head needs a fresh review; a moved base does not.</div>
+      <div class="step"><b>Composed-tree admission</b>The author enqueues the reviewed head. The merge queue combines it with current main and runs admission checks on that tree, including Rust and migration order. Refusals return the exact reason; failed tests are not retried automatically.</div>
       <div class="step"><b>Qualified evidence reuse</b>Inspect original logs and prove relevant inputs equivalent. Retain the original tested commit and disclose warm-binary reuse. Changed inputs or uncertainty require affected checks again.</div>
-      <div class="step"><b>Pinned integration</b>Outside the lock, freeze the reviewed head, admitted base, predicted merge tree and any extension certificate in a plan; reject duplicate database-migration versions across the reviewed head and live main. Inside a short fail-closed main lease, execute one head-pinned squash. Count a merge only when its single parent equals the admitted base, its tree equals the prediction and the branch ref reads back as the squash commit. Ambiguous attempts retain the lock for reconciliation, not retries. Releases use a separate lock and pinned checkout with their own exact-commit gate evidence and postcheck. Native tool locks and per-workload headroom replace retired Cargo-slot caps.</div>
+      <div class="step"><b>Pinned integration</b>Inside a short fail-closed main lease, the queue runner executes one head-pinned squash. Count a merge only when its single parent equals the admitted base, its tree equals the prediction and the branch ref reads back as the squash commit. Ambiguous attempts are reconciled, not retried. Releases happen only on release triggers, from a separate lock and pinned checkout with their own exact-commit gate evidence and postcheck.</div>
     </div>
-    <div class="loop">A changed head needs fresh independent review. A changed base keeps the verdict only when the reviewer's transitive invalidation set is untouched, there are no conflicts, and relevant inputs remain equivalent; record the exact live-base/tree certificate. Otherwise the base move needs independent delta review. P1/P2 findings need a plausible reachable consumer or caller path; a reviewer-proven false PASS against a gate's promised contract blocks merge even if today's inputs do not trigger it. Required independently observed changed-path proof still matters. Missing, failed or interrupted evidence blocks admission. Record executed checks, reused evidence and remaining gaps separately; no unmeasured speedup is implied.</div>
+    <div class="loop">The author alone changes the branch. Payment and release-path changes get a specialist reviewer. P1/P2 findings need a plausible reachable consumer or caller path; a reviewer-proven false PASS against a gate's promised contract blocks merge even if today's inputs do not trigger it. Missing, failed or interrupted evidence blocks admission. Record executed checks, reused evidence and remaining gaps separately; no unmeasured speedup is implied.</div>
     <div class="grid two">
       <div class="card"><b>Before runtime.</b> Typed contracts, generated-client freshness, owning tests and actual-surface visual proof cover relevant risks. Inventory which gate executes each test and its explicit exclusions.</div>
       <div class="card"><b>AI-managed locale quality.</b> All seven locales, including Korean, start from locale-neutral meaning and require independent exact-text-hash <code>PASS + LLM_CRITIQUED</code>. Sensitive copy also needs domain review; pricing, legal and policy facts retain their owners.</div>
@@ -219,21 +179,13 @@
     <p class="sub">Counted 2026-10-18: 7 merged (five oh-my-pi, two jcode), 5 open and 3 closed without merge among my PRs across oh-my-pi, jcode, Flutter, OpenTelemetry Rust and ts-rs. Query: <code>author:mg-mg-mg is:pr is:public -user:mg-mg-mg -org:TriAstra-ai</code>, filtered to those five repositories. Open: oh-my-pi #15647 and #15478, <a href="https://github.com/flutter/flutter/pull/194429">Flutter #194429</a>, <a href="https://github.com/open-telemetry/opentelemetry-rust/pull/3791">OpenTelemetry Rust #3791</a> and <a href="https://github.com/Aleph-Alpha/ts-rs/pull/501">ts-rs #501</a>. The maintainer's #15509 is not counted as my merged PR. <a href="https://github.com/mg-mg-mg/mg-mg-mg/blob/main/CONTRIBUTIONS.md">Contribution index</a>.</p>
   </section>
 
-  <section id="evidence">
-    <h2>Historical visual evidence</h2>
-    <p class="sub">This historical blueprint contains obsolete approval rules. The current text, not the image, describes today's operating contract.</p>
-    <div class="gal">
-      <figure><a href="agent-blueprint.png"><img src="agent-blueprint.png" alt="Historical operating blueprint: OpenAI implementation, Anthropic review and small-model lookups in isolated worktrees; Owner architecture and irreversible-action approvals; separate author and read-only reviewer, pinned integration, merge is not deploy; old claims of about 19% sent back and 0/231 reverted, labeled all PRs merged Sep 11 to Oct 8, 2026; a reviewer caught personal details in error reports and the author added a regression in 1 h 16 m" loading="lazy" width="1920" height="1080" style="height:auto"></a><figcaption><b>Historical blueprint, not current metric evidence.</b> Role routing and separate author/reviewer sessions remain useful ideas. Mandatory Owner architecture/Korean review and deployment approvals are obsolete. Different-model routing does not substitute for independent fixed-pair review. Its "All PRs" / 231 denominator is unreproduced and inaccurate: the defined UTC count above is 249, with no merged PR titled "Revert". The embedded image text needs regeneration from an editable source, not pixel editing.</figcaption></figure>
-    </div>
-  </section>
-
   <section>
     <h2>Publication hygiene</h2>
     <p>Before publishing, stage the intended files and run <code>bash scripts/check-publication.sh origin/main</code> (Git and Python 3 only). The pinned pull-request workflow checks staged text, incoming commit trees and messages, and requires GitHub noreply author and committer identities. It rejects non-noreply email addresses and common credential patterns in text. This limited guard does not inspect binary media, detect every secret or remove existing history; public text and images still require human review. Existing history is intentionally unchanged.</p>
   </section>
 
   <footer>
-    Product source code is private; this page describes the process, not the code. Roles and reliability updated 2026-10-18; broader practice checked 2026-10-15. Measurements carry their own dates, not a claim of current rates.<br>
+    Product source code is private; this page describes the process, not the code. Process and diagrams checked 2026-10-21; reliability accounts updated 2026-10-18. Measurements carry their own dates, not a claim of current rates.<br>
     Mingyun Chae · <a href="https://github.com/mg-mg-mg">GitHub profile</a> · <a href="https://github.com/mg-mg-mg/agentic-engineering#readme">Text case study</a>
   </footer>
 </main>

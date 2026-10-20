@@ -6,7 +6,7 @@ Independent review caught a privacy problem in a chart-calculation-range fix bef
 
 **Visual version:** https://mg-mg-mg.github.io/agentic-engineering/
 
-*Mingyun Chae · October 2026. Case study of the delivery process behind [TriAstra](https://triastra.ai) and a client engagement. Product source code is private. Role and reliability update: 2026-10-18; the broader process description was checked against maintained main-branch rules on 2026-10-15. Measurements carry their own dates, not a claim of current rates.*
+*Mingyun Chae · October 2026. Case study of the delivery process behind [TriAstra](https://triastra.ai) and a client engagement. Product source code is private. Process description and diagrams checked against maintained main-branch rules on 2026-10-21; reliability accounts updated 2026-10-18. Measurements carry their own dates, not a claim of current rates.*
 
 ## TL;DR
 
@@ -37,25 +37,28 @@ The repository contract makes decision rights explicit: an agent should decide o
 | Product direction, pricing, legal or user-facing policy facts, scope expansion | Owner decides once; agents continue independent authorized work |
 | Wording in all seven locales, including Korean | AI-managed, independent exact-text-hash review; not an Owner copy-review gate |
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/diagrams/decision-rights-dark.svg">
+  <img alt="Who decides what, by reversibility and external effect: agents decide reversible internal work and report why; code merge and production release run under standing authority after independent review and on release triggers; the Owner decides product direction and pricing once and approves credentials, external sends, payments, stores and production data." src="assets/diagrams/decision-rights.svg" width="100%">
+</picture>
+
 ## 2. The current native system
 
-```mermaid
-flowchart TB
-  O["Owner: product, priorities, bounded authority"]
-  R["About ten long-lived OMP role sessions"]
-  G[("Canonical GitHub Issues / PRs / Project")]
-  A["Sole author: isolated worktree, checks, commit, push, PR"]
-  V["Independent read-only review: fixed head/base and predicted merge tree"]
-  Q["Required full gate once, last; qualified evidence reuse"]
-  M["Authorized integration: pinned head, parent/tree readback"]
-  O --> R --> G --> A --> V --> Q --> M
-```
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/diagrams/change-lifecycle-dark.svg">
+  <img alt="How one change reaches production: LEADER admits an Issue; one author root builds and proves it in an isolated worktree and opens a PR; a separate read-only reviewer gives one verdict per head; changes or a queue refusal mean a new head and a new review; the merge queue runs admission on the PR combined with current main and makes a head-pinned squash merge; RELEASE ships an exact main SHA only on a release trigger." src="assets/diagrams/change-lifecycle.svg" width="100%">
+</picture>
 
-### About ten long-lived OMP role sessions
+### Eleven long-lived OMP role sessions
 
-The current arrangement has approximately ten long-lived role sessions: **LEADER, RELEASE, DISCOVERY, PLATFORM, BILLING, REFACTOR, BUG-FIX, FEATURE, GROWTH and OPENSOURCE**. These divide coordination, release readiness, discovery, platform and billing ownership, maintenance, product delivery, growth and upstream work. They are ownership boundaries, not ten mandatory stages or a fixed concurrency target. LEADER coordinates queue and integration conflicts; RELEASE owns exact-commit readiness and releases within applicable authority. External effects still require their applicable approval.
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/diagrams/role-sessions-dark.svg">
+  <img alt="Eleven long-lived role sessions under the Owner, in four groups: coordinate (LEADER, REVIEW), build (FEATURE, BUG-FIX, REFACTOR), platform and ship (PLATFORM, RELEASE) and specialists (BILLING, GROWTH, DISCOVERY, OPENSOURCE). Money, stores, production data, external messages and credentials still need the Owner." src="assets/diagrams/role-sessions.svg" width="100%">
+</picture>
 
-These are long-lived ownership roles, not evidence that all sessions are currently running. Roots delegate bounded slices within live host limits and measured memory/disk headroom, read fresh before each heavy start and sized per workload class, not a fixed global cap or worker count. One writer owns each branch and generated surface. Authors own checks, commits, push and PR preparation. Authoring roots may integrate their own independently reviewed PRs; LEADER may integrate any authorized PR and resolves cross-root conflicts. RELEASE may also integrate release-path PRs from any author and notifies LEADER.
+The current arrangement has eleven long-lived role sessions: **LEADER, REVIEW, FEATURE, BUG-FIX, REFACTOR, PLATFORM, RELEASE, BILLING, GROWTH, DISCOVERY and OPENSOURCE**. These divide coordination, independent review, product delivery, maintenance, platform and release ownership, billing, growth, discovery and upstream work. They are ownership boundaries, not eleven mandatory stages or a fixed concurrency target. LEADER coordinates priority and cross-root conflicts; RELEASE owns exact-commit readiness and releases within applicable authority. External effects still require their applicable approval.
+
+These are long-lived ownership roles, not evidence that all sessions are currently running. Roots delegate bounded slices within live host limits and measured memory/disk headroom, read fresh before each heavy start and sized per workload class, not a fixed global cap or worker count. One writer owns each branch and generated surface. Authors own checks, commits, push and PR preparation, then enqueue their independently reviewed PRs; one merge queue, run by PLATFORM, performs every merge to main. LEADER keeps priority and resolves cross-root conflicts.
 
 ### Actual progress, not another scheduler
 
@@ -76,10 +79,10 @@ Earlier work ran in the Codex CLI and Claude Code, then OMP and jcode; today OMP
 ## 3. Gates that make speed safe
 
 1. **Plan minimum proof by changed risk and consumers.** Run targeted regressions and actual changed-path smoke, then adversarial self-review and any needed rebase.
-2. **Review a fixed pair independently.** A distinct read-only session reviews exact head/base commits and the predicted merge tree, including integration interactions and newly tracked files. The author alone changes the branch. A changed head needs fresh independent review. A changed base keeps the verdict only when the reviewer's transitive invalidation set is untouched, there are no conflicts, and relevant inputs remain equivalent; record the exact live-base/tree certificate. Otherwise the base move needs independent delta review. P1/P2 findings need a plausible reachable consumer or caller path; a reviewer-proven false PASS against a gate's promised contract blocks merge even if today's inputs do not trigger it.
-3. **Run the required full gate once, last.** Resolve findings before the broad gate on the final reviewed head. Do not add a verifier merely to repeat the author's or reviewer's suite. Required independently observed changed-path proof still matters.
+2. **Review each head once, independently.** A distinct read-only session reviews the exact head and records one `decision: MERGEABLE` verdict or findings. The author alone changes the branch, and a changed head needs a fresh independent review. A moved base does not need another review: the queue tests the combination instead. Payment and release-path changes get a specialist reviewer. P1/P2 findings need a plausible reachable consumer or caller path; a reviewer-proven false PASS against a gate's promised contract blocks merge even if today's inputs do not trigger it.
+3. **Admit on the exact composed tree.** The author enqueues the reviewed head. The merge queue combines it with current main and runs the admission checks on that tree, including Rust and database-migration-order checks. A refusal returns the exact reason to the author; failed tests are never retried automatically. Do not add a verifier merely to repeat the author's or reviewer's suite.
 4. **Reuse evidence only with proof.** Inspect complete original logs and prove relevant source, dependencies, toolchain, flags, fixtures and operational inputs equivalent. Keep the original tested commit visible; disclose warm-binary reuse. Changed inputs, new interactions or uncertainty require affected checks to run again. Failed, missing or interrupted evidence blocks admission.
-5. **Integrate and release separately.** Outside the lock, freeze the reviewed head, admitted base, predicted merge tree and any extension certificate in a plan; reject duplicate database-migration versions across the reviewed head and live main. Inside a short fail-closed main lease, execute one head-pinned squash. A merge counts only when its single parent equals the admitted base, its tree equals the prediction and the branch ref reads back as the squash commit. Ambiguous attempts retain the lock for reconciliation, not retries. Production releases use a separate lock and pinned checkout with their own exact-commit gate evidence and postcheck. Native tool locks and per-workload headroom replace retired Cargo-slot caps.
+5. **Integrate and release separately.** Inside a short fail-closed main lease, the queue runner executes one head-pinned squash. A merge counts only when its single parent equals the admitted base, its tree equals the prediction and the branch ref reads back as the squash commit. Ambiguous attempts are reconciled, not retried. Production releases happen only on release triggers, never per merge, from a separate lock and pinned checkout with their own exact-commit gate evidence and postcheck.
 6. **Catch errors before runtime.** Typed contracts, generated-client freshness, owning tests and actual-surface visual proof cover the relevant risks. Test inventory must name which gate executes each test and any explicit exclusions; a test count alone proves little.
 7. **AI-managed locale quality, including Korean.** Start from locale-neutral meaning, author each locale independently, and require an independent exact-text-hash `PASS + LLM_CRITIQUED` verdict. Sensitive copy also needs domain review; pricing, legal and policy facts retain their decision owners.
 
@@ -90,6 +93,11 @@ Every handoff distinguishes checks actually run, qualified reused evidence and r
 From my local OMP session logs, five-minute samples of first-event-to-last-write intervals give approximately **1,450 OMP coding-agent sessions** and **3,430 sub-agent runs** since 2026-09-23, a peak of **~116 concurrent OMP coding agents (October 14, 22:29 UTC)** and a seven-day average of **~54** in the 2026-10-18 snapshot. These figures cover **OMP coding-agent sessions only**, excluding the Aside browser agent. Overlapping intervals do not establish active execution.
 
 These failures were found during operation at that scale; concurrency is context, not proof that it caused every incident:
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/diagrams/incident-loop-dark.svg">
+  <img alt="Incidents become automated guardrails: operate many agents on one repository; detect problems through review, E2E and gates; record them honestly without backdating; fix the root cause with a regression test; automate a guardrail so the tool refuses next time; send harness bugs upstream; evidence and new checks accumulate in the shared repository rules and gates." src="assets/diagrams/incident-loop.svg" width="100%">
+</picture>
 
 | What broke or needed proof | What changed |
 | --- | --- |
@@ -121,12 +129,6 @@ Running many concurrent agent sessions on one machine stresses the harness itsel
 - **jcode:** contiguous TUI typing grouped into one undo step ([#1714](https://github.com/1jehuang/jcode/pull/1714)) and restored CI formatting ([#1739](https://github.com/1jehuang/jcode/pull/1739)), both merged.
 
 Counted 2026-10-18: **7 merged, 5 open and 3 closed without merge** among my PRs across oh-my-pi, jcode, Flutter, OpenTelemetry Rust and ts-rs. Query: `author:mg-mg-mg is:pr is:public -user:mg-mg-mg -org:TriAstra-ai`, filtered to those five repositories. The seven merges are five in oh-my-pi and two in jcode; my oh-my-pi #15647 and #15478, [Flutter #194429](https://github.com/flutter/flutter/pull/194429), [OpenTelemetry Rust #3791](https://github.com/open-telemetry/opentelemetry-rust/pull/3791) and [ts-rs #501](https://github.com/Aleph-Alpha/ts-rs/pull/501) remain open. The maintainer's #15509 is not counted as my merged PR. [Contribution index](https://github.com/mg-mg-mg/mg-mg-mg/blob/main/CONTRIBUTIONS.md).
-
-## Historical visual evidence
-
-![Historical operating blueprint: OpenAI implementation, Anthropic review and small-model lookups in isolated worktrees; Owner architecture and irreversible-action approvals; separate author and read-only reviewer, pinned integration, merge is not deploy; old claims of about 19% sent back and 0/231 reverted, labeled all PRs merged Sep 11 to Oct 8, 2026; a reviewer caught personal details in error reports and the author added a regression in 1 h 16 m](./agent-blueprint.png)
-
-**Historical blueprint, not current metric evidence:** role routing and separate author/reviewer sessions remain useful ideas. The image's mandatory Owner architecture/Korean review and deployment approvals are obsolete; different-model routing is not a substitute for independent fixed-pair review. Its "All PRs" / 231 denominator is unreproduced and inaccurate: the defined UTC count above is 249, with no merged PR titled "Revert". The embedded image text needs regeneration from an editable source, not pixel editing.
 
 ## Publication hygiene
 
