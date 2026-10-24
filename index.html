@@ -56,6 +56,8 @@
     .metrics { grid-template-columns: repeat(2, 1fr); }
     .two { grid-template-columns: 1fr; }
     .pipe { grid-template-columns: repeat(2, 1fr); row-gap: 18px; }
+    .dia { overflow-x:auto; }
+    .dia img { min-width:960px; }
   }
   @media print { header { padding:28px 0 32px; } .metric, .card, .step, .dia { box-shadow:none; break-inside: avoid; } }
 </style>
@@ -64,7 +66,7 @@
 
 <header>
   <div class="wrap">
-    <div class="eyebrow">Case study · Process and diagrams checked 2026-10-21</div>
+    <div class="eyebrow">Case study · Operating model updated 2026-10-24</div>
     <h1>One engineer, an agent team.</h1>
     <p class="lead">AI agents carry implementation, independent review, risk-selected verification and bookkeeping. I own product direction, priorities and bounded authority—not every engineering decision.</p>
     <div class="who">Mingyun Chae · Senior Backend &amp; AI Agent Platform Engineer · <a href="https://github.com/mg-mg-mg">GitHub profile</a> · <a href="https://triastra.ai">TriAstra</a> · <a href="https://github.com/mg-mg-mg/agentic-delivery-kit">historical/synthetic reference code</a></div>
@@ -96,8 +98,8 @@
         <tr><th style="width:62%">Decision</th><th>Authority</th></tr>
         <tr><td>Technical design, root-cause scope, refactoring, slicing, test strategy and task order</td><td>Agent decides and reports why</td></tr>
         <tr><td>Tooling recovery, Issues, branches, worktrees, PRs, docs and rule updates</td><td>Agent acts within scope, then records</td></tr>
-        <tr><td>Independently reviewed, verified code merge and criteria-based reconciliation</td><td>Standing task authority; original local-only, PR-only or review-only limits remain binding</td></tr>
-        <tr><td>Ordinary exact-main-commit production release</td><td>RELEASE releases only on defined release triggers, never per merge, under bounded standing approval, with readiness, full-gate evidence and postcheck; no per-commit prompt</td></tr>
+        <tr><td>Independently reviewed, verified code merge and criteria-based reconciliation</td><td>The author prepares the qualified PR; the OPS-owned queue merges. The owning Root reconciles the outcome within the original task scope; narrower limits remain binding</td></tr>
+        <tr><td>Ordinary exact-main-commit production release</td><td>OPS releases only on defined triggers, never per merge, under applicable authority, with required readiness, exact-commit evidence and postcheck</td></tr>
         <tr><td>Money, live payments, stores, external sends, production data/Ops actions, accounts, credentials and boundary-crossing releases</td><td>Explicit applicable Owner approval; code merge does not grant it</td></tr>
         <tr><td>Product direction, pricing, legal/policy facts and scope expansion</td><td>Owner decides once; independent authorized work continues</td></tr>
         <tr><td>Wording in all seven locales, including Korean</td><td>AI-managed independent exact-text-hash review; not an Owner copy-review gate</td></tr>
@@ -106,19 +108,43 @@
     <figure class="dia"><img src="assets/diagrams/decision-rights.svg" width="960" height="600" loading="lazy" alt="Who decides what, by reversibility and external effect: agents decide reversible internal work and report why; code merge and production release run under standing authority after independent review and on release triggers; the Owner decides product direction and pricing once and approves credentials, external sends, payments, stores and production data."></figure>
   </section>
 
-  <section>
-    <h2>2. The current native system</h2>
-    <p class="sub">Eleven long-lived OMP role sessions work one canonical GitHub queue. Ownership is not proof that all sessions are currently running, and the role count is not a concurrency target.</p>
-    <figure class="dia"><img src="assets/diagrams/role-sessions.svg" width="960" height="528" loading="lazy" alt="Eleven long-lived role sessions under the Owner, in four groups: coordinate (LEADER, REVIEW), build (FEATURE, BUG-FIX, REFACTOR), platform and ship (PLATFORM, RELEASE) and specialists (BILLING, GROWTH, DISCOVERY, OPENSOURCE). Money, stores, production data, external messages and credentials still need the Owner."></figure>
-    <figure class="dia"><img src="assets/diagrams/change-lifecycle.svg" width="960" height="568" loading="lazy" alt="How one change reaches production: LEADER admits an Issue; one author root builds and proves it in an isolated worktree and opens a PR; a separate read-only reviewer gives one verdict per head; changes or a queue refusal mean a new head and a new review; the merge queue runs admission on the PR combined with current main and makes a head-pinned squash merge; RELEASE ships an exact main SHA only on a release trigger."></figure>
-    <p>Roots delegate bounded slices within live host limits and measured memory/disk headroom, read fresh before each heavy start and sized per workload class, not a fixed global cap or worker count. One writer owns each branch and generated surface. Authors own checks, commits, push and PRs, then enqueue their independently reviewed PRs; one merge queue, run by PLATFORM, performs every merge to main. LEADER keeps priority and resolves cross-root conflicts. Canonical GitHub Issues, PRs and Project state are the only queue: no extra dispatcher, queue ledger or timer scheduler.</p>
-    <p>Before sorting or admission, each candidate gets a compact evidence-backed product judgment in its existing Issue or PR: user harm and trust, core user value, the current journey bottleneck, affected scope with observed versus inferred evidence, and end-to-end completion cost and recurring value. The goal is observed useful user outcomes and recurring operational value, not PR or worker counts; a PR's age or sunk effort is not value.</p>
-    <div class="grid two">
-      <div class="card"><b>Admission follows actual progress.</b> Finish actionable existing PRs before ordinary new implementation, then admit eligible independent Issues. Admission follows actual assigned-task progress, dependencies, writer custody and effective host capacity. Distinguish working, waiting, idle and unknown. Silence does not terminate a writer or transfer custody. Record a blocked item's resumption condition and continue other authorized work.</div>
-      <div class="card"><b>Observation-only holds.</b> Landed code, released code and observed outcomes are distinct states. Keep an observation-only Issue open with its window and due check; admit the check, not another implementation attempt.</div>
+  <section id="operating-model">
+    <h2>2. Current ownership and execution</h2>
+    <p class="sub">Five continuing ownership roles, not five serial stages, a concurrency target or proof that every session is running.</p>
+    <div class="card">
+      <table>
+        <tr><th>Root</th><th>Owns</th></tr>
+        <tr><td><b>LEADER</b></td><td>Product priorities, admission and cross-Root scope/custody conflicts</td></tr>
+        <tr><td><b>REVIEW</b></td><td>Distinct fixed-head review, findings and evidence assessment</td></tr>
+        <tr><td><b>ENGINEERING</b></td><td>Product/domain source, defects, maintenance and dependencies within its assigned scope</td></tr>
+        <tr><td><b>OPS</b></td><td>Platform/infrastructure source, shared tooling, the sole merge queue and authorized exact-commit releases</td></tr>
+        <tr><td><b>GROWTH</b></td><td>Content/analytics source, acquisition, conversion, retention and support preparation within its assigned scope and effect permissions</td></tr>
+      </table>
     </div>
-    <p><b>Browser and peer messages.</b> A browser teammate handles authorized test-mode E2E flows, locale/UX audits and read-only dashboards. Browser communication uses a file mailbox and notification relay. Coding sessions use direct addressed delivery between sessions, with recipient liveness checks and no browser relay. Messages use Request / Result / Next / Action required sections and carry no authority; pure FYI belongs on the owning Issue or PR, not in the mailbox. Durable decisions and evidence belong there too. The two transports are different mechanisms, not evidence of an identical end-to-end benchmark.</p>
-    <p class="muted"><b>How it evolved — October 2026.</b> Earlier work ran in the Codex CLI and Claude Code, then OMP and jcode; today OMP is the only coding host, routing OpenAI and Anthropic models by role. The timer-driven pool and privileged dispatcher were retired. Separate verifier replay and per-deploy approval are historical. The public kit is a historical/synthetic reference with reusable lease, guards, governance checks and navigation evaluation mechanisms—not the current workflow or a demonstrated OMP adapter. Synthetic tests do not establish live sandbox containment.</p>
+    <figure class="dia" tabindex="0"><img src="assets/diagrams/role-sessions.svg" width="960" height="528" loading="lazy" alt="Five ownership roles: LEADER and REVIEW coordinate and assess evidence; ENGINEERING owns product source in scope, OPS owns platform/infrastructure, the sole queue and authorized releases, and GROWTH owns content/analytics in scope. Roots appoint bounded sole-writer workers and retain outcome accountability."></figure>
+    <p>A Root owns the outcome: priorities, scope, shared contracts, writer custody, integration readiness and decision/effect boundaries. Any authoring Root can appoint a worker as the sole branch writer. Workers carry substantial bounded investigation, implementation and proof through to a usable result, not merely research and handoff. The Root remains accountable for integration. Independent read-only review assesses frozen source rather than approving the reviewer's own authoring.</p>
+    <p>Each repository Issue has one primary worker, one canonical worktree—including retries and review—one source writer and one integration owner. Reuse a suitable idle worker rather than starting duplicate campaigns. Review reads the existing frozen lane; a message, age or silence does not authorize another writer or transfer custody. Workers receive only assignment-specific permissions, not implicit deployment, payment, account or external-effect authority.</p>
+    <figure class="dia" tabindex="0"><img src="assets/diagrams/change-lifecycle.svg" width="960" height="568" loading="lazy" alt="One change has separate source, review, queue-merge and release facts. A Root appoints one author, independent review assesses frozen source, the OPS queue selects required composed-tree proof, and OPS releases an exact main commit only on an authorized trigger."></figure>
+    <p>Authors own checks, commits, push and PR preparation. The owning Root coordinates integration readiness; the <b>OPS-owned queue alone merges</b>. OPS deploys an exact main commit only under a real release trigger and applicable authority. Authoring, merging, serving a release and observing a useful user outcome are different facts. Diagrams explain these boundaries, not installation or permission evidence.</p>
+    <div class="grid two">
+      <div class="card"><b>Continue eligible disjoint work.</b> Prioritize findings and actionable revisions while independent authorized work proceeds in parallel. Do not wait for every review or merge. A blocked item keeps its resumption condition; it does not license duplicate writers or redispatch of completed implementation.</div>
+      <div class="card"><b>Observation-only holds.</b> Landed code, released code and observed outcomes are distinct. Keep an observation-only Issue open with its window and due check; admit the check, not another implementation attempt.</div>
+    </div>
+    <h3 id="records">Durable work, maintained meaning and execution state</h3>
+    <div class="card">
+      <table>
+        <tr><th>Record</th><th>Authority and boundary</th></tr>
+        <tr><td>GitHub Issues / PRs / Project</td><td>Durable scope, priorities, ownership, decisions, evidence and remaining outcome criteria</td></tr>
+        <tr><td>Maintained knowledge wiki</td><td>Reusable meaning, contracts and operating policy—not a second product backlog</td></tr>
+        <tr><td>Execution state / code controller</td><td>Mechanical runtime transitions, leases, process lifecycle and recovery—not another product-priority ledger</td></tr>
+      </table>
+    </div>
+    <p>Human/AI judgment selects outcomes and resolves semantic exceptions; code should automate repetitive execution mechanics. Ordinary authorized work does not require a CPU/RAM/disk approval, an ACK receipt or an extra manual audit ritual. Real source ownership, native tool locks, privacy, authorization, failures and explicit stop conditions remain binding; a diagnostic is not a permission token.</p>
+    <h3 id="controller-design">Controller design and installation</h3>
+    <p>The code-driven controller boundary is <b>design / work in progress</b>, not proof that a new controller or private adapter is installed or has completed real delivery runs. Source, a passing synthetic example, installation, serving behavior and measured outcomes need different evidence. The implementation direction is a Rust-first core with only necessary SDK bridges, not a claim that every component is already Rust or that a live migration is qualified.</p>
+    <p>The separate <a href="https://github.com/mg-mg-mg/agentic-delivery-kit#readme">agentic-delivery-kit README</a>, read on 2026-10-24, describes an earlier synthetic dispatcher reference and explicitly says it has no OMP adapter. Its source is useful for studying mechanisms; it is not evidence of private installation, containment or operational results. Substituting an executable name or copying a diagram does not establish integration.</p>
+    <p><b>Browser work and messages.</b> Use an owned context for authorized UI checks and read-only operational inspection. Messages coordinate a bounded request, result or exception; they do not create effect authority or an ACK gate. Durable decisions and evidence return to the owning Issue or PR, not another mailbox ledger.</p>
+    <p class="muted"><b>How it evolved — October 2026.</b> Earlier work used the Codex CLI, Claude Code, OMP and jcode. Current coding uses OMP with OpenAI Codex routing; earlier multi-vendor routing is historical, not a definition of independent review. The timer-driven pool and privileged dispatcher were retired. This history and the public reference are not proof that the <a href="#controller-design">controller design</a> is installed.</p>
   </section>
 
   <section id="reliability">
@@ -128,7 +154,7 @@
     <div class="grid two">
       <div class="card"><b>Missing release admission evidence → fail-closed integration.</b> A release-path change merged without required evidence. The gap was recorded without backdating and evidence completed afterwards. The merge tool now refuses release-critical PRs lacking a consistent admission line; classification combines an explicit list with the release entrypoints' transitive callee closure.</div>
       <div class="card"><b>Cleanup race → quarantine and verify.</b> An independent reviewer reproduced races where cleanup could delete a replaced file. Fixed before merge with atomic quarantine rename and identity/content verification, rather than trusting an earlier path check.</div>
-      <div class="card"><b>Build sizing → measured headroom.</b> Budgeted 32 GB; one production build measured a sampled peak of 14.7 GB RSS with zero swap. Sampling can miss short peaks. This is one workload observation, not a whole-system maximum or a future capacity guarantee.</div>
+      <div class="card"><b>Historical build sizing—not a current approval rule.</b> Budgeted 32 GB for that run; one production build measured a sampled peak of 14.7 GB RSS with zero swap. Sampling can miss short peaks. This is one dated workload observation, not a whole-system maximum, future capacity guarantee or permission requirement.</div>
       <div class="card"><b>Git hook environment leak → isolation.</b> A test fixture most likely inherited a Git hook's <code>GIT_*</code> environment and flipped <code>core.bare</code> in the shared repository. Fixed with isolated Git environments; the same bug class is proposed upstream in <a href="https://github.com/flutter/flutter/pull/194429">Flutter #194429</a>, open as of 2026-10-18.</div>
     </div>
     <p class="sub">Private-operation accounts, not independently rerunnable public incident records. No private PRs, internal identifiers or infrastructure layout are published. Preventive guardrails and pre-merge reproductions are not measured reductions in incident rate.</p>
@@ -138,11 +164,11 @@
   <section>
     <h2>3. Gates that make speed safe</h2>
     <div class="pipe">
-      <div class="step"><b>Targeted proof</b>Select regressions and actual changed-path smoke by risk and affected consumers; self-review and rebase as needed.</div>
-      <div class="step"><b>Review each head once</b>A distinct read-only session reviews the exact head and records one <code>decision: MERGEABLE</code> verdict or findings. A changed head needs a fresh review; a moved base does not.</div>
-      <div class="step"><b>Composed-tree admission</b>The author enqueues the reviewed head. The merge queue combines it with current main and runs admission checks on that tree, including Rust and migration order. Refusals return the exact reason; failed tests are not retried automatically.</div>
+      <div class="step"><b>Required owning proof</b>Select behavioral checks and actual changed-path smoke by risk and affected consumers. No unrelated verifier or manual hand-audit gate.</div>
+      <div class="step"><b>Independent frozen-source review</b>A distinct read-only session records a fixed-head verdict with the relevant base/composition identified. New heads need fresh review; base drift needs impact assessment and affected proof.</div>
+      <div class="step"><b>Composed-tree admission</b>The OPS queue combines the qualified head with current main and selects required risk/consumer checks, including migration order when applicable. Refusals retain real causes; failures are not rerun until they pass.</div>
       <div class="step"><b>Qualified evidence reuse</b>Inspect original logs and prove relevant inputs equivalent. Retain the original tested commit and disclose warm-binary reuse. Changed inputs or uncertainty require affected checks again.</div>
-      <div class="step"><b>Pinned integration</b>Inside a short fail-closed main lease, the queue runner executes one head-pinned squash. Count a merge only when its single parent equals the admitted base, its tree equals the prediction and the branch ref reads back as the squash commit. Ambiguous attempts are reconciled, not retried. Releases happen only on release triggers, from a separate lock and pinned checkout with their own exact-commit gate evidence and postcheck.</div>
+      <div class="step"><b>Queue merge, separate release</b>The queue runner performs pinned integration under its main lease and verifies parent, tree and branch ref. Ambiguous mutation is reconciled. OPS releases an exact main commit only under a real trigger and applicable authority, with required exact-commit proof and postcheck. Workers do not inherit self-merge or deployment rights.</div>
     </div>
     <div class="loop">The author alone changes the branch. Payment and release-path changes get a specialist reviewer. P1/P2 findings need a plausible reachable consumer or caller path; a reviewer-proven false PASS against a gate's promised contract blocks merge even if today's inputs do not trigger it. Missing, failed or interrupted evidence blocks admission. Record executed checks, reused evidence and remaining gaps separately; no unmeasured speedup is implied.</div>
     <div class="grid two">
@@ -172,6 +198,7 @@
   <section id="upstream">
     <h2>6. Upstream fixes found by dogfooding</h2>
     <p class="sub">Running many concurrent agent sessions on one machine stresses the harness itself. Harness defects get the same treatment as product defects: reproduce, isolate, fix with a regression, send upstream.</p>
+    <p class="muted">The upstream statuses below are the <b>2026-10-18 snapshot</b>, not a fresh status check for this operating-model update.</p>
     <div class="grid two">
       <div class="card"><b>Shell built-ins blocking their own input producer</b> (<a href="https://github.com/can1357/oh-my-pi/issues/15501">oh-my-pi #15501</a>). <code>read line &lt; &lt;(cmd)</code> could hang because the read blocked the runtime worker before the producer ran; the same hang stalled a live agent shell command on 2026-10-14. The maintainer's <a href="https://github.com/can1357/oh-my-pi/pull/15509">#15509</a> landed the <code>read</code> deadlock fix and its single-worker regression, graciously crediting my original patch. My <a href="https://github.com/can1357/oh-my-pi/pull/15504">#15504</a> was narrowed in review to a regular-file fast path and merged. The <code>mapfile</code>/<code>readarray</code> fix <a href="https://github.com/can1357/oh-my-pi/pull/15647">#15647</a> remains open, with a single-worker regression that timed out before the fix and passes after it.</div>
       <div class="card"><b>Configuration and worktrees.</b> A proposed config-save fix reports the persisted value it replaces (<a href="https://github.com/can1357/oh-my-pi/pull/15478">#15478</a>, open), not the session override. Reported: clone-first worktrees copying gitignored secrets such as <code>.env</code> (<a href="https://github.com/can1357/oh-my-pi/issues/15476">#15476</a>) and per-worktree build-cache clones exhausting disk (<a href="https://github.com/can1357/oh-my-pi/issues/15475">#15475</a>). In jcode, contiguous TUI typing became one undo step (<a href="https://github.com/1jehuang/jcode/pull/1714">#1714</a>) and CI formatting was restored (<a href="https://github.com/1jehuang/jcode/pull/1739">#1739</a>).</div>
@@ -185,7 +212,7 @@
   </section>
 
   <footer>
-    Product source code is private; this page describes the process, not the code. Process and diagrams checked 2026-10-21; reliability accounts updated 2026-10-18. Measurements carry their own dates, not a claim of current rates.<br>
+    Product source code is private; this page describes the process, not the code. Operating-model text and ownership/lifecycle diagrams updated 2026-10-24; other diagrams retain their 2026-10-21 snapshot and reliability accounts their 2026-10-18 dates. Measurements carry their own dates, not a claim of current rates.<br>
     Mingyun Chae · <a href="https://github.com/mg-mg-mg">GitHub profile</a> · <a href="https://github.com/mg-mg-mg/agentic-engineering#readme">Text case study</a>
   </footer>
 </main>
