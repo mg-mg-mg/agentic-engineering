@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg viewBox="0 0 960 528" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="role-sessions-title role-sessions-desc" id="roles-root">
-<title id="role-sessions-title">Eleven long-lived role sessions</title>
-<desc id="role-sessions-desc">Org chart: the Owner sets direction, priorities and approvals over four groups of long-lived OMP role sessions. Coordinate: LEADER (priority, admission, conflicts; receives ambiguous work) and REVIEW (independent fixed-head review). Build: FEATURE, BUG-FIX, REFACTOR. Platform and ship: PLATFORM (tooling, merge queue) and RELEASE (exact-SHA releases). Specialists: BILLING, GROWTH, DISCOVERY, OPENSOURCE. Money, stores, production data, external messages and credentials still need the Owner.</desc>
+<title id="role-sessions-title">Five ownership roles and bounded workers</title>
+<desc id="role-sessions-desc">The Owner sets direction and effect permissions; LEADER owns priorities and conflicts, REVIEW independently assesses frozen source, ENGINEERING owns product source in scope, OPS owns platform and infrastructure source plus the sole merge queue and authorized releases, and GROWTH owns content and analytics in scope; any authoring Root may appoint a sole-writer worker while retaining outcome and integration accountability.</desc>
 <defs>
       <style>#roles-root { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; color: #2d3142; }
       #roles-root .diagram-container { width: 100%; overflow-x: auto; }
@@ -26,43 +26,34 @@
 <line x1="60" y1="226" x2="228" y2="226" stroke="#2d3142" stroke-width="1" stroke-opacity="0.12"/>
 <text x="60" y="245" fill="#2d3142" font-size="12" font-weight="600" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" text-anchor="start">REVIEW</text>
 <text x="60" y="259" fill="#4f5d75" font-size="9" font-weight="400" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="start">independent fixed-head review</text>
-<rect x="268" y="152" width="200" height="172" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
-<text x="284" y="174" fill="#4f5d75" font-size="8" font-weight="500" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="start" letter-spacing="0.18em">BUILD</text>
-<text x="284" y="201" fill="#2d3142" font-size="12" font-weight="600" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" text-anchor="start">FEATURE</text>
-<text x="284" y="215" fill="#4f5d75" font-size="9" font-weight="400" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="start">new product features</text>
-<line x1="284" y1="226" x2="452" y2="226" stroke="#2d3142" stroke-width="1" stroke-opacity="0.12"/>
-<text x="284" y="245" fill="#2d3142" font-size="12" font-weight="600" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" text-anchor="start">BUG-FIX</text>
-<text x="284" y="259" fill="#4f5d75" font-size="9" font-weight="400" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="start">defect → proof → PR</text>
-<line x1="284" y1="270" x2="452" y2="270" stroke="#2d3142" stroke-width="1" stroke-opacity="0.12"/>
-<text x="284" y="289" fill="#2d3142" font-size="12" font-weight="600" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" text-anchor="start">REFACTOR</text>
-<text x="284" y="303" fill="#4f5d75" font-size="9" font-weight="400" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="start">structure · verification speed</text>
+<rect x="268" y="152" width="200" height="128" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="284" y="174" fill="#4f5d75" font-size="8" font-weight="500" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="start" letter-spacing="0.18em">PRODUCT SOURCE</text>
+<text x="284" y="201" fill="#2d3142" font-size="12" font-weight="600" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" text-anchor="start">ENGINEERING</text>
+<text x="284" y="221" fill="#4f5d75" font-size="9" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">product · domain · defects</text>
+<text x="284" y="239" fill="#4f5d75" font-size="9" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">maintenance · dependencies</text>
+<text x="284" y="259" fill="#4f5d75" font-size="9" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">within assigned scope</text>
 <rect x="492" y="152" width="200" height="128" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
-<text x="508" y="174" fill="#4f5d75" font-size="8" font-weight="500" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="start" letter-spacing="0.18em">PLATFORM &amp; SHIP</text>
-<text x="508" y="201" fill="#2d3142" font-size="12" font-weight="600" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" text-anchor="start">PLATFORM</text>
-<text x="508" y="215" fill="#4f5d75" font-size="9" font-weight="400" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="start">tooling · merge queue</text>
-<line x1="508" y1="226" x2="676" y2="226" stroke="#2d3142" stroke-width="1" stroke-opacity="0.12"/>
-<text x="508" y="245" fill="#2d3142" font-size="12" font-weight="600" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" text-anchor="start">RELEASE</text>
-<text x="508" y="259" fill="#4f5d75" font-size="9" font-weight="400" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="start">exact-SHA releases</text>
-<rect x="716" y="152" width="200" height="216" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
-<text x="732" y="174" fill="#4f5d75" font-size="8" font-weight="500" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="start" letter-spacing="0.18em">SPECIALISTS</text>
-<text x="732" y="201" fill="#2d3142" font-size="12" font-weight="600" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" text-anchor="start">BILLING</text>
-<text x="732" y="215" fill="#4f5d75" font-size="9" font-weight="400" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="start">payments · entitlements</text>
-<line x1="732" y1="226" x2="900" y2="226" stroke="#2d3142" stroke-width="1" stroke-opacity="0.12"/>
-<text x="732" y="245" fill="#2d3142" font-size="12" font-weight="600" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" text-anchor="start">GROWTH</text>
-<text x="732" y="259" fill="#4f5d75" font-size="9" font-weight="400" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="start">analytics · funnels</text>
-<line x1="732" y1="270" x2="900" y2="270" stroke="#2d3142" stroke-width="1" stroke-opacity="0.12"/>
-<text x="732" y="289" fill="#2d3142" font-size="12" font-weight="600" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" text-anchor="start">DISCOVERY</text>
-<text x="732" y="303" fill="#4f5d75" font-size="9" font-weight="400" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="start">audits · evidence · Issues</text>
-<line x1="732" y1="314" x2="900" y2="314" stroke="#2d3142" stroke-width="1" stroke-opacity="0.12"/>
-<text x="732" y="333" fill="#2d3142" font-size="12" font-weight="600" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" text-anchor="start">OPENSOURCE</text>
-<text x="732" y="347" fill="#4f5d75" font-size="9" font-weight="400" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="start">upstream fixes</text>
+<text x="508" y="174" fill="#4f5d75" font-size="8" font-weight="500" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="start" letter-spacing="0.18em">OPERATE &amp; SHIP</text>
+<text x="508" y="201" fill="#2d3142" font-size="12" font-weight="600" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" text-anchor="start">OPS</text>
+<text x="508" y="221" fill="#4f5d75" font-size="9" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">platform · infrastructure source</text>
+<text x="508" y="239" fill="#4f5d75" font-size="9" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">sole merge queue</text>
+<text x="508" y="259" fill="#4f5d75" font-size="9" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">authorized exact-SHA releases</text>
+<rect x="716" y="152" width="200" height="128" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="732" y="174" fill="#4f5d75" font-size="8" font-weight="500" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="start" letter-spacing="0.18em">CONTENT &amp; ANALYTICS</text>
+<text x="732" y="201" fill="#2d3142" font-size="12" font-weight="600" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" text-anchor="start">GROWTH</text>
+<text x="732" y="221" fill="#4f5d75" font-size="9" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">acquisition · retention · support</text>
+<text x="732" y="239" fill="#4f5d75" font-size="9" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">content and analytics source</text>
+<text x="732" y="259" fill="#4f5d75" font-size="9" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">within assigned scope</text>
+<rect x="44" y="312" width="872" height="56" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="60" y="334" fill="#2d3142" font-size="12" font-weight="600" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">Bounded workers · investigation · implementation · proof</text>
+<text x="60" y="352" fill="#4f5d75" font-size="10" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">Any authoring Root may appoint the sole branch writer. The Root retains scope, custody and integration accountability.</text>
 <rect x="44" y="392" width="872" height="56" rx="6" fill="#ececec" stroke="#2d3142" stroke-width="1" stroke-opacity="0.12"/>
-<text x="60" y="414" fill="#4f5d75" font-size="8" font-weight="500" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="start" letter-spacing="0.18em">APPROVAL GATES</text>
-<text x="60" y="432" fill="#4f5d75" font-size="10" font-weight="400" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" text-anchor="start">Money, store submissions, production data, external messages and credentials still need the Owner. Merge never implies deployment.</text>
+<text x="60" y="414" fill="#4f5d75" font-size="8" font-weight="500" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="start" letter-spacing="0.18em">EFFECT AUTHORITY</text>
+<text x="60" y="432" fill="#4f5d75" font-size="10" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">Money, stores, production data, external sends and credentials retain their permissions. A worker role grants no new authority.</text>
 <line x1="40" y1="468" x2="920" y2="468" stroke="#2d3142" stroke-width="0.8" stroke-opacity="0.12"/>
 <text x="40" y="484" fill="#4f5d75" font-size="8" font-weight="500" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="start" letter-spacing="0.18em">LEGEND</text>
 <rect x="40" y="500" width="14" height="10" rx="2" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
-<text x="60" y="508.5" fill="#4f5d75" font-size="10" font-weight="400" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" text-anchor="start">Long-lived role session</text>
+<text x="60" y="508.5" fill="#4f5d75" font-size="10" font-weight="400" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" text-anchor="start">Ownership scope</text>
 <rect x="216.79999999999998" y="500" width="14" height="10" rx="2" fill="#bf4520" stroke="#bf4520" stroke-width="1" fill-opacity="0.08"/>
 <text x="236.79999999999998" y="508.5" fill="#4f5d75" font-size="10" font-weight="400" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" text-anchor="start">Receives ambiguous work</text>
 <path d="M 393.59999999999997,505 H 421.59999999999997" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#roles-arrow)"/>

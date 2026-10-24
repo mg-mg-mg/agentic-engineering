@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg viewBox="0 0 960 568" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="change-lifecycle-title change-lifecycle-desc" id="lifecycle-dark-root">
-<title id="change-lifecycle-title">How one change reaches production</title>
-<desc id="change-lifecycle-desc">Swimlane: LEADER admits an Issue; one author root builds in an isolated worktree and opens a PR; a separate read-only reviewer gives one verdict per head; changes mean a new head and a new review; the author enqueues and the PLATFORM merge queue runs admission on the PR combined with current main, refusing back to the author or making a head-pinned squash merge with parent and tree checks; RELEASE ships an exact main SHA only on a release trigger, never per merge.</desc>
+<svg viewBox="0 0 960 568" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="change-lifecycle-dark-title change-lifecycle-dark-desc" id="lifecycle-dark-root">
+<title id="change-lifecycle-dark-title">Source, review, merge and release are distinct</title>
+<desc id="change-lifecycle-dark-desc">A Root scopes an Issue and appoints one author, which may be a worker, in its canonical worktree; distinct read-only review assesses frozen source; the OPS queue selects required proof on the composed tree and performs pinned integration, while OPS releases an exact main commit only on an authorized trigger and user outcomes require separate observation.</desc>
 <defs>
       <style>#lifecycle-dark-root { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; color: #f5f5f5; }
       #lifecycle-dark-root .diagram-container { width: 100%; overflow-x: auto; }
@@ -17,10 +17,10 @@
 <line x1="40" y1="480" x2="920" y2="480" stroke="#f5f5f5" stroke-width="1" stroke-opacity="0.22"/>
 <line x1="168" y1="40" x2="168" y2="480" stroke="#f5f5f5" stroke-width="1" stroke-opacity="0.22"/>
 <text x="56" y="88" fill="#bfc0c0" font-size="8" font-weight="500" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="start" letter-spacing="0.18em">OWNER · LEADER</text>
-<text x="56" y="176" fill="#bfc0c0" font-size="8" font-weight="500" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="start" letter-spacing="0.18em">AUTHOR ROOT</text>
+<text x="56" y="176" fill="#bfc0c0" font-size="8" font-weight="500" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="start" letter-spacing="0.18em">SOLE AUTHOR</text>
 <text x="56" y="264" fill="#bfc0c0" font-size="8" font-weight="500" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="start" letter-spacing="0.18em">REVIEWER</text>
-<text x="56" y="352" fill="#bfc0c0" font-size="8" font-weight="500" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="start" letter-spacing="0.18em">MERGE QUEUE</text>
-<text x="56" y="440" fill="#bfc0c0" font-size="8" font-weight="500" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="start" letter-spacing="0.18em">RELEASE</text>
+<text x="56" y="352" fill="#bfc0c0" font-size="8" font-weight="500" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="start" letter-spacing="0.18em">OPS QUEUE</text>
+<text x="56" y="440" fill="#bfc0c0" font-size="8" font-weight="500" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="start" letter-spacing="0.18em">OPS RELEASE</text>
 <path d="M 304,84 H 388 Q 396,84 396,92 V 144" fill="none" stroke="#bfc0c0" stroke-width="1.2" marker-end="url(#lifecycle-dark-arrow)"/>
 <path d="M 456,172 H 488" fill="none" stroke="#bfc0c0" stroke-width="1.2" marker-end="url(#lifecycle-dark-arrow)"/>
 <path d="M 548,200 V 232" fill="none" stroke="#bfc0c0" stroke-width="1.2" marker-end="url(#lifecycle-dark-arrow)"/>
@@ -32,7 +32,7 @@
 <rect x="670.8" y="245" width="58.4" height="12" rx="2" fill="#2d3142"/>
 <text x="700" y="254" fill="#f08a59" font-size="8" font-weight="400" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle" letter-spacing="0.12em">MERGEABLE</text>
 <rect x="391.2" y="365" width="237.6" height="12" rx="2" fill="#2d3142"/>
-<text x="510" y="374" fill="#bfc0c0" font-size="8" font-weight="400" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle" letter-spacing="0.12em">CHANGES OR REFUSAL → NEW HEAD, NEW REVIEW</text>
+<text x="510" y="374" fill="#bfc0c0" font-size="8" font-weight="400" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle" letter-spacing="0.12em">FINDING → FIX → NEW HEAD → REVIEW</text>
 <rect x="728.0" y="387" width="120.0" height="12" rx="2" fill="#2d3142"/>
 <text x="844" y="396" fill="#bfc0c0" font-size="8" font-weight="400" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="end" letter-spacing="0.12em">ON A RELEASE TRIGGER</text>
 <rect x="184" y="56" width="120" height="56" rx="6" fill="#393e53" stroke="#f5f5f5" stroke-width="1"/>
@@ -45,7 +45,7 @@
 <text x="396.0" y="190.0" fill="#bfc0c0" font-size="9" font-weight="400" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">worktree · smoke</text>
 <rect x="488" y="144" width="120" height="56" rx="6" fill="#393e53" stroke="#f5f5f5" stroke-width="1"/>
 <text x="548.0" y="164.0" fill="#f5f5f5" font-size="12" font-weight="600" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" text-anchor="middle">Open PR</text>
-<text x="548.0" y="178.0" fill="#bfc0c0" font-size="9" font-weight="400" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">self-reviewed</text>
+<text x="548.0" y="178.0" fill="#bfc0c0" font-size="9" font-weight="400" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">owning proof</text>
 <text x="548.0" y="190.0" fill="#bfc0c0" font-size="9" font-weight="400" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">frozen head</text>
 <rect x="488" y="232" width="120" height="56" rx="6" fill="#393e53" stroke="#f5f5f5" stroke-width="1"/>
 <text x="548.0" y="252.0" fill="#f5f5f5" font-size="12" font-weight="600" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" text-anchor="middle">Review</text>
@@ -54,7 +54,7 @@
 <rect x="640" y="320" width="120" height="56" rx="6" fill="#393e53" stroke="#f5f5f5" stroke-width="1"/>
 <text x="700.0" y="340.0" fill="#f5f5f5" font-size="12" font-weight="600" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" text-anchor="middle">Admission run</text>
 <text x="700.0" y="354.0" fill="#bfc0c0" font-size="9" font-weight="400" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">PR + current main</text>
-<text x="700.0" y="366.0" fill="#bfc0c0" font-size="9" font-weight="400" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">composed tree</text>
+<text x="700.0" y="366.0" fill="#bfc0c0" font-size="9" font-weight="400" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">required checks</text>
 <rect x="792" y="320" width="120" height="56" rx="6" fill="#f08a59" stroke="#f08a59" stroke-width="1" fill-opacity="0.10"/>
 <text x="852.0" y="340.0" fill="#f5f5f5" font-size="12" font-weight="600" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" text-anchor="middle">Squash merge</text>
 <text x="852.0" y="354.0" fill="#bfc0c0" font-size="9" font-weight="400" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">head-pinned</text>
@@ -63,8 +63,8 @@
 <text x="852.0" y="428.0" fill="#f5f5f5" font-size="12" font-weight="600" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" text-anchor="middle">Release</text>
 <text x="852.0" y="442.0" fill="#bfc0c0" font-size="9" font-weight="400" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">exact main SHA</text>
 <text x="852.0" y="454.0" fill="#bfc0c0" font-size="9" font-weight="400" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="middle">postcheck</text>
-<text x="184" y="430" fill="#bfc0c0" font-size="10" font-weight="400" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" text-anchor="start">Payment and release-path PRs get a specialist</text>
-<text x="184" y="444" fill="#bfc0c0" font-size="10" font-weight="400" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" text-anchor="start">reviewer (BILLING / RELEASE). Merge is not deploy.</text>
+<text x="184" y="430" fill="#bfc0c0" font-size="10" font-weight="400" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" text-anchor="start">Risk-selected specialist review remains independent.</text>
+<text x="184" y="444" fill="#bfc0c0" font-size="10" font-weight="400" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" text-anchor="start">Merge, release and observed user outcomes are distinct.</text>
 <line x1="40" y1="500" x2="920" y2="500" stroke="#f5f5f5" stroke-width="0.8" stroke-opacity="0.12"/>
 <text x="40" y="516" fill="#bfc0c0" font-size="8" font-weight="500" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" text-anchor="start" letter-spacing="0.18em">LEGEND</text>
 <rect x="40" y="532" width="14" height="10" rx="2" fill="#393e53" stroke="#f5f5f5" stroke-width="1"/>
