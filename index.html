@@ -29,7 +29,14 @@
   h2 { font-size: 24px; margin: 0 0 6px; letter-spacing: -.01em; }
   .sub { color: var(--muted); margin: 0 0 20px; }
   .grid { display:grid; gap:14px; }
-  .metrics { grid-template-columns: repeat(4, 1fr); margin-top: -28px; }
+  .metrics { grid-template-columns: repeat(4, 1fr); margin-top: 18px; }
+  .overview { padding-top: 24px; }
+  .summary { grid-template-columns: repeat(3, 1fr); }
+  .summary h2 { font-size: 18px; }
+  .summary p { font-size: 14px; margin: 8px 0 0; }
+  .overview-links { display: flex; flex-wrap: wrap; gap: 10px 18px; margin-top: 18px; font-size: 14px; }
+  .overview-links a { color: var(--accent); text-decoration: none; }
+  .overview-links a:hover { text-decoration: underline; }
   .metric { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:18px 18px 16px; box-shadow: 0 6px 20px rgba(16,23,42,.06); }
   .metric .n { font-size: 30px; font-weight: 750; letter-spacing:-.02em; }
   .metric .l { font-size: 13px; color: var(--muted); }
@@ -52,8 +59,10 @@
   footer a { color: var(--accent); text-decoration:none; }
 
   @media (max-width: 860px) {
+    header { padding:32px 0 28px; }
     header h1 { font-size: 30px; }
     .metrics { grid-template-columns: repeat(2, 1fr); }
+    .summary { grid-template-columns: 1fr; }
     .two { grid-template-columns: 1fr; }
     .pipe { grid-template-columns: repeat(2, 1fr); row-gap: 18px; }
     .dia { overflow-x:auto; }
@@ -68,23 +77,22 @@
   <div class="wrap">
     <div class="eyebrow">Case study · Operating model updated 2026-10-24</div>
     <h1>One engineer, an agent team.</h1>
-    <p class="lead">AI agents carry implementation, independent review, risk-selected verification and bookkeeping. I own product direction, priorities and bounded authority—not every engineering decision.</p>
-    <div class="who">Mingyun Chae · Senior Backend &amp; AI Agent Platform Engineer · <a href="https://github.com/mg-mg-mg">GitHub profile</a> · <a href="https://triastra.ai">TriAstra</a> · <a href="https://github.com/mg-mg-mg/agentic-delivery-kit">historical/synthetic reference code</a></div>
+    <p class="lead">I build and operate TriAstra, a seven-language AI product, and design the agent-assisted workflow behind it: scoped implementation, independent review, and verification before integration.</p>
+    <div class="who">Mingyun Chae · Senior Backend &amp; AI Agent Platform Engineer · <a href="https://github.com/mg-mg-mg">GitHub profile</a> · <a href="https://triastra.ai">TriAstra</a> · <a href="https://github.com/mg-mg-mg/agentic-delivery-kit">reference code</a></div>
   </div>
 </header>
 
 <main class="wrap">
-  <div class="grid metrics">
-    <div class="metric"><div class="n">~1,700</div><div class="l">registered users reported as of 2026-10-07; not active or paying users</div></div>
-    <div class="metric"><div class="n">~2 h</div><div class="l">reported median from report to fix across 24 bugs, 2026-09-07 through 2026-10-08</div></div>
-    <div class="metric"><div class="n">7 locales</div><div class="l">web and ChatGPT app in the 2026-10-07 product snapshot</div></div>
-    <div class="metric"><div class="n">~1 in 5</div><div class="l">reviewed PRs reportedly sent back before merge as of 2026-10-08</div></div>
-  </div>
-  <p class="muted" style="margin-top:12px"><b>Measurement limits.</b> User, bug-time and review-return figures are approximate historical reports from private operations, not publicly verifiable measurements. Their original counting rules are unavailable; the bug-time endpoints and review-return inclusion rules are not established, so these are not precise benchmarks.</p>
-  <p class="muted">No merged PR titled "Revert" among <b>249 PRs</b> merged during 2026-09-11 through 2026-10-08 (UTC dates). The count from the private product repository's GitHub search includes all authors and dependency bots: with repository access, search with <code>is:pr is:merged merged:2026-09-11..2026-10-08</code> via <code>gh api search/issues</code> and read <code>total_count</code> (249); adding <code>in:title Revert</code> returns 0. Only someone with repository access can rerun this count. Dates are inclusive UTC calendar days. This title search does not prove that no changes were reverted or that no regressions occurred.</p>
-  <p class="muted">Supporting activity context, not a success measure: 34–45 PRs merged per day during 2026-10-03 through 2026-10-06 (UTC days; the same all-author GitHub merged-date definition). These historical observations do not measure the effect of the newer workflow.</p>
+  <section id="overview" class="overview" aria-label="Case study overview">
+    <div class="grid summary">
+      <div class="card"><h2>Product</h2><p>A seven-language AI product with Rust services, web and mobile clients, and a ChatGPT integration.</p></div>
+      <div class="card"><h2>Delivery</h2><p>Scoped implementation, independent review, risk-selected verification and controlled integration with explicit ownership.</p></div>
+      <div class="card"><h2>Developer tooling</h2><p>Reproduced failures, upstream contributions and a public reference harness for selected delivery mechanisms.</p></div>
+    </div>
+    <nav class="overview-links" aria-label="Explore the case study"><a href="#operating-model">Current workflow</a><a href="#review-evidence">Review and billing examples</a><a href="#upstream">Upstream fixes</a><a href="https://github.com/mg-mg-mg/agentic-delivery-kit">Reference code</a><a href="#measurement-methods">Measurement methods</a></nav>
+  </section>
 
-  <section>
+  <section id="review-evidence">
     <h2>Independent review changes outcomes</h2>
     <p class="sub">Independent review caught a privacy problem in a chart-calculation-range fix before merge. In a separate October 2026 billing case, a browser agent's test-mode refund E2E showed that refunded reports continued generating; an author added regression coverage and fixed the behavior, a separate reviewer checked it, and the fix reached production. These are distinct examples of the process, not interchangeable evidence.</p>
     <p>The billing case predates standing release authority. Its original Owner approvals are history, not today's deployment rule. Requested changes, author repairs and independent delta review—not rubber-stamp approvals—are part of the delivery loop.</p>
@@ -204,6 +212,20 @@
       <div class="card"><b>Configuration and worktrees.</b> A proposed config-save fix reports the persisted value it replaces (<a href="https://github.com/can1357/oh-my-pi/pull/15478">#15478</a>, open), not the session override. Reported: clone-first worktrees copying gitignored secrets such as <code>.env</code> (<a href="https://github.com/can1357/oh-my-pi/issues/15476">#15476</a>) and per-worktree build-cache clones exhausting disk (<a href="https://github.com/can1357/oh-my-pi/issues/15475">#15475</a>). In jcode, contiguous TUI typing became one undo step (<a href="https://github.com/1jehuang/jcode/pull/1714">#1714</a>) and CI formatting was restored (<a href="https://github.com/1jehuang/jcode/pull/1739">#1739</a>).</div>
     </div>
     <p class="sub">Historical report dated 2026-10-18, <b>not revalidated</b>: 7 merged (five oh-my-pi, two jcode), 5 open and 3 closed without merge among my PRs across oh-my-pi, jcode, Flutter, OpenTelemetry Rust and ts-rs. Query: <code>author:mg-mg-mg is:pr is:public -user:mg-mg-mg -org:TriAstra-ai</code>, filtered to those five repositories. Reported open PRs: oh-my-pi #15647 and #15478, <a href="https://github.com/flutter/flutter/pull/194429">Flutter #194429</a>, <a href="https://github.com/open-telemetry/opentelemetry-rust/pull/3791">OpenTelemetry Rust #3791</a> and <a href="https://github.com/Aleph-Alpha/ts-rs/pull/501">ts-rs #501</a>. The original per-PR counting list is not reproduced here; this update neither revalidates nor recalculates that aggregate from a single PR's merge-state check. The maintainer's #15509 is not counted as my merged PR. <a href="https://github.com/mg-mg-mg/mg-mg-mg/blob/main/CONTRIBUTIONS.md">Contribution index</a>.</p>
+  </section>
+
+  <section id="measurement-methods">
+    <h2>Measurement methods and historical snapshots</h2>
+  <div class="grid metrics">
+    <div class="metric"><div class="n">~1,700</div><div class="l">registered users reported as of 2026-10-07; not active or paying users</div></div>
+    <div class="metric"><div class="n">~2 h</div><div class="l">reported median from report to fix across 24 bugs, 2026-09-07 through 2026-10-08</div></div>
+    <div class="metric"><div class="n">7 locales</div><div class="l">web and ChatGPT app in the 2026-10-07 product snapshot</div></div>
+    <div class="metric"><div class="n">~1 in 5</div><div class="l">reviewed PRs reportedly sent back before merge as of 2026-10-08</div></div>
+  </div>
+  <p class="muted" style="margin-top:12px"><b>Measurement limits.</b> User, bug-time and review-return figures are approximate historical reports from private operations, not publicly verifiable measurements. Their original counting rules are unavailable; the bug-time endpoints and review-return inclusion rules are not established, so these are not precise benchmarks.</p>
+  <p class="muted">No merged PR titled "Revert" among <b>249 PRs</b> merged during 2026-09-11 through 2026-10-08 (UTC dates). The count from the private product repository's GitHub search includes all authors and dependency bots: with repository access, search with <code>is:pr is:merged merged:2026-09-11..2026-10-08</code> via <code>gh api search/issues</code> and read <code>total_count</code> (249); adding <code>in:title Revert</code> returns 0. Only someone with repository access can rerun this count. Dates are inclusive UTC calendar days. This title search does not prove that no changes were reverted or that no regressions occurred.</p>
+  <p class="muted">Supporting activity context, not a success measure: 34–45 PRs merged per day during 2026-10-03 through 2026-10-06 (UTC days; the same all-author GitHub merged-date definition). These historical observations do not measure the effect of the newer workflow.</p>
+
   </section>
 
   <section>

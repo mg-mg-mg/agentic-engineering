@@ -1,27 +1,18 @@
 # One Engineer, an Agent Team: How I Ship a Production Product with AI Agents
 
+I build and operate TriAstra, a seven-language AI product, and design the agent-assisted workflow behind it: scoped implementation, independent review, and verification before integration.
+
+## At a glance
+
+- **Product:** A seven-language AI product with Rust services, web and mobile clients, and a ChatGPT integration.
+- **Delivery:** Scoped implementation, independent read-only review, risk-selected verification and controlled integration, with explicit ownership and permission boundaries.
+- **Developer tooling:** Reproduced failures, upstream contributions and a public reference harness that makes selected delivery mechanisms inspectable.
+
+**Explore:** [Current workflow](#2-current-ownership-and-execution) · [Review and billing examples](#evidence-in-practice) · [Upstream fixes](#6-upstream-fixes-found-by-dogfooding) · [Reference code](https://github.com/mg-mg-mg/agentic-delivery-kit) · [Measurement methods](#measurement-methods-and-historical-snapshots)
+
+## Evidence in practice
+
 Independent review caught a privacy problem in a chart-calculation-range fix before merge. In a separate October 2026 billing case, a browser agent's test-mode refund E2E showed that refunded reports continued generating; an author added regression coverage and fixed the behavior, a separate reviewer checked it, and the fix reached production. These are distinct examples of the process, not interchangeable evidence. The billing case predates standing release authority: its original Owner approvals are history, not today's deployment rule.
-
-**Reference code:** [agentic-delivery-kit](https://github.com/mg-mg-mg/agentic-delivery-kit) contains a historical/synthetic dispatcher reference and reusable lease, guards, governance checks and navigation evaluation mechanisms. It is not the current native OMP workflow or a demonstrated OMP adapter; synthetic tests do not establish live sandbox containment.
-
-**Visual version:** https://mg-mg-mg.github.io/agentic-engineering/
-
-*Mingyun Chae · October 2026. Case study of the delivery process behind [TriAstra](https://triastra.ai) and a client engagement. Product source code is private. Operating-model text and ownership/lifecycle diagrams updated 2026-10-24; other diagrams retain their 2026-10-21 snapshot and reliability accounts their 2026-10-18 dates. Measurements carry their own dates, not a claim of current rates.*
-
-## TL;DR
-
-AI agents carry implementation, independent review, risk-selected verification and bookkeeping. I own product direction, priorities and the boundaries of standing authority, rather than every engineering decision.
-
-| Impact | Historical evidence |
-| --- | --- |
-| A product built and run by one person | Seven languages on the web and as a ChatGPT app; roughly 1,700 registered users reported as of 2026-10-07 (not active or paying users) |
-| Bugs resolved in hours | Reported median of roughly two hours from report to fix across 24 bugs, 2026-09-07 through 2026-10-08 |
-| Independent review changes outcomes | Roughly one in five reviewed PRs reportedly sent back before merge as of 2026-10-08; no merged PR titled "Revert" among 249 PRs merged during 2026-09-11 through 2026-10-08 (UTC dates) |
-| A client received working software | A manual workflow became a working server and role-based interfaces, with scheduling, access controls and a pre-merge E2E smoke gate |
-
-**Measurement limits:** User, bug-time and review-return figures are approximate historical reports from private operations, not publicly verifiable measurements. Their original counting rules are unavailable; the bug-time endpoints and review-return inclusion rules are not established, so these are not precise benchmarks. The count from the private product repository's GitHub search includes all authors and dependency bots: with repository access, search with `is:pr is:merged merged:2026-09-11..2026-10-08` via `gh api search/issues` and read `total_count` (249); adding `in:title Revert` returns 0. Only someone with repository access can rerun this count. Dates are inclusive UTC calendar days. This title search does not prove that no changes were reverted or that no regressions occurred.
-
-Supporting activity context, not a success measure: 34–45 PRs merged per day during 2026-10-03 through 2026-10-06 (UTC days; the same all-author GitHub merged-date definition). These historical observations do not measure the effect of the newer workflow.
 
 ## 1. Owner attention is the scarcest resource
 
@@ -157,6 +148,28 @@ Except for the explicit **#15504 merge-state check on 2026-10-24**, the upstream
 - **jcode:** contiguous TUI typing grouped into one undo step ([#1714](https://github.com/1jehuang/jcode/pull/1714)) and restored CI formatting ([#1739](https://github.com/1jehuang/jcode/pull/1739)), both merged.
 
 Historical report dated 2026-10-18, **not revalidated**: **7 merged, 5 open and 3 closed without merge** among my PRs across oh-my-pi, jcode, Flutter, OpenTelemetry Rust and ts-rs. Query: `author:mg-mg-mg is:pr is:public -user:mg-mg-mg -org:TriAstra-ai`, filtered to those five repositories. The reported merge split was five in oh-my-pi and two in jcode; the reported open PRs were my oh-my-pi #15647 and #15478, [Flutter #194429](https://github.com/flutter/flutter/pull/194429), [OpenTelemetry Rust #3791](https://github.com/open-telemetry/opentelemetry-rust/pull/3791) and [ts-rs #501](https://github.com/Aleph-Alpha/ts-rs/pull/501). The original per-PR counting list is not reproduced here; this update neither revalidates nor recalculates that aggregate from a single PR's merge-state check. The maintainer's #15509 is not counted as my merged PR. [Contribution index](https://github.com/mg-mg-mg/mg-mg-mg/blob/main/CONTRIBUTIONS.md).
+
+## Measurement methods and historical snapshots
+
+**Reference code:** [agentic-delivery-kit](https://github.com/mg-mg-mg/agentic-delivery-kit) contains a historical/synthetic dispatcher reference and reusable lease, guards, governance checks and navigation evaluation mechanisms. It is not the current native OMP workflow or a demonstrated OMP adapter; synthetic tests do not establish live sandbox containment.
+
+**Visual version:** https://mg-mg-mg.github.io/agentic-engineering/
+
+*Mingyun Chae · October 2026. Case study of the delivery process behind [TriAstra](https://triastra.ai) and a client engagement. Product source code is private. Operating-model text and ownership/lifecycle diagrams updated 2026-10-24; other diagrams retain their 2026-10-21 snapshot and reliability accounts their 2026-10-18 dates. Measurements carry their own dates, not a claim of current rates.*
+
+AI agents carry implementation, independent review, risk-selected verification and bookkeeping. I own product direction, priorities and the boundaries of standing authority, rather than every engineering decision.
+
+| Impact | Historical evidence |
+| --- | --- |
+| A product built and run by one person | Seven languages on the web and as a ChatGPT app; roughly 1,700 registered users reported as of 2026-10-07 (not active or paying users) |
+| Bugs resolved in hours | Reported median of roughly two hours from report to fix across 24 bugs, 2026-09-07 through 2026-10-08 |
+| Independent review changes outcomes | Roughly one in five reviewed PRs reportedly sent back before merge as of 2026-10-08; no merged PR titled "Revert" among 249 PRs merged during 2026-09-11 through 2026-10-08 (UTC dates) |
+| A client received working software | A manual workflow became a working server and role-based interfaces, with scheduling, access controls and a pre-merge E2E smoke gate |
+
+**Measurement limits:** User, bug-time and review-return figures are approximate historical reports from private operations, not publicly verifiable measurements. Their original counting rules are unavailable; the bug-time endpoints and review-return inclusion rules are not established, so these are not precise benchmarks. The count from the private product repository's GitHub search includes all authors and dependency bots: with repository access, search with `is:pr is:merged merged:2026-09-11..2026-10-08` via `gh api search/issues` and read `total_count` (249); adding `in:title Revert` returns 0. Only someone with repository access can rerun this count. Dates are inclusive UTC calendar days. This title search does not prove that no changes were reverted or that no regressions occurred.
+
+Supporting activity context, not a success measure: 34–45 PRs merged per day during 2026-10-03 through 2026-10-06 (UTC days; the same all-author GitHub merged-date definition). These historical observations do not measure the effect of the newer workflow.
+
 
 ## Publication hygiene
 
